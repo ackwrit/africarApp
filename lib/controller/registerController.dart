@@ -19,7 +19,8 @@ class homeRegister extends State<registerController>{
 
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'NG';
-  PhoneNumber number = PhoneNumber(isoCode: 'ML');
+  PhoneNumber number= PhoneNumber(isoCode: 'ML');
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -74,19 +75,30 @@ class homeRegister extends State<registerController>{
           Padding(padding: EdgeInsets.all(10)),
         
           FlatButton(
-            onPressed: null,
-            child: Text('Connexion'),
+            onPressed: ()=>validationPhone(number.toString()),
+            child: Text('Validation'),
           ),
-          Padding(padding: EdgeInsets.all(10)),
-          FlatButton(
-            onPressed: null,
-            child: Text('Inscription'),
-          ),
-          Padding(padding: EdgeInsets.all(10)),
+
         ],
       ),
     );
 
+  }
+
+
+  validationPhone(String number){
+    return showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context)
+        {
+          return AlertDialog(
+            title: Text(number),
+          );
+        }
+
+
+    );
   }
 
 }
