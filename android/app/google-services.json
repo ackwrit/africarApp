@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "198233373524",
+    "firebase_url": "https://afri-car.firebaseio.com",
+    "project_id": "afri-car",
+    "storage_bucket": "afri-car.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:198233373524:android:187d59ee49899bd40866c1",
+        "android_client_info": {
+          "package_name": "lightphoenix.africars"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "198233373524-o0rtha7lq3oqno50b6ca9e0fv7dfbj16.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAEKyrunH1j4T5xKu1Bb5xa4z1a1KRqxKU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "198233373524-o0rtha7lq3oqno50b6ca9e0fv7dfbj16.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "198233373524-kdo1o8gf3dbu193jdsktig9dcgol90ol.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "lightphoenix.africacars"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
