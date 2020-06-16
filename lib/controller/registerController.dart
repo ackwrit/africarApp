@@ -1,6 +1,7 @@
 
 
 import 'package:africars/controller/administrationController.dart';
+import 'package:africars/controller/registerProController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -56,7 +57,7 @@ class homeRegister extends State<registerController>{
               onPressed: (){
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context){
-                      return administrationController();
+                      return registerProController();
                     }
                 ));
               },

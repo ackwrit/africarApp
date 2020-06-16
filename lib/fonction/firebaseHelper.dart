@@ -1,4 +1,5 @@
 
+import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -7,6 +8,29 @@ class firebaseHelper{
 //authetification
 final auth = FirebaseAuth.instance;
 String verificationId;
+
+
+
+
+//Authentification par mail
+
+Future<FirebaseUser> handleCreateMailCompagnie({String nif,String adresse,String mail,String password,String nomDirigeant,String prenomDirigeant})async{
+  final AuthResult authResult = await auth.createUserWithEmailAndPassword(email: mail, password: password);
+  FirebaseUser user =authResult.user;
+  String uid= user.uid;
+  Map map ={
+    'id':uid,
+    'matricule':nif,
+    'adresse':adresse,
+    'mail':mail,
+    'nomeDirigeant':nomDirigeant,
+    'prenomDirigeant':prenomDirigeant,
+    'offre':'gratuit'
+  };
+  addCompagnie(uid, map);
+  return user;
+
+}
 
 
 Future <void> handleSignPhone(String phone) async
@@ -68,6 +92,7 @@ Future<void> signOTP(smsCode,verifId)async{
 //database
   static final base=FirebaseDatabase.instance.reference();
   final base_user=base.child("utilisateur");
+  final base_compagnie=base.child('compagnie');
 
 
 
@@ -76,6 +101,16 @@ Future<void> signOTP(smsCode,verifId)async{
   addUser(String uid,Map map)
   {
     base_user.child(uid).set(map);
+  }
+
+  addCompagnie(String uid,Map map)
+  {
+    base_compagnie.child(uid).set(map);
+  }
+
+  Future<compagnie> getCompagnie(String uid) async{
+    DataSnapshot snapshot = await base_compagnie.child(uid).once();
+    return compagnie(snapshot);
   }
 
 
