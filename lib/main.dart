@@ -1,5 +1,6 @@
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/registerController.dart';
+import 'package:africars/controller/trajetController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -154,7 +155,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List <Widget> controllers (){
     return [
-      dateController(),
+      trajetController(),
      dateController(),
 
 

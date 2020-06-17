@@ -95,7 +95,7 @@ class homeRegister extends State<registerController>{
         
           FlatButton(
             onPressed: (){
-              (codeSent)?handleOTP(smsCode, verificationId):handleSignWithSign(number.toString());
+              (codeSent)?handleOTP(smsCode, verificationId):handleSignWithSign(number.toString().trim());
 
 
                 //firebaseHelper().handleSignPhone(number.toString());
@@ -147,7 +147,7 @@ Future <void> handleSignWithSign(phone)async
 
   auth.verifyPhoneNumber(
       phoneNumber: phone,
-      timeout: Duration(seconds: 60),
+      timeout: Duration(seconds: 20),
       verificationCompleted: verified,
       verificationFailed: failed,
       codeSent: phoneCodeSent,
