@@ -1,6 +1,7 @@
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
+import 'package:africars/controller/trajetInternationalController.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,7 +69,8 @@ class _MyHomePageState extends State<MyHomePage> {
             activeColor: Colors.orange,
             inactiveColor: Colors.white,
             items:[
-              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("Trajet",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("International",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
 
 
@@ -111,7 +113,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget androidConfig(){
     
     return new DefaultTabController(
-      length: 2,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title:Image.asset("assets/logo.png",height: 225,),
@@ -136,7 +138,8 @@ class _MyHomePageState extends State<MyHomePage> {
             indicatorColor: Colors.orange,
 
               tabs: [
-              Tab(icon:new Icon(Icons.map),child: new Text("Trajet") ,),
+              Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
+                Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
             Tab(icon:new Icon(Icons.bookmark),child: new Text("Réservation") ,),
           ]
           ),
@@ -156,6 +159,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List <Widget> controllers (){
     return [
       trajetController(),
+      trajetInternationalController(),
      dateController(),
 
 

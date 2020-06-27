@@ -24,6 +24,7 @@ class homeRegister extends State<registerController>{
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'NG';
   PhoneNumber number= PhoneNumber(isoCode: 'ML');
+  String phone;
   String smsCode,verificationId;
   bool codeSent=false;
 
@@ -67,7 +68,7 @@ class homeRegister extends State<registerController>{
           InternationalPhoneNumberInput(
             initialValue: number,
             onInputChanged: (text){
-              number =text;
+              number=text;
             },
             selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
             inputDecoration: InputDecoration(
@@ -95,6 +96,9 @@ class homeRegister extends State<registerController>{
         
           FlatButton(
             onPressed: (){
+              print(number.phoneNumber.trim());
+              print(number.toString().trim());
+              print(number.phoneNumber);
               (codeSent)?handleOTP(smsCode, verificationId):handleSignWithSign(number.toString().trim());
 
 
