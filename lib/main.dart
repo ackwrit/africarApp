@@ -139,7 +139,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
               tabs: [
               Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
-                Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
+                Tab(icon:new Icon(Icons.map),child: new Text("Interational") ,),
             Tab(icon:new Icon(Icons.bookmark),child: new Text("Réservation") ,),
           ]
           ),

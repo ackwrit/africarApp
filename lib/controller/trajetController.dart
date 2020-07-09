@@ -33,7 +33,10 @@ class homeTrajet extends State<trajetController>{
     'Kayes','Kéniéba','Kidal','Kita','Koffi','Kona','Konobougou','Koulikoro','Koury','Koutiala',
     'Labbezanga','Lakamani',
     'Mbessoba','Ménaka','Mopti',
-    'Niéna',
+    'Niéna','Niono','Nioro du Sahel',
+    'San','Sandaré','Ségou','Sévaré','Sikasso',
+    'Tabakoto','Taoudénit','Ténè','Tillaberry','Tombouctou','Toukoto',
+    'Yangasso'
   ];
 
 
@@ -103,6 +106,7 @@ class homeTrajet extends State<trajetController>{
               DropdownButton <String>(
 
 
+
                   items: destination.map((String value) {
                     return DropdownMenuItem(
 
@@ -125,24 +129,6 @@ class homeTrajet extends State<trajetController>{
           ),
 
 
-          TextField(
-            controller: arrivee,
-            scrollPadding: EdgeInsets.all(10),
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20)
-              ),
-
-              fillColor: Colors.white,
-              filled: true,
-
-            ),
-            onChanged: (String prevalue){
-              setState(() {
-                arrivee.text=prevalue;
-              });
-            },
-          ),
            Padding(padding: EdgeInsets.all(10),),
            Row(
              mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -204,11 +190,11 @@ class homeTrajet extends State<trajetController>{
 
 
   swapVille(){
-    TextEditingController tempo = new TextEditingController();
+    String tempo;
     setState(() {
-      tempo =depart;
-      depart=arrivee;
-      arrivee=tempo;
+      tempo =destinationSelectionDepart;
+      destinationSelectionDepart=destinationSelectionArrivee;
+      destinationSelectionArrivee=tempo;
     });
 
 
@@ -266,9 +252,9 @@ class homeTrajet extends State<trajetController>{
                     }
                   else
                     {
-                      DateTime hour = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
+                      DateTime houre = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
                       setState(() {
-                        momentArrivee=hour;
+                        momentArrivee=houre;
                       });
 
                     }
@@ -280,7 +266,7 @@ class homeTrajet extends State<trajetController>{
           ),
         ),
       action: SnackBarAction(
-          label: '',
+          label: 'OK',
           onPressed: (){
             print('excéution');
           })
