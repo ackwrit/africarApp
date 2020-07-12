@@ -1,5 +1,6 @@
 
 import 'package:africars/model/compagnie.dart';
+import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -93,6 +94,7 @@ Future<void> signOTP(smsCode,verifId)async{
   static final base=FirebaseDatabase.instance.reference();
   final base_user=base.child("utilisateur");
   final base_compagnie=base.child('compagnie');
+  final base_trajet=base.child('trajet');
 
 
 
@@ -114,6 +116,10 @@ Future<void> signOTP(smsCode,verifId)async{
   }
 
 
+
+
+
+
   Future<utilisateur> getUser(String uid) async
   {
     DataSnapshot snapshot = await base_user.child(uid).once();
@@ -121,7 +127,15 @@ Future<void> signOTP(smsCode,verifId)async{
   }
 
 
+  addTrajet(String uid,Map map)
+  {
+    base_trajet.child(uid).set(map);
+  }
 
+  Future<trajet> getTrajet(String uid) async{
+    DataSnapshot snapshot = await base_trajet.child(uid).once();
+    return trajet(snapshot);
+  }
 
 
 }

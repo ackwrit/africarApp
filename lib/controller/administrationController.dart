@@ -60,6 +60,31 @@ class admin extends State<administrationController>{
 
 
   Widget androidConfig(){
+    return new DefaultTabController(
+        length: 3,
+        child: Scaffold(
+          appBar: AppBar(
+            title:Image.asset("assets/logo.png",height: 225,),
+            backgroundColor: Colors.black,
+            centerTitle: true,
+            bottom: TabBar
+              (
+                indicatorColor: Colors.orange,
+
+                tabs: [
+                  Tab(icon: new Icon(Icons.info),child: new Text("information")),
+                  Tab(icon:new Icon(Icons.settings),child: new Text('paramètre')),
+                  Tab(icon: new Icon(Icons.pie_chart),child: new Text('données')),
+                ]
+            ),
+
+          ),
+          backgroundColor: Colors.orange,
+          body: TabBarView(
+              children: controller()
+          ),
+        )
+    );
 
   }
 

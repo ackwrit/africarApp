@@ -1,3 +1,4 @@
+import 'package:africars/controller/listingTrajet.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
@@ -20,6 +21,7 @@ class homeInternational extends State<trajetInternationalController>{
   DateTime momentArrivee=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
+  bool retour=true;
   String destinationSelectionDepart='Choisir votre départ';
   String destinationSelectionArrivee='Choisir votre arrivée';
   List <String> destination=[
@@ -140,15 +142,30 @@ class homeInternational extends State<trajetInternationalController>{
 
             ],
           ),
-
-
-
           Padding(padding: EdgeInsets.all(10),),
+          Text('Souhaitez-vous un retour ? '),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Non'),
+              Switch.adaptive(
+                  value: retour,
+                  onChanged: (bool t){
+                    setState(() {
+                      retour =t;
+                    });
+
+                  }),
+              Text('Oui')
+
+            ],
+          ),
+          Padding(padding: EdgeInsets.all(2),),
+          (retour)?Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Text('Retour'),
-              Text(formatjour.format(momentDepart)),
+              Text(formatjour.format(momentArrivee)),
 
 
               FlatButton(
@@ -160,18 +177,27 @@ class homeInternational extends State<trajetInternationalController>{
 
 
             ],
-          ),
-          Padding(padding: EdgeInsets.all(10),),
+          ):Container(),
+
+
+
+
 
           RaisedButton(
             onPressed: (){
               //cheminement vers page selection trajet
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context)
+                  {
+                    return listingTrajet(retour: retour,);
+                  }
+              ));
 
             },
             shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             color: Colors.black,
             elevation: 5,
-            child: Text('Réservation',style: TextStyle(color: Colors.orange),),
+            child: Text('Chercher',style: TextStyle(color: Colors.orange),),
 
           )
         ],

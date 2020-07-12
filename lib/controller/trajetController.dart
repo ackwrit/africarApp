@@ -1,4 +1,5 @@
 
+import 'package:africars/controller/listingTrajet.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ class homeTrajet extends State<trajetController>{
   DateTime momentArrivee=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
+  bool retour=true;
   String destinationSelectionDepart='Choisir votre départ';
   String destinationSelectionArrivee='Choisir votre arrivée';
   List <String> destination=[
@@ -70,119 +72,142 @@ class homeTrajet extends State<trajetController>{
       padding: EdgeInsets.all(20),
 
       color: Colors.orange,
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Départ : '),
-              DropdownButton <String>(
-                  items: destination.map((String value) {
-                    return DropdownMenuItem(
-                        value: value,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Départ : '),
+                DropdownButton <String>(
+                    items: destination.map((String value) {
+                      return DropdownMenuItem(
+                          value: value,
 
-                        child: Text(value)
-                    );
-                  }).toList(),
-                  hint:Text(destinationSelectionDepart),
-                  onChanged: (newVal){
-                    setState(() {
-                      destinationSelectionDepart=newVal;
-                    });
-                  }
-              ),
-            ],
-          ),
-
-
-          Padding(padding: EdgeInsets.all(2)),
-          IconButton(icon: Icon(Icons.swap_vertical_circle),
-              onPressed: ()=>swapVille()
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Arrivée : '),
-              DropdownButton <String>(
+                          child: Text(value)
+                      );
+                    }).toList(),
+                    hint:Text(destinationSelectionDepart),
+                    onChanged: (newVal){
+                      setState(() {
+                        destinationSelectionDepart=newVal;
+                      });
+                    }
+                ),
+              ],
+            ),
 
 
-
-                  items: destination.map((String value) {
-                    return DropdownMenuItem(
+            Padding(padding: EdgeInsets.all(2)),
+            IconButton(icon: Icon(Icons.swap_vertical_circle),
+                onPressed: ()=>swapVille()
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Arrivée : '),
+                DropdownButton <String>(
 
 
 
-                        value: value,
-
-                        child: Text(value)
-                    );
-                  }).toList(),
-                  hint:Text(destinationSelectionArrivee),
-                  
-                  onChanged: (newVal){
-                    setState(() {
-                      destinationSelectionArrivee=newVal;
-                    });
-                  }
-              ),
-            ],
-          ),
-
-
-           Padding(padding: EdgeInsets.all(10),),
-           Row(
-             mainAxisAlignment: MainAxisAlignment.spaceAround,
-             children: [
-               Text('Aller'),
-               Text(formatjour.format(momentDepart)),
-
-
-               FlatButton(
-                   onPressed:()=>affichageSnackBar('depart'),
-
-                   child: Text(formatheure.format(momentDepart)),
-
-               ),
-
-
-             ],
-           ),
+                    items: destination.map((String value) {
+                      return DropdownMenuItem(
 
 
 
-          Padding(padding: EdgeInsets.all(10),),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Text('Retour'),
-              Text(formatjour.format(momentDepart)),
+                          value: value,
+
+                          child: Text(value)
+                      );
+                    }).toList(),
+                    hint:Text(destinationSelectionArrivee),
+
+                    onChanged: (newVal){
+                      setState(() {
+                        destinationSelectionArrivee=newVal;
+                      });
+                    }
+                ),
+              ],
+            ),
 
 
-              FlatButton(
-                onPressed:()=>affichageSnackBar('arrivee'),
+            Padding(padding: EdgeInsets.all(10),),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('Aller'),
+                Text(formatjour.format(momentDepart)),
 
-                child: Text(formatheure.format(momentArrivee)),
 
-              ),
+                FlatButton(
+                  onPressed:()=>affichageSnackBar('depart'),
+
+                  child: Text(formatheure.format(momentDepart)),
+
+                ),
 
 
-            ],
-          ),
-          Padding(padding: EdgeInsets.all(10),),
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(10),),
+            Text('Souhaitez-vous un retour ? '),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Non'),
+                Switch.adaptive(
+                    value: retour,
+                    onChanged: (bool t){
+                      setState(() {
+                        retour =t;
+                      });
 
-          RaisedButton(
+                    }),
+                Text('Oui')
+
+              ],
+            ),
+            Padding(padding: EdgeInsets.all(2),),
+            (retour)?Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('Retour'),
+                Text(formatjour.format(momentArrivee)),
+
+
+                FlatButton(
+                  onPressed:()=>affichageSnackBar('arrivee'),
+
+                  child: Text(formatheure.format(momentArrivee)),
+
+                ),
+
+
+              ],
+            ):Container(),
+            Padding(padding: EdgeInsets.all(5),),
+
+            RaisedButton(
               onPressed: (){
-                //cheminement vers page selection trajet
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context)
+                        {
+                          return listingTrajet(retour: retour,);
+                        }
+                ));
 
               },
-            shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            color: Colors.black,
-            elevation: 5,
-            child: Text('Réservation',style: TextStyle(color: Colors.orange),),
+              shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              color: Colors.black,
+              elevation: 5,
+              child: Text('Chercher',style: TextStyle(color: Colors.orange),),
 
-          )
-        ],
+            )
+          ],
+        ),
       ),
+
 
     );
 
@@ -276,5 +301,8 @@ class homeTrajet extends State<trajetController>{
 
 
   }
+
+
+
 
 }
