@@ -32,6 +32,7 @@ dependencies:
   calendar_strip: ^1.0.6
   intl: ^0.16.1
   flutter_time_picker_spinner: ^1.0.6+1
+  date_format: ^1.0.8
 
 
   # The following adds the Cupertino Icons font to your application.

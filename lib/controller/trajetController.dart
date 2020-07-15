@@ -280,7 +280,7 @@ class homeTrajet extends State<trajetController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                         {
-                          return listingTrajet(retour: retour,);
+                          return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,);
                         }
                 ));
 
@@ -380,7 +380,9 @@ class homeTrajet extends State<trajetController>{
       action: SnackBarAction(
           label: 'OK',
           onPressed: (){
-            print('excéution');
+            print(momentDepart);
+            String stringmoment=momentDepart.toIso8601String();
+            print(stringmoment);
           })
 
     );
