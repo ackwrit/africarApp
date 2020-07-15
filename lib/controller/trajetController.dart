@@ -23,7 +23,8 @@ class homeTrajet extends State<trajetController>{
   DateTime momentArrivee=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
-  bool retour=true;
+  int nbpassager=1;
+  bool retour=false;
   String destinationSelectionDepart='Choisir votre départ';
   String destinationSelectionArrivee='Choisir votre arrivée';
   List <String> destination=[
@@ -75,81 +76,106 @@ class homeTrajet extends State<trajetController>{
       child: SingleChildScrollView(
         child: Column(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Départ : '),
-                DropdownButton <String>(
-                    items: destination.map((String value) {
-                      return DropdownMenuItem(
-                          value: value,
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 
-                          child: Text(value)
-                      );
-                    }).toList(),
-                    hint:Text(destinationSelectionDepart),
-                    onChanged: (newVal){
-                      setState(() {
-                        destinationSelectionDepart=newVal;
-                      });
-                    }
-                ),
-              ],
+                  Text('Départ : '),
+                  DropdownButton <String>(
+                      underline: Container(
+                        height: 0,
+                      ),
+                      iconSize: 0,
+                      items: destination.map((String value) {
+                        return DropdownMenuItem(
+                            value: value,
+
+                            child: Text(value)
+                        );
+                      }).toList(),
+                      hint: Text(destinationSelectionDepart),
+                      onChanged: (newVal){
+                        setState(() {
+                          destinationSelectionDepart=newVal;
+                        });
+                      }
+                  ),
+                ],
+              ),
             ),
-
-
-            Padding(padding: EdgeInsets.all(2)),
             IconButton(icon: Icon(Icons.swap_vertical_circle),
                 onPressed: ()=>swapVille()
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text('Arrivée : '),
-                DropdownButton <String>(
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Arrivée : '),
+                  DropdownButton <String>(
+                    underline: Container(
+                      height: 0,
+                    ),
+                      iconSize: 0,
 
 
 
-                    items: destination.map((String value) {
-                      return DropdownMenuItem(
+                      items: destination.map((String value) {
+                        return DropdownMenuItem(
 
 
 
-                          value: value,
+                            value: value,
 
-                          child: Text(value)
-                      );
-                    }).toList(),
-                    hint:Text(destinationSelectionArrivee),
+                            child: Text(value)
+                        );
+                      }).toList(),
+                      hint:Text(destinationSelectionArrivee),
 
-                    onChanged: (newVal){
-                      setState(() {
-                        destinationSelectionArrivee=newVal;
-                      });
-                    }
-                ),
-              ],
+                      onChanged: (newVal){
+                        setState(() {
+                          destinationSelectionArrivee=newVal;
+                        });
+                      }
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              height: 20,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Aller'),
+                  Text(formatjour.format(momentDepart)),
+
+
+                  FlatButton(
+                    onPressed:()=>affichageSnackBar('depart'),
+
+                    child: Text(formatheure.format(momentDepart)),
+
+                  ),
+
+
+                ],
+              ),
             ),
 
-
-            Padding(padding: EdgeInsets.all(10),),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Aller'),
-                Text(formatjour.format(momentDepart)),
-
-
-                FlatButton(
-                  onPressed:()=>affichageSnackBar('depart'),
-
-                  child: Text(formatheure.format(momentDepart)),
-
-                ),
-
-
-              ],
-            ),
             Padding(padding: EdgeInsets.all(10),),
             Text('Souhaitez-vous un retour ? '),
             Row(
@@ -169,23 +195,84 @@ class homeTrajet extends State<trajetController>{
               ],
             ),
             Padding(padding: EdgeInsets.all(2),),
-            (retour)?Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Text('Retour'),
-                Text(formatjour.format(momentArrivee)),
+            Container(
+              child: (retour)?Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Text('Retour'),
+                  Text(formatjour.format(momentArrivee)),
 
 
-                FlatButton(
-                  onPressed:()=>affichageSnackBar('arrivee'),
+                  FlatButton(
+                    onPressed:()=>affichageSnackBar('arrivee'),
 
-                  child: Text(formatheure.format(momentArrivee)),
+                    child: Text(formatheure.format(momentArrivee)),
 
-                ),
+                  ),
 
 
-              ],
-            ):Container(),
+                ],
+              ):Container(),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20)
+              ),
+
+            ),
+            Container(
+              height: 20,
+            ),
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    child: (nbpassager==1)?Text('Passager : $nbpassager'):Text('Passagers : $nbpassager'),
+                  ),
+                  Container(
+                    child: Row(
+                      children: [
+
+                        IconButton(
+                            icon: Icon(Icons.remove_circle_outline),
+                            onPressed: (){
+                              setState(() {
+
+                                if(nbpassager==1)
+                                {
+                                  nbpassager=1;
+                                }
+                                else
+                                {
+                                  nbpassager=nbpassager-1;
+                                }
+                              });
+                            }
+                        ),
+                        Text('$nbpassager'),
+                        IconButton(
+                            icon: Icon(Icons.add_circle_outline),
+                            onPressed: (){
+                              //augmentation
+                              setState(() {
+                                nbpassager=nbpassager+1;
+                              });
+                            }
+                        ),
+                      ],
+                    ),
+                  ),
+
+                ],
+              ),
+
+            ),
+
+
             Padding(padding: EdgeInsets.all(5),),
 
             RaisedButton(
@@ -201,7 +288,7 @@ class homeTrajet extends State<trajetController>{
               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               color: Colors.black,
               elevation: 5,
-              child: Text('Chercher',style: TextStyle(color: Colors.orange),),
+              child: Text('Rechercher',style: TextStyle(color: Colors.orange),),
 
             )
           ],
