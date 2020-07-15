@@ -51,25 +51,30 @@ class homeListing extends State<listingTrajet>{
 
 
   Widget bodyPage(){
-    return Column(
-      children: [
-        FirebaseAnimatedList(
-            query: firebaseHelper().base_trajet,
-            defaultChild: Text("Actuellement, il n'y a aucun trajet"),
-            shrinkWrap: true,
-            itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double>animation,int index){
-              trajet trajetSelectionne = trajet(snapshot);
-              DateTime heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
-              DateTime heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
-              DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
-              DateFormat formatheure = DateFormat.Hm('fr_FR');
-              return
-                Card(
+    return Container(
+      padding: EdgeInsets.all(20),
+      child: Column(
+        children: [
+          Container(
+            height: 5,
+          ),
+          FirebaseAnimatedList(
+              query: firebaseHelper().base_trajet,
+              defaultChild: Text("Actuellement, il n'y a aucun trajet"),
+              shrinkWrap: true,
+              itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double>animation,int index){
+                trajet trajetSelectionne = trajet(snapshot);
+                DateTime heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
+                DateTime heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
+                DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
+                DateFormat formatheure = DateFormat.Hm('fr_FR');
+                return Card(
+                  elevation: 5,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   child: Column(
                     children: [
                       Padding(padding: EdgeInsets.all(8)),
-                      Text(formatjour.format(heuredepart)),
+                      Text(formatjour.format(widget.heureDepart)),
                       ListTile(
                         title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
                         trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
@@ -84,12 +89,14 @@ class homeListing extends State<listingTrajet>{
 
 
 
-            }
-        ),
+              }
+          ),
 
 
-      ],
+        ],
+      ),
     );
+      
   }
 
 }
