@@ -23,6 +23,7 @@ class homeTrajet extends State<trajetController>{
   DateTime momentArrivee=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
+  DateFormat formatmois;
   int nbpassager=1;
   bool retour=false;
   String destinationSelectionDepart='Choisir votre départ';
@@ -56,6 +57,7 @@ class homeTrajet extends State<trajetController>{
     initializeDateFormatting('fr_FR');
     formatjour= DateFormat.yMMMMd('fr_FR');
     formatheure = DateFormat.Hm('fr_FR');
+    formatmois = DateFormat.M('fr_FR');
 
 
     // TODO: implement build
@@ -327,7 +329,7 @@ class homeTrajet extends State<trajetController>{
               Text('Horaire'),
 
               CalendarStrip(
-                containerHeight: 100,
+                containerHeight: 180,
 
                   onDateSelected: (heure)
                       {
