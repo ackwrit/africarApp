@@ -9,6 +9,8 @@ class trajet{
   String heureDestination;
   String prix;
   String idCompagnie;
+  String logoCompagnie;
+  String nomCompagnie;
 
 
   trajet(DataSnapshot snapshot)
@@ -21,6 +23,8 @@ class trajet{
     heureDestination=map['heureDestination'];
     prix=map['prix'];
     idCompagnie=map['idCompagnie'];
+    logoCompagnie=map['logoCompagnie'];
+    nomCompagnie=map['nomCompagnie'];
   }
 
   Map toMap(){
@@ -32,6 +36,8 @@ class trajet{
       map['heureDestination']:heureDestination,
       map['prix']:prix,
       map['idCompagnie']:idCompagnie,
+      map['nomCompagnie']:nomCompagnie,
+      map['logoCompagnie']:logoCompagnie,
 
     };
 

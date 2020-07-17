@@ -72,6 +72,7 @@ class homeListing extends State<listingTrajet>{
             height: 5,
           ),
           FirebaseAnimatedList(
+            padding: EdgeInsets.all(10),
               query: firebaseHelper().base_trajet,
               defaultChild: Text("Actuellement, il n'y a aucun trajet"),
               shrinkWrap: true,
@@ -81,22 +82,6 @@ class homeListing extends State<listingTrajet>{
 
                 heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
                 heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
-                firebaseHelper().getCompagnie(trajetSelectionne.idCompagnie).then(
-                        (value) {
-
-                            partenaire=value;
-
-
-
-
-
-
-
-
-
-
-
-                        });
 
 
 
@@ -121,13 +106,14 @@ class homeListing extends State<listingTrajet>{
                       ListTile(
                         title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
                         trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
-                        subtitle: Text('prix'),
+                        subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
 
                       ),
                       Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Text(partenaire.nomCompagnie),
+                          Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                          Text(trajetSelectionne.nomCompagnie),
                           //Text(logoCompagnie)
 
 
