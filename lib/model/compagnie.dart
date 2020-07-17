@@ -4,6 +4,8 @@ import 'package:firebase_database/firebase_database.dart';
 class compagnie{
   String id;
   String matricule;
+  String nomCompagnie;
+  String logo;
   String adresse;
   String mail;
   String nomDirigeant;
@@ -21,6 +23,8 @@ class compagnie{
     nomDirigeant = map['nomeDirigeant'];
     prenomDirigeant = map['prenomDirigeant'];
     offre = map['offre'];
+    nomCompagnie = map['nomCompagnie'];
+    logo = map['logo'];
 
   }
 
@@ -33,7 +37,9 @@ class compagnie{
       map['mail']:mail,
       map['nomeDirigeant']:nomDirigeant,
       map['prenomDirigeant']:prenomDirigeant,
-      map['offre']:offre
+      map['offre']:offre,
+      map['nomCompagnie']:nomCompagnie,
+      map['logo']:logo
 
     };
   }

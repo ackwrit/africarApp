@@ -1,5 +1,6 @@
 import 'package:africars/fonction/conversion.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:date_format/date_format.dart';
 import 'package:firebase_database/firebase_database.dart';
@@ -32,6 +33,17 @@ class listingTrajet extends StatefulWidget{
 }
 
 class homeListing extends State<listingTrajet>{
+  compagnie partenaire;
+  String offrepartenaire,logoCompagnie;
+  String nameCompagnie;
+
+  DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
+  DateFormat formatheure = DateFormat.Hm('fr_FR');
+  DateTime heuredepart;
+  DateTime heurearrivee;
+
+
+
 
 
   @override
@@ -51,6 +63,7 @@ class homeListing extends State<listingTrajet>{
 
 
   Widget bodyPage(){
+
     return Container(
       padding: EdgeInsets.all(20),
       child: Column(
@@ -62,12 +75,42 @@ class homeListing extends State<listingTrajet>{
               query: firebaseHelper().base_trajet,
               defaultChild: Text("Actuellement, il n'y a aucun trajet"),
               shrinkWrap: true,
+
               itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double>animation,int index){
                 trajet trajetSelectionne = trajet(snapshot);
-                DateTime heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
-                DateTime heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
-                DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
-                DateFormat formatheure = DateFormat.Hm('fr_FR');
+
+                heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
+                heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
+                firebaseHelper().getCompagnie(trajetSelectionne.idCompagnie).then(
+                        (value) {
+
+                            partenaire=value;
+
+
+
+
+
+
+
+
+
+
+
+                        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
                 return Card(
                   elevation: 5,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -78,8 +121,20 @@ class homeListing extends State<listingTrajet>{
                       ListTile(
                         title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
                         trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
-                        subtitle: Text('Prix'),
+                        subtitle: Text('prix'),
 
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(partenaire.nomCompagnie),
+                          //Text(logoCompagnie)
+
+
+
+
+
+                        ],
                       ),
                     ],
                   ),
@@ -98,5 +153,9 @@ class homeListing extends State<listingTrajet>{
     );
       
   }
+
+
+
+
 
 }

@@ -320,7 +320,7 @@ class homeInternational extends State<trajetInternationalController>{
               Text('Horaire'),
 
               CalendarStrip(
-                  containerHeight: 180,
+                  containerHeight: 160,
 
                   onDateSelected: (heure)
                   {
