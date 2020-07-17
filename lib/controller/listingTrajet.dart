@@ -1,3 +1,6 @@
+
+
+import 'package:africars/controller/singleTrajetController.dart';
 import 'package:africars/fonction/conversion.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/compagnie.dart';
@@ -98,37 +101,52 @@ class homeListing extends State<listingTrajet>{
 
 
 
-                return Card(
-                  elevation: 5,
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  child: Column(
-                    children: [
-                      Padding(padding: EdgeInsets.all(8)),
-                      Text(formatjour.format(widget.heureDepart)),
-                      ListTile(
-                        title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
-                        trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
-                        subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
+                return GestureDetector(
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      children: [
+                        Padding(padding: EdgeInsets.all(8)),
+                        Text(formatjour.format(widget.heureDepart)),
+                        ListTile(
+                          title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
+                          trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
+                          subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
 
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
-                          Text(trajetSelectionne.nomCompagnie),
-                          //Text(logoCompagnie)
-
-
-
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                            Text(trajetSelectionne.nomCompagnie),
+                            //Text(logoCompagnie)
 
 
-                        ],
-                      ),
-                    ],
+
+
+
+                          ],
+                        ),
+                      ],
+                    ),
+
+
                   ),
+                  onTap: (){
+                    print('envoyer sur la page correspondante');
+                    //Trajet Aller
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context)
+                            {
+                              return singleTrajetController(retour: widget.retour,trajets: trajetSelectionne,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,);
+                            }
+                    ));
 
+                  },
 
                 );
+
 
 
 
