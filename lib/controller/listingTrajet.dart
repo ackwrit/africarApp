@@ -16,13 +16,15 @@ class listingTrajet extends StatefulWidget{
   String arrivee;
   DateTime heureDepart;
   DateTime HeureArrivee;
+  int nombrepassager;
   
-  listingTrajet({bool retour,String depart,String arrivee,DateTime heureDepart,DateTime heureArrivee}){
+  listingTrajet({bool retour,String depart,String arrivee,DateTime heureDepart,DateTime heureArrivee,int nombrepassager}){
     this.retour =retour;
     this.depart=depart;
     this.arrivee=arrivee;
     this.heureDepart=heureDepart;
     this.HeureArrivee=heureArrivee;
+    this.nombrepassager=nombrepassager;
   }
   @override
   State<StatefulWidget> createState() {

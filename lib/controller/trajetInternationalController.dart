@@ -273,7 +273,7 @@ class homeInternational extends State<trajetInternationalController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                     {
-                      return listingTrajet(retour: retour,);
+                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
                     }
                 ));
 

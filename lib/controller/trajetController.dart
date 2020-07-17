@@ -282,7 +282,7 @@ class homeTrajet extends State<trajetController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                         {
-                          return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,);
+                          return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
                         }
                 ));
 
