@@ -153,7 +153,7 @@ class homeSingle extends State<singleTrajetController>{
                          backTrajetController(retour: widget.retour,trajets: widget.voyage,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrepassager: widget.nombrepassager,)
                          :
                          //booking billet
-                         bookingController();
+                         bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrePassager: widget.nombrepassager,);
                        }
                     ));
                   }
