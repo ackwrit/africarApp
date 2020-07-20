@@ -1,23 +1,36 @@
+import 'package:africars/controller/backTrajetControllerReview.dart';
 import 'package:africars/controller/bookingController.dart';
 import 'package:africars/fonction/conversion.dart';
+import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class backTrajetController extends StatefulWidget{
   bool retour;
-  trajet voyage;
+  String depart;
+  String arrivee;
+  DateTime heureDepart;
+  DateTime HeureArrivee;
   DateTime momentDepart;
-  DateTime momentArrivee;
+  DateTime momentarrivee;
+  trajet voyageAller;
   int nombrepassager;
 
-  backTrajetController({bool retour,trajet trajets,DateTime momentDepart,DateTime momentArrivee,int nombrepassager})
+  backTrajetController({trajet trajetAller,bool retour,String depart,String arrivee,DateTime heureDepart,DateTime heureArrivee,int nombrepassager,DateTime momenDepart,DateTime momentArrivee})
   {
-    this.retour=retour;
-    this.voyage=trajets;
-    this.momentDepart=momentDepart;
-    this.momentArrivee=momentArrivee;
-    this.nombrepassager=nombrepassager;
+  this.retour =retour;
+  this.depart=depart;
+  this.arrivee=arrivee;
+  this.heureDepart=heureDepart;
+  this.HeureArrivee=heureArrivee;
+  this.nombrepassager=nombrepassager;
+  this.momentDepart=momenDepart;
+  this.momentarrivee=momentArrivee;
+  this.voyageAller=trajetAller;
 
   }
 
@@ -30,9 +43,14 @@ class backTrajetController extends StatefulWidget{
 }
 
 class homeBack extends State<backTrajetController>{
-  int bagage =0;
+  compagnie partenaire;
+  String offrepartenaire,logoCompagnie;
+  String nameCompagnie;
+
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  DateTime heuredepart;
+  DateTime heurearrivee;
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -53,121 +71,98 @@ class homeBack extends State<backTrajetController>{
 
 
   Widget bodyPage(){
-    DateTime heuredepart=conversion().stringtoDateTime(widget.voyage.heureDepart);
-    DateTime heureArrivee = conversion().stringtoDateTime(widget.voyage.heureDestination);
+
     return Container(
-      child: Text('En construction ...'),
-    );
-
-  }
-
-
-  Widget recuperer()
-  {
-    return Container(
-      width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
-      child: SingleChildScrollView(
-          child: Card(
-            elevation: 5.0,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            child: Column(
-              children: [
-                Container(
-                  height: 10,
-                ),
-                Text("${widget.voyage.depart} - ${widget.voyage.destination}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
-                Container(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Image.network(widget.voyage.logoCompagnie,height: 120,width: 120,),
-                    Text(widget.voyage.nomCompagnie)
-                  ],
-                ),
-                Text("${formatjour.format(widget.momentDepart)}",style: TextStyle(fontSize: 22),),
-                Container(height: 20,),
-                //Text('Départ :  ${formatheure.format(heuredepart)}',style: TextStyle(fontSize: 18), ),
-                Container(height: 10,),
-                //Text('Arrivée : ${formatheure.format(heureArrivee)}',style: TextStyle(fontSize: 18), ),
-                Container(height: 15,),
-                Text("Nombre de passager(s) : ${widget.nombrepassager}",style:TextStyle(fontSize: 15)),
-                Container(height: 10,),
-                Container(
-                  decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20)
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      Container(
-                        child: (bagage<=1)?Text('bagage suplémentaire : $bagage'):Text('bagages supplémentaires : $bagage'),
-                      ),
-                      Container(
-                        child: Row(
+      child: Column(
+        children: [
+          Container(
+            height: 5,
+          ),
+          FirebaseAnimatedList(
+              padding: EdgeInsets.all(10),
+              query: firebaseHelper().base_trajet,
+              defaultChild: Text("Actuellement, il n'y a aucun trajet"),
+              shrinkWrap: true,
+
+              itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double>animation,int index){
+                trajet trajetSelectionne = trajet(snapshot);
+
+                heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
+                heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                return GestureDetector(
+                  child: Card(
+                    elevation: 5,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    child: Column(
+                      children: [
+                        Padding(padding: EdgeInsets.all(8)),
+                        Text(formatjour.format(widget.momentarrivee)),
+                        ListTile(
+                          title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
+                          trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
+                          subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
+
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
+                            Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                            Text(trajetSelectionne.nomCompagnie),
+                            //Text(logoCompagnie)
 
-                            IconButton(
-                                icon: Icon(Icons.remove_circle_outline),
-                                onPressed: (){
-                                  setState(() {
 
-                                    if(bagage==0)
-                                    {
-                                      bagage=0;
-                                    }
-                                    else
-                                    {
-                                      bagage=bagage-1;
-                                    }
-                                  });
-                                }
-                            ),
-                            Text('$bagage'),
-                            IconButton(
-                                icon: Icon(Icons.add_circle_outline),
-                                onPressed: (){
-                                  //augmentation
-                                  setState(() {
-                                    bagage=bagage+1;
-                                  });
-                                }
-                            ),
+
+
+
                           ],
                         ),
-                      ),
+                      ],
+                    ),
 
-                    ],
+
                   ),
+                  onTap: (){
+                    print('envoyer sur la page correspondante');
+                    //Trajet Aller
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context)
+                        {
+                          return backTrajetControllerReview(retour: widget.retour,trajetsRetour: trajetSelectionne,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
+                        }
+                    ));
 
-                ),
-                Text('Prix ${widget.voyage.prix} cfa'),
-                Container(height: 10,),
-                RaisedButton(
-                    color: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    child: Text('Valider',style:TextStyle(color: Colors.orange),),
-                    onPressed: (){
+                  },
 
-                      //déterminer choix si voyage de retour
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (BuildContext context){
-                            return bookingController();
-                          }
-                      ));
-                    }
-                ),
+                );
 
-              ],
 
-            ),
-          )
 
-      ) ,
+
+              }
+          ),
+
+
+        ],
+      ),
     );
+
   }
+
+
 
 }

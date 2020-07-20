@@ -150,7 +150,7 @@ class homeSingle extends State<singleTrajetController>{
                        builder: (BuildContext context){
                          return (widget.retour)?
                              //backsignleController
-                         backTrajetController(retour: widget.retour,trajets: widget.voyage,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrepassager: widget.nombrepassager,)
+                         backTrajetController(trajetAller:widget.voyage,retour: widget.retour,depart: widget.voyage.depart,arrivee: widget.voyage.destination,heureArrivee: widget.momentArrivee,heureDepart: widget.momentDepart,nombrepassager: widget.nombrepassager,momenDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,)
                          :
                          //booking billet
                          bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrePassager: widget.nombrepassager,);
