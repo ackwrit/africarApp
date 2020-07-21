@@ -71,6 +71,10 @@ PODS:
     - FirebaseCore (~> 6.6)
     - GTMSessionFetcher/Core (~> 1.1)
   - Flutter (1.0.0)
+  - flutter_checkout_payment (0.0.1):
+    - Flutter
+    - Frames (~> 3.0)
+  - Frames (3.0.4)
   - GoogleAppMeasurement (6.3.1):
     - GoogleUtilities/AppDelegateSwizzler (~> 6.0)
     - GoogleUtilities/MethodSwizzler (~> 6.0)
@@ -121,6 +125,7 @@ DEPENDENCIES:
   - firebase_database (from `.symlinks/plugins/firebase_database/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_checkout_payment (from `.symlinks/plugins/flutter_checkout_payment/ios`)
   - libphonenumber (from `.symlinks/plugins/libphonenumber/ios`)
 
 SPEC REPOS:
@@ -135,6 +140,7 @@ SPEC REPOS:
     - FirebaseDatabase
     - FirebaseInstallations
     - FirebaseStorage
+    - Frames
     - GoogleAppMeasurement
     - GoogleDataTransport
     - GoogleDataTransportCCTSupport
@@ -160,6 +166,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_checkout_payment:
+    :path: ".symlinks/plugins/flutter_checkout_payment/ios"
   libphonenumber:
     :path: ".symlinks/plugins/libphonenumber/ios"
 
@@ -181,6 +189,8 @@ SPEC CHECKSUMS:
   FirebaseInstallations: 575cd32f2aec0feeb0e44f5d0110a09e5e60b47b
   FirebaseStorage: f4f39ae834a7145963b913f54e2f24a9db1d8fac
   Flutter: 0e3d915762c693b495b44d77113d4970485de6ec
+  flutter_checkout_payment: 39c97c1ba8ee6f1c5784230722e524f7c60546f8
+  Frames: 3c5131144b0648ee5a6ec463ef8f25372acb18aa
   GoogleAppMeasurement: c29d405ff76e18551b5d158eaba6753fda8c7542
   GoogleDataTransport: a857c6a002d201b524dd4bc2ed7e7355ed07e785
   GoogleDataTransportCCTSupport: 32f75fbe904c82772fcbb6b6bd4525bfb6f2a862

@@ -54,16 +54,6 @@ class homeRegister extends State<registerController>{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          FlatButton(
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return registerProController();
-                    }
-                ));
-              },
-              child: Text('Professionnel')
-          ),
           Padding(padding: EdgeInsets.all(10)),
           InternationalPhoneNumberInput(
             initialValue: number,

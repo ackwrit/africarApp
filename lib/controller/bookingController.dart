@@ -1,3 +1,5 @@
+import 'package:africars/controller/paymentController.dart';
+import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/conversion.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:flutter/material.dart';
@@ -174,11 +176,17 @@ class homeBooking extends State<bookingController>{
                 :Container(),
             RaisedButton(onPressed: (){
               //partie paiement
-              print('page paiement');
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context)
+                      {
+                        return reservationController();
+                      }
+              ));
+
 
             },
               elevation: 10,
-              child: Text('ok',style: TextStyle(color: Colors.orange),),
+              child: Text('Réservation',style: TextStyle(color: Colors.orange),),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               color: Colors.black,
             )

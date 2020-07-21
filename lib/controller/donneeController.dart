@@ -98,6 +98,7 @@ class homeData extends State<donneeController>{
                       showAvg = !showAvg;
                     });
                   },
+                  child: Text(''),
 
                 ),
               ),
