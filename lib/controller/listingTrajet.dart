@@ -135,6 +135,7 @@ class homeListing extends State<listingTrajet>{
                   ),
                   onTap: (){
                     print('envoyer sur la page correspondante');
+                    print(widget.retour);
                     //Trajet Aller
                     Navigator.push(context, MaterialPageRoute(
                         builder: (BuildContext context)

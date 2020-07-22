@@ -20,7 +20,7 @@ class billet{
   String nbPassager;
   String nomPassager;
   String prenomPassager;
-  bool provisoire;
+  bool  validate;
 
 
 
@@ -44,7 +44,7 @@ class billet{
     qrCodeAller=map['qrCodeAller'];
     qrCodeRetour=map['qrCodeRetour'];
     billetretour=map['billetRetour'];
-    provisoire=map['provisoire'];
+    validate=map['validate'];
     jourAller=map['jourAller'];
     jourRetour=map['jourRetour'];
 
@@ -69,7 +69,7 @@ class billet{
     map['qrCodeAller']:qrCodeAller,
     map['qrCodeRetour']:qrCodeRetour,
       map['billerRetour']:billetretour,
-      map['provisoire']:provisoire,
+      map['validate']:validate,
       map['jourAller']:jourAller,
       map['jourRetour']:jourRetour,
 
