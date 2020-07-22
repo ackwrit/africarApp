@@ -1,4 +1,5 @@
 
+import 'package:africars/model/billet.dart';
 import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
@@ -95,6 +96,7 @@ Future<void> signOTP(smsCode,verifId)async{
   final base_user=base.child("utilisateur");
   final base_compagnie=base.child('compagnie');
   final base_trajet=base.child('trajet');
+  final base_billet=base.child('billet');
 
 
 
@@ -108,6 +110,18 @@ Future<void> signOTP(smsCode,verifId)async{
   addCompagnie(String uid,Map map)
   {
     base_compagnie.child(uid).set(map);
+  }
+
+  addBillet(String uid,Map map)
+  {
+    base_billet.child(uid).set(map);
+  }
+
+
+
+  Future<billet> getBillet(String uid) async{
+    DataSnapshot snapshot = await base_compagnie.child(uid).once();
+    return billet(snapshot);
   }
 
   Future<compagnie> getCompagnie(String uid) async{

@@ -1,3 +1,4 @@
+import 'package:africars/controller/infoPersoBilletController.dart';
 import 'package:africars/controller/paymentController.dart';
 import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/conversion.dart';
@@ -42,7 +43,7 @@ class homeBooking extends State<bookingController>{
   String generateQRCode=randomAlphaNumeric(20);
   String generateQRCodeRetour=randomAlphaNumeric(20);
   String refBillet=randomAlphaNumeric(13);
-  String refBilletRetour=randomAlphaNumeric(13);
+
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   @override
@@ -127,7 +128,7 @@ class homeBooking extends State<bookingController>{
                   Container(height: 10,),
                   (widget.retour==true)?Text("Retour"):Text("Aller simple"),
                   Container(height: 10,),
-                  Text("Référence du billet : $refBilletRetour"),
+                  Text("Référence du billet : $refBillet"),
                   Container(height: 10,),
                   Text(formatjour.format(widget.momentArrivee)),
                   Container(height: 10,),
@@ -179,7 +180,17 @@ class homeBooking extends State<bookingController>{
               Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context)
                       {
-                        return reservationController();
+                        return infoPersoBilletController(
+                          aller: widget.voyageAller,
+                          retour: widget.voyageRetour,
+                          qrCodeAller: generateQRCode,
+                          qrCodeRetour: generateQRCodeRetour,
+                          refBillet: refBillet,
+                          nombrePassager: widget.nombrePassager,
+                          billetRetour: widget.retour,
+                          jourDepart: widget.momentDepart,
+                          jourRetour: widget.momentArrivee,
+                        );
                       }
               ));
 
