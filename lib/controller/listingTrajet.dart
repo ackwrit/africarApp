@@ -87,66 +87,74 @@ class homeListing extends State<listingTrajet>{
 
                 heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
                 heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                return GestureDetector(
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      children: [
-                        Padding(padding: EdgeInsets.all(8)),
-                        Text(formatjour.format(widget.heureDepart)),
-                        ListTile(
-                          title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
-                          trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
-                          subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
-
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                if(trajetSelectionne.depart==widget.depart && trajetSelectionne.destination==widget.arrivee)
+                  {
+                    return GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        child: Column(
                           children: [
-                            Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
-                            Text(trajetSelectionne.nomCompagnie),
-                            //Text(logoCompagnie)
+                            Padding(padding: EdgeInsets.all(8)),
+                            Text(formatjour.format(widget.heureDepart)),
+                            ListTile(
+                              title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
+                              trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
+                              subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
+
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                                Text(trajetSelectionne.nomCompagnie),
+                                //Text(logoCompagnie)
 
 
 
 
 
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
 
 
-                  ),
-                  onTap: (){
-                    print('envoyer sur la page correspondante');
-                    print(widget.retour);
-                    //Trajet Aller
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context)
+                      ),
+                      onTap: (){
+                        print('envoyer sur la page correspondante');
+                        print(widget.retour);
+                        //Trajet Aller
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (BuildContext context)
                             {
                               return singleTrajetController(retour: widget.retour,trajets: trajetSelectionne,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,);
                             }
-                    ));
+                        ));
 
-                  },
+                      },
 
-                );
+                    );
+                  }
+                else
+                  {
+                    return Container();
+                  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

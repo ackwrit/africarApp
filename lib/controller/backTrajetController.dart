@@ -90,65 +90,73 @@ class homeBack extends State<backTrajetController>{
 
                 heurearrivee= conversion().stringtoDateTime(trajetSelectionne.heureDestination);
                 heuredepart =conversion().stringtoDateTime(trajetSelectionne.heureDepart);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-                return GestureDetector(
-                  child: Card(
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                    child: Column(
-                      children: [
-                        Padding(padding: EdgeInsets.all(8)),
-                        Text(formatjour.format(widget.momentarrivee)),
-                        ListTile(
-                          title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
-                          trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
-                          subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
-
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                if(trajetSelectionne.depart==widget.arrivee && trajetSelectionne.destination==widget.depart)
+                  {
+                    return GestureDetector(
+                      child: Card(
+                        elevation: 5,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                        child: Column(
                           children: [
-                            Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
-                            Text(trajetSelectionne.nomCompagnie),
-                            //Text(logoCompagnie)
+                            Padding(padding: EdgeInsets.all(8)),
+                            Text(formatjour.format(widget.momentarrivee)),
+                            ListTile(
+                              title: Text("${trajetSelectionne.destination} - ${trajetSelectionne.depart}",textAlign: TextAlign.start,),
+                              trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
+                              subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
+
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              children: [
+                                Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                                Text(trajetSelectionne.nomCompagnie),
+                                //Text(logoCompagnie)
 
 
 
 
 
+                              ],
+                            ),
                           ],
                         ),
-                      ],
-                    ),
 
 
-                  ),
-                  onTap: (){
-                    print('envoyer sur la page correspondante');
-                    //Trajet Aller
-                    Navigator.push(context, MaterialPageRoute(
-                        builder: (BuildContext context)
-                        {
-                          return backTrajetControllerReview(retour: widget.retour,trajetsRetour: trajetSelectionne,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
-                        }
-                    ));
+                      ),
+                      onTap: (){
+                        print('envoyer sur la page correspondante');
+                        //Trajet Aller
+                        Navigator.push(context, MaterialPageRoute(
+                            builder: (BuildContext context)
+                            {
+                              return backTrajetControllerReview(retour: widget.retour,trajetsRetour: trajetSelectionne,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
+                            }
+                        ));
 
-                  },
+                      },
 
-                );
+                    );
+                  }
+                else
+                  {
+                    return Container();
+                  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
