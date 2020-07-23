@@ -31,7 +31,7 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:198233373524:ios:7d9d0b57f37b4f3c0866c1</string>
+	<string>1:198233373524:ios:ae7bb593ce853d470866c1</string>
 	<key>DATABASE_URL</key>
 	<string>https://afri-car.firebaseio.com</string>
 </dict>

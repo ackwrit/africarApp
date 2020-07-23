@@ -1,6 +1,7 @@
 
 
 import 'package:africars/controller/administrationController.dart';
+import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/registerProController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -94,7 +95,7 @@ class homeRegister extends State<registerController>{
 
                 //firebaseHelper().handleSignPhone(number.toString());
             },
-            child: Text('Validation')
+            child: (codeSent)?Text('Enregister'):Text('Validation')
               
 
           ),
@@ -169,6 +170,11 @@ Future <void> handleOTP(smsCode,verifId) async{
 
   };
   firebaseHelper().addUser(uid, map);
+  Navigator.push(context, MaterialPageRoute(
+      builder: (BuildContext context){
+        return listingTrajet();
+      }
+  ));
 }
 
 }
