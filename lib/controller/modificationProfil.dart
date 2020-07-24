@@ -186,7 +186,6 @@ class homeSettingsProfil extends State<modificationProfil> {
             RaisedButton(
               child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
               onPressed: (){
-                print('Enregistrement');
                 Map map ={
                   'prenom':profil.prenom,
                   'id':identifiant,
@@ -208,6 +207,18 @@ class homeSettingsProfil extends State<modificationProfil> {
               color: Colors.black,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             ),
+            RaisedButton(
+                onPressed: (){
+                 Navigator.push(context, MaterialPageRoute(
+                     builder: (BuildContext context){
+                       return settingsProfilController();
+                     }
+                 ));
+                },
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              child: Text('Retour',style: TextStyle(color: Colors.orange),),
+              color: Colors.black,
+            )
 
             //Portemonnaie virtuel
 
@@ -229,17 +240,12 @@ class homeSettingsProfil extends State<modificationProfil> {
       type: FileType.image,
     );
 
-    urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil);
-    Map map ={
-      'prenom':profil.prenom,
-      'id':identifiant,
-      'nom':profil.nom,
-      'image':urlImage,
-      'login':profil.pseudo,
-
-
-    };
+    urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(identifiant));
+    Map map=profil.toMap();
+    map['image']=urlImage;
     firebaseHelper().addUser(identifiant, map);
+
+
 
 
 

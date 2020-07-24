@@ -58,25 +58,19 @@ class homeReserve extends State<reservationController>{
           SizedBox(height: 10,),
           (paiementBoutique==true)?Text("Merci d'effectuer le paiement 1h avant le départ de votre voyage en agence"):Container(),
           SizedBox(height: 10,),
-          RaisedButton(
-            color: Colors.black,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            onPressed: (){
-              setState(() {
-                paiementPro=!paiementPro;
-                //enregristrement passé de donnée rappel
-                print('Enregistrement base de donnée rappel');
-              });
 
-            },
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(Icons.phone,color: Colors.orange,),
-                Text(' Être Rappeller',style: TextStyle(color: Colors.orange),)
-              ],
-            )
-          ),
+          RaisedButton.icon(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            color: Colors.black,
+              onPressed: (){
+                setState(() {
+                  paiementPro=!paiementPro;
+
+                });
+
+              },
+              icon: Icon(Icons.phone,color: Colors.orange,),
+              label: Text('Être rappeller',style: TextStyle(color: Colors.orange),)),
           SizedBox(height: 10,),
           (paiementPro)? Column(
             mainAxisAlignment: MainAxisAlignment.start,

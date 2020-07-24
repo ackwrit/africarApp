@@ -32,15 +32,15 @@ class utilisateur{
   {
     Map map;
     return map ={
-      map['nom']:nom,
-      map['prenom']:prenom,
-      map['id']:id,
-      map['compagnie']:compagnie,
-      map['telephone']:telephone,
-      map['image']:image,
-      map['typeUtilisateur']:type_utilisateur,
-      map['login']:pseudo,
-      map['mail']:mail,
+      'nom':nom,
+      'prenom':prenom,
+      'id':id,
+      'compagnie':compagnie,
+      'telephone':telephone,
+      'image':image,
+      'typeUtilisateur':type_utilisateur,
+      'login':pseudo,
+      'mail':mail,
     };
   }
 }
