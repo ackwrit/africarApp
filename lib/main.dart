@@ -1,4 +1,5 @@
 import 'package:africars/controller/dateController.dart';
+import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
@@ -85,12 +86,12 @@ class _MyHomePageState extends State<MyHomePage> {
           return new Scaffold(
             appBar: new AppBar(
               actions: [
-                IconButton(icon:Icon(Icons.account_circle), onPressed:()
+                IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
                 {
                   Navigator.push(context, MaterialPageRoute(
                       builder: (BuildContext context)
                       {
-                        return registerController();
+                        return profilController();
                       }
                   ));
 
@@ -119,12 +120,12 @@ class _MyHomePageState extends State<MyHomePage> {
           title:Image.asset("assets/logo.png",height: 225,),
           backgroundColor: Colors.black,
           actions: [
-            IconButton(icon:Icon(Icons.account_circle), onPressed:()
+            IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
             {
               Navigator.push(context, MaterialPageRoute(
                   builder: (BuildContext context)
                   {
-                    return registerController();
+                    return profilController();
                   }
               ));
 

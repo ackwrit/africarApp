@@ -1,15 +1,20 @@
 
+import 'dart:io';
+
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:random_string/random_string.dart';
 
 class firebaseHelper{
 //authetification
 final auth = FirebaseAuth.instance;
 String verificationId;
+String generate=randomAlphaNumeric(20);
 
 
 
@@ -98,6 +103,13 @@ Future<void> signOTP(smsCode,verifId)async{
   final base_trajet=base.child('trajet');
   final base_billet=base.child('billet');
 
+  //storage
+
+
+
+  static final base_storage = FirebaseStorage.instance.ref();
+  final StorageReference storage_profil = base_storage.child('photoprofil');
+
 
 
 
@@ -115,6 +127,23 @@ Future<void> signOTP(smsCode,verifId)async{
   addBillet(String uid,Map map)
   {
     base_billet.child(uid).set(map);
+  }
+
+
+
+  Future<String> myId() async{
+    FirebaseUser user = await auth.currentUser();
+    return user.uid;
+
+
+  }
+
+
+  Future <String> savePicture(File file,StorageReference storageReference) async{
+    StorageUploadTask storageUploadTask = storageReference.putFile(file);
+    StorageTaskSnapshot snapshot = await storageUploadTask.onComplete;
+    String url = await snapshot.ref.getDownloadURL();
+    return url;
   }
 
 

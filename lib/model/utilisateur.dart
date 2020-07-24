@@ -9,6 +9,8 @@ class utilisateur{
   String telephone;
   String image;
   String type_utilisateur;
+  String pseudo;
+  String mail;
 
 
   utilisateur(DataSnapshot snapshot)
@@ -19,8 +21,10 @@ class utilisateur{
     prenom = map['prenom'];
     compagnie =map['compagnie'];
     telephone =map['telephone'];
+    pseudo= map['login'];
     image =map['image'];
-    type_utilisateur =map['type_utilisateur'];
+    mail=map['mail'];
+    type_utilisateur =map['typeUtilisateur'];
   }
 
 
@@ -34,7 +38,9 @@ class utilisateur{
       map['compagnie']:compagnie,
       map['telephone']:telephone,
       map['image']:image,
-      map['type_utilisateur']:type_utilisateur,
+      map['typeUtilisateur']:type_utilisateur,
+      map['login']:pseudo,
+      map['mail']:mail,
     };
   }
 }

@@ -3,6 +3,8 @@
 import 'package:africars/controller/administrationController.dart';
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/registerProController.dart';
+import 'package:africars/controller/profilController.dart';
+import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -166,13 +168,14 @@ Future <void> handleOTP(smsCode,verifId) async{
     'prenom':'',
     'nom':'',
     'mail':'',
-    'typeUtilisateur':''
+    'typeUtilisateur':'particulier',
+
 
   };
   firebaseHelper().addUser(uid, map);
   Navigator.push(context, MaterialPageRoute(
       builder: (BuildContext context){
-        return listingTrajet();
+        return settingsProfilController();
       }
   ));
 }
