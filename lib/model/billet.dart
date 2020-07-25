@@ -1,5 +1,7 @@
 
+import 'package:africars/fonction/conversion.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'dart:convert';
 
 class billet{
   String id;
@@ -7,29 +9,34 @@ class billet{
   DateTime emission;
   DateTime jourAller;
   DateTime jourRetour;
-  DateTime departAller;
-  DateTime retourAller;
-  DateTime retourRetour;
-  DateTime departRetour;
+  String departAller;
+  String retourAller;
+  String retourRetour;
+  String departRetour;
   String logoCompagnieAller;
   String logoCompagnieRetour;
   String lieuDepart;
   String lieuArrivee;
   String qrCodeAller;
   String qrCodeRetour;
-  String nbPassager;
+  int nbPassager;
   String nomPassager;
   String prenomPassager;
   bool  validate;
+  String idVoyageur;
+  String vide;
+
 
 
 
   billet(DataSnapshot snapshot)
   {
+
+
     id=snapshot.key;
     Map map = snapshot.value;
     //Convertir  les informations en DateTime
-    emission = map['emission'];
+    emission = conversion().stringtoDateTime(map['emission']);
     departAller=map['departAller'];
     retourAller=map['retourAller'];
     departRetour=map['departRetour'];
@@ -38,15 +45,16 @@ class billet{
     logoCompagnieRetour=map['logoCompagnieRetour'];
     lieuDepart = map['lieuDepart'];
     lieuArrivee = map['lieuArrivee'];
-    nbPassager = map['nbPassager'];
+    nbPassager =map['nbPassager'];
     nomPassager = map['nomPassager'];
     prenomPassager = map['prenomPassager'];
     qrCodeAller=map['qrCodeAller'];
     qrCodeRetour=map['qrCodeRetour'];
     billetretour=map['billetRetour'];
     validate=map['validate'];
-    jourAller=map['jourAller'];
-    jourRetour=map['jourRetour'];
+    jourAller=conversion().stringtoDateTime(map['jourAller']);
+    (billetretour==true)?jourRetour=conversion().stringtoDateTime(map['jourRetour']):vide='';
+    idVoyageur=map['idVoyageur'];
 
   }
 
@@ -72,6 +80,7 @@ class billet{
       map['validate']:validate,
       map['jourAller']:jourAller,
       map['jourRetour']:jourRetour,
+      map['idVoyageur']:idVoyageur,
 
     };
   }
