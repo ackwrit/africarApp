@@ -1,4 +1,5 @@
 
+import 'package:africars/controller/detailDateController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/utilisateur.dart';
@@ -50,21 +51,36 @@ class homeDate extends State<dateController>{
       color: Colors.orange,
       child: FirebaseAnimatedList(
           query: firebaseHelper().base_billet,
-          defaultChild: Text("Il n'y a aucun voyage effectué"),
+          defaultChild: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Il n' y a aucun achat effectué")
+            ],
+          ),
           itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double> animation,int index){
             billet ticket= billet(snapshot);
-
+            if(ticket.idVoyageur==identifiant && ticket.validate==true)
+              {
                 return Card(
                   child: ListTile(
                     leading: Text("${formatjour.format(ticket.jourAller)}"),
                     title: Text("${ticket.lieuDepart}-${ticket.lieuArrivee}"),
                     trailing: Text("${formatheure.format(ticket.jourAller)}"),
                     onTap: (){
-                      print('Détail du billet');
+                      Navigator.push(context, MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return detailDateController(ticket: ticket,);
+                          }
+                      ));
+
                     },
                   ),
 
                 );
+              }
+
+
+
 
 
           }
