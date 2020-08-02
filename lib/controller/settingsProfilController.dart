@@ -122,7 +122,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
                 ),
               ),
           Padding(padding: EdgeInsets.all(5),),
-          Text(profil.pseudo),
+          //Text(profil.pseudo),
           Padding(padding: EdgeInsets.all(5),),
           Text(profil.nom),
           Padding(padding: EdgeInsets.all(5),),

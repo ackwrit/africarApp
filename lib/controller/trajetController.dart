@@ -74,7 +74,7 @@ class homeTrajet extends State<trajetController>{
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
 
-      color: Colors.orange,
+      color:Colors.orangeAccent,
       child: SingleChildScrollView(
         child: Column(
           children: [
@@ -291,7 +291,7 @@ class homeTrajet extends State<trajetController>{
               shape:RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               color: Colors.black,
               elevation: 5,
-              child: Text('Rechercher',style: TextStyle(color: Colors.orange),),
+              child: Text('Rechercher',style:TextStyle(color:Colors.white)),
 
             )
           ],

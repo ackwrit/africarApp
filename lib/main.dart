@@ -67,7 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return new CupertinoTabScaffold(
         tabBar: new CupertinoTabBar(
             backgroundColor: Colors.black,
-            activeColor: Colors.orange,
+            activeColor: Colors.orangeAccent,
             inactiveColor: Colors.white,
             items:[
               new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),

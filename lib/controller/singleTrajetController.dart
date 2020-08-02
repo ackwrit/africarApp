@@ -45,7 +45,7 @@ class homeSingle extends State<singleTrajetController>{
       centerTitle: true,
 
     ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );
@@ -83,8 +83,8 @@ class homeSingle extends State<singleTrajetController>{
               Text("${formatjour.format(widget.momentDepart)}",style: TextStyle(fontSize: 22),),
               Container(height: 20,),
               Text('Départ :  ${formatheure.format(heuredepart)}',style: TextStyle(fontSize: 18), ),
-              Container(height: 10,),
-              Text('Arrivée : ${formatheure.format(heureArrivee)}',style: TextStyle(fontSize: 18), ),
+             // Container(height: 10,),
+             // Text('Arrivée : ${formatheure.format(heureArrivee)}',style: TextStyle(fontSize: 18), ),
               Container(height: 15,),
               Text("Nombre de passager(s) : ${widget.nombrepassager}",style:TextStyle(fontSize: 15)),
               Container(height: 10,),
@@ -142,7 +142,7 @@ class homeSingle extends State<singleTrajetController>{
               RaisedButton(
                 color: Colors.black,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                  child: Text('Valider',style:TextStyle(color: Colors.orange),),
+                  child: Text('Valider',style:TextStyle(color: Colors.white),),
                   onPressed: (){
                   print(widget.retour);
                   
@@ -154,7 +154,7 @@ class homeSingle extends State<singleTrajetController>{
                          backTrajetController(trajetAller:widget.voyage,retour: widget.retour,depart: widget.voyage.depart,arrivee: widget.voyage.destination,heureArrivee: widget.momentArrivee,heureDepart: widget.momentDepart,nombrepassager: widget.nombrepassager,momenDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,)
                          :
                          //booking billet
-                         bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrePassager: widget.nombrepassager,);
+                         bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: heuredepart,momentArrivee: heureArrivee,nombrePassager: widget.nombrepassager,);
                        }
                     ));
                   }

@@ -2,7 +2,9 @@ import 'package:africars/controller/infoPersoBilletController.dart';
 import 'package:africars/controller/paymentController.dart';
 import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/conversion.dart';
+import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/trajet.dart';
+import 'package:africars/model/utilisateur.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -43,9 +45,17 @@ class homeBooking extends State<bookingController>{
   String generateQRCode=randomAlphaNumeric(20);
   String generateQRCodeRetour=randomAlphaNumeric(20);
   String refBillet=randomAlphaNumeric(13);
+  utilisateur profil;
+  String identifiant;
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  @override
+  void initState() {
+    // TODO: implement initState
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -56,7 +66,7 @@ class homeBooking extends State<bookingController>{
         backgroundColor: Colors.black,
 
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
@@ -199,7 +209,7 @@ class homeBooking extends State<bookingController>{
 
             },
               elevation: 10,
-              child: Text('Réservation',style: TextStyle(color: Colors.orange),),
+              child: Text('Réservation',style: TextStyle(color: Colors.white),),
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               color: Colors.black,
             )

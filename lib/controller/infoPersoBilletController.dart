@@ -74,7 +74,7 @@ class homeInfoPerso extends State<infoPersoBilletController>{
         backgroundColor: Colors.black,
 
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
@@ -158,7 +158,7 @@ class homeInfoPerso extends State<infoPersoBilletController>{
                     }
                 ));
               },
-            child: Text('Paiement',style: TextStyle(color: Colors.orange),),
+            child: Text('Paiement',style: TextStyle(color: Colors.white),),
           )
 
         ],

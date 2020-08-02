@@ -33,7 +33,7 @@ class homeReserve extends State<reservationController>{
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
@@ -44,7 +44,7 @@ class homeReserve extends State<reservationController>{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          RaisedButton(
+         /* RaisedButton(
             color: Colors.black,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               onPressed: (){
@@ -54,7 +54,15 @@ class homeReserve extends State<reservationController>{
 
               },
             child: Text('Paiement en agence',style: TextStyle(color: Colors.orange),),
+          ),*/
+         //Orange money
+          GestureDetector(
+            child: Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+            onTap: (){
+              print('afficher orange money');
+            },
           ),
+
           SizedBox(height: 10,),
           (paiementBoutique==true)?Text("Merci d'effectuer le paiement 1h avant le départ de votre voyage en agence"):Container(),
           SizedBox(height: 10,),
@@ -70,7 +78,7 @@ class homeReserve extends State<reservationController>{
 
               },
               icon: Icon(Icons.phone,color: Colors.orange,),
-              label: Text('Être rappeller',style: TextStyle(color: Colors.orange),)),
+              label: Text('Être rappeller',style: TextStyle(color: Colors.white),)),
           SizedBox(height: 10,),
           (paiementPro)? Column(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -101,7 +109,7 @@ class homeReserve extends State<reservationController>{
             ],
           ) :Container(),
           SizedBox(height: 20,),
-          RaisedButton(
+         /* RaisedButton(
             color: Colors.black,
             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
             onPressed: (){
@@ -113,7 +121,7 @@ class homeReserve extends State<reservationController>{
               ));
             },
             child: Text('Paiement en ligne',style: TextStyle(color: Colors.orange),),
-          ),
+          ),*/
           SizedBox(height: 10,),
 
         ],

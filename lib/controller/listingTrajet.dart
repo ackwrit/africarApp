@@ -61,7 +61,7 @@ class homeListing extends State<listingTrajet>{
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
@@ -69,18 +69,11 @@ class homeListing extends State<listingTrajet>{
 
   Widget bodyPage(){
 
-    return Container(
-      padding: EdgeInsets.all(20),
-      child: Column(
-        children: [
-          Container(
-            height: 5,
-          ),
-          FirebaseAnimatedList(
+    return FirebaseAnimatedList(
             padding: EdgeInsets.all(10),
               query: firebaseHelper().base_trajet,
               defaultChild: Text("Actuellement, il n'y a aucun trajet"),
-              shrinkWrap: true,
+
 
               itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double>animation,int index){
                 trajet trajetSelectionne = trajet(snapshot);
@@ -95,18 +88,18 @@ class homeListing extends State<listingTrajet>{
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                         child: Column(
                           children: [
-                            Padding(padding: EdgeInsets.all(8)),
+                            Padding(padding: EdgeInsets.all(2)),
                             Text(formatjour.format(widget.heureDepart)),
                             ListTile(
                               title: Text("${trajetSelectionne.depart} - ${trajetSelectionne.destination}",textAlign: TextAlign.start,),
-                              trailing: Text("${formatheure.format(heuredepart) }- ${formatheure.format(heurearrivee)}"),
+                              trailing: Text("${formatheure.format(heuredepart)}"),
                               subtitle: Text('prix : ${trajetSelectionne.prix} cfa'),
 
                             ),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Image.network(trajetSelectionne.logoCompagnie,height: 100,width: 100,),
+                                Image.network(trajetSelectionne.logoCompagnie,height: 80,width: 80,),
                                 Text(trajetSelectionne.nomCompagnie),
                                 //Text(logoCompagnie)
 
@@ -160,12 +153,11 @@ class homeListing extends State<listingTrajet>{
 
 
               }
-          ),
+          );
 
 
-        ],
-      ),
-    );
+
+
       
   }
 

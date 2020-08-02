@@ -192,6 +192,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                   'nom':profil.nom,
                   'image':urlImage,
                   'login':profil.pseudo,
+                  'typeUtilisateur':profil.type_utilisateur
 
 
                 };
