@@ -49,7 +49,7 @@ class admin extends State<administrationController>{
               backgroundColor: Colors.black,
 
             ),
-            backgroundColor: Colors.orange,
+            backgroundColor: Colors.orangeAccent,
             body: controllerSelected,
           );
         }
@@ -69,7 +69,7 @@ class admin extends State<administrationController>{
             centerTitle: true,
             bottom: TabBar
               (
-                indicatorColor: Colors.orange,
+                indicatorColor: Colors.orangeAccent,
 
                 tabs: [
                   Tab(icon: new Icon(Icons.info),child: new Text("information")),
@@ -79,7 +79,7 @@ class admin extends State<administrationController>{
             ),
 
           ),
-          backgroundColor: Colors.orange,
+          backgroundColor: Colors.orangeAccent,
           body: TabBarView(
               children: controller()
           ),

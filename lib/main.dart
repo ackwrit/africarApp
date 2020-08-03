@@ -1,8 +1,11 @@
 import 'package:africars/controller/dateController.dart';
+import 'package:africars/controller/principalController.dart';
 import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -22,9 +25,27 @@ class MyApp extends StatelessWidget {
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: MyHomePage(title: ''),
+      home: authentification(),
       debugShowCheckedModeBanner: false,
     );
+  }
+
+
+  Widget authentification(){
+    return StreamBuilder<FirebaseUser>(
+        stream: FirebaseAuth.instance.onAuthStateChanged,
+        builder: (BuildContext context,snapshot){
+          if(snapshot.hasData){
+            return principalController();
+          }
+          else
+          {
+            return profilController();
+          }
+
+        }
+    );
+
   }
 }
 
@@ -59,6 +80,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   }
+
+
+
 
 
 

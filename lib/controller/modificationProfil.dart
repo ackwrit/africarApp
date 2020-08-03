@@ -73,7 +73,7 @@ class homeSettingsProfil extends State<modificationProfil> {
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );
@@ -135,7 +135,7 @@ class homeSettingsProfil extends State<modificationProfil> {
               child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
             ),
             Padding(padding: EdgeInsets.all(5),),
-            TextField(
+            /*TextField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
@@ -150,7 +150,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                 });
               },
             ),
-            Padding(padding: EdgeInsets.all(5),),
+            Padding(padding: EdgeInsets.all(5),),*/
             TextField(
               decoration: InputDecoration(
                 fillColor: Colors.white,

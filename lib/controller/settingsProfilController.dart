@@ -69,7 +69,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );

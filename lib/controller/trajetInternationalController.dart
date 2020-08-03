@@ -65,7 +65,7 @@ class homeInternational extends State<trajetInternationalController>{
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
 
-      color: Colors.orange,
+      color: Colors.orangeAccent,
       child: SingleChildScrollView(
         child: Column(
           children: [

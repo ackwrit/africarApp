@@ -1,6 +1,9 @@
 
 import 'package:africars/controller/listingTrajet.dart';
+import 'package:africars/controller/registerController.dart';
 import 'package:calendar_strip/calendar_strip.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
@@ -279,7 +282,8 @@ class homeTrajet extends State<trajetController>{
 
             RaisedButton(
               onPressed: (){
-                print(retour);
+
+
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                         {
@@ -393,6 +397,8 @@ class homeTrajet extends State<trajetController>{
 
 
   }
+
+
 
 
 

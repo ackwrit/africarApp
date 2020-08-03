@@ -61,7 +61,7 @@ class homeBack extends State<backTrajetController>{
         centerTitle: true,
 
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );

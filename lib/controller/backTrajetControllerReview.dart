@@ -47,7 +47,7 @@ class homeReviewBack extends State<backTrajetControllerReview>{
         centerTitle: true,
 
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );

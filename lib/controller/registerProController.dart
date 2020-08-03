@@ -21,7 +21,7 @@ class homeRegisterPro extends State<registerProController>{
         title: Image.asset("assets/logo.png",height: 225,),
         backgroundColor: Colors.black,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 
     );

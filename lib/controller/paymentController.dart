@@ -54,7 +54,7 @@ class homePayment extends State<paymentController>{
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }

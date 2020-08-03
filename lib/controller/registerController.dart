@@ -40,7 +40,7 @@ class homeRegister extends State<registerController>{
         backgroundColor: Colors.black,
 
       ),
-      backgroundColor: Colors.orange,
+      backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
