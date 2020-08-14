@@ -2,6 +2,7 @@
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:calendar_strip/calendar_strip.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
@@ -29,6 +30,12 @@ class homeTrajet extends State<trajetController>{
   DateFormat formatmois;
   int nbpassager=1;
   bool retour=false;
+  final List<String> imgList = [
+      'assets/banniere01.JPG',
+        'assets/banniere02.JPG',
+        'assets/banniere03.JPG',
+        'assets/banniere04.JPG'
+  ];
   String destinationSelectionDepart='Choisir votre départ';
   String destinationSelectionArrivee='Choisir votre arrivée';
   List <String> destination=[
@@ -126,9 +133,9 @@ class homeTrajet extends State<trajetController>{
                 children: [
                   Text('Arrivée : '),
                   DropdownButton <String>(
-                    underline: Container(
-                      height: 0,
-                    ),
+                      underline: Container(
+                        height: 0,
+                      ),
                       iconSize: 0,
 
 
@@ -219,8 +226,8 @@ class homeTrajet extends State<trajetController>{
                 ],
               ):Container(),
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20)
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20)
               ),
 
             ),
@@ -229,8 +236,8 @@ class homeTrajet extends State<trajetController>{
             ),
             Container(
               decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20)
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(20)
               ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -286,9 +293,9 @@ class homeTrajet extends State<trajetController>{
 
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
-                        {
-                          return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
-                        }
+                    {
+                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
+                    }
                 ));
 
               },
@@ -297,7 +304,29 @@ class homeTrajet extends State<trajetController>{
               elevation: 5,
               child: Text('Rechercher',style:TextStyle(color:Colors.white)),
 
+            ),
+            Padding(padding: EdgeInsets.all(10),),
+            
+            CarouselSlider(
+
+              options: CarouselOptions(
+                autoPlay: true,
+                autoPlayAnimationDuration: Duration(milliseconds: 3000),
+              ),
+              items: imgList.map((item) => 
+                  Container(
+                child:Card(
+                  child: Center(
+                      child: Image.asset(item, fit: BoxFit.cover, width: 1000,height: 1000,)
+                  ),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  
+                ),
+                
+              )).toList(),
             )
+
+
           ],
         ),
       ),
@@ -323,7 +352,7 @@ class homeTrajet extends State<trajetController>{
   {
 
     final snackbar =SnackBar(
-      duration: Duration(seconds: 30),
+        duration: Duration(seconds: 30),
         backgroundColor: Colors.orangeAccent,
         content: Container(
 
@@ -334,25 +363,25 @@ class homeTrajet extends State<trajetController>{
               Text('Horaire'),
 
               CalendarStrip(
-                containerHeight: 160,
+                  containerHeight: 160,
 
                   onDateSelected: (heure)
-                      {
-                        if(periode=='depart')
-                          {
-                            setState(() {
-                              momentDepart=heure;
-                            });
+                  {
+                    if(periode=='depart')
+                    {
+                      setState(() {
+                        momentDepart=heure;
+                      });
 
-                          }
-                        else
-                          {
-                            setState(() {
-                              momentArrivee=heure;
-                            });
-                          }
+                    }
+                    else
+                    {
+                      setState(() {
+                        momentArrivee=heure;
+                      });
+                    }
 
-                      }
+                  }
               ),
               Padding(padding: EdgeInsets.all(5),),
               TimePickerSpinner(
@@ -363,20 +392,20 @@ class homeTrajet extends State<trajetController>{
                 onTimeChange: (time)
                 {
                   if(periode=='depart')
-                    {
-                      DateTime hour = new DateTime(momentDepart.year,momentDepart.month,momentDepart.day,time.hour,time.minute);
-                      setState(() {
-                        momentDepart=hour;
-                      });
-                    }
+                  {
+                    DateTime hour = new DateTime(momentDepart.year,momentDepart.month,momentDepart.day,time.hour,time.minute);
+                    setState(() {
+                      momentDepart=hour;
+                    });
+                  }
                   else
-                    {
-                      DateTime houre = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
-                      setState(() {
-                        momentArrivee=houre;
-                      });
+                  {
+                    DateTime houre = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
+                    setState(() {
+                      momentArrivee=houre;
+                    });
 
-                    }
+                  }
                 },
 
               ),
@@ -384,13 +413,13 @@ class homeTrajet extends State<trajetController>{
             ],
           ),
         ),
-      action: SnackBarAction(
-          label: 'OK',
-          onPressed: (){
-            print(momentDepart);
-            String stringmoment=momentDepart.toIso8601String();
-            print(stringmoment);
-          })
+        action: SnackBarAction(
+            label: 'OK',
+            onPressed: (){
+              print(momentDepart);
+              String stringmoment=momentDepart.toIso8601String();
+              print(stringmoment);
+            })
 
     );
     Scaffold.of(context).showSnackBar(snackbar);

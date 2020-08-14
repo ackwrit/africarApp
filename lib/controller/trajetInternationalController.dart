@@ -1,5 +1,6 @@
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:calendar_strip/calendar_strip.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -21,6 +22,12 @@ class homeInternational extends State<trajetInternationalController>{
   DateTime momentArrivee=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
+  final List<String> imgList = [
+    'assets/banniere05.JPG',
+    'assets/banniere06.JPG',
+    'assets/banniere07.JPG',
+    'assets/banniere08.JPG'
+  ];
   bool retour=false;
   int nbpassager=1;
   String destinationSelectionDepart='Choisir votre départ';
@@ -283,6 +290,26 @@ class homeInternational extends State<trajetInternationalController>{
               elevation: 5,
               child: Text('Rechercher',style: TextStyle(color: Colors.orange),),
 
+            ),
+            Padding(padding: EdgeInsets.all(10),),
+
+            CarouselSlider(
+
+              options: CarouselOptions(
+                autoPlay: true,
+                autoPlayAnimationDuration: Duration(milliseconds: 3000),
+              ),
+              items: imgList.map((item) =>
+                  Container(
+                    child:Card(
+                      child: Center(
+                          child: Image.asset(item, fit: BoxFit.cover, width: 1000,height: 1000,)
+                      ),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+
+                    ),
+
+                  )).toList(),
             )
           ],
         ),
