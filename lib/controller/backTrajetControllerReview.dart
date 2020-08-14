@@ -57,8 +57,8 @@ class homeReviewBack extends State<backTrajetControllerReview>{
 
 
   Widget bodyPage(){
-    DateTime heuredepart=conversion().stringtoDateTime(widget.voyageRetour.heureDepart);
-    DateTime heureArrivee = conversion().stringtoDateTime(widget.voyageRetour.heureDestination);
+    //DateTime heuredepart=conversion().stringtoDateTime(widget.voyageRetour.heureDepart);
+    //DateTime heureArrivee = conversion().stringtoDateTime(widget.voyageRetour.heureDestination);
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
@@ -84,9 +84,9 @@ class homeReviewBack extends State<backTrajetControllerReview>{
                 ),
                 Text("${formatjour.format(widget.momentArrivee)}",style: TextStyle(fontSize: 22),),
                 Container(height: 20,),
-                Text('Départ :  ${formatheure.format(heuredepart)}',style: TextStyle(fontSize: 18), ),
-                Container(height: 10,),
-                Text('Arrivée : ${formatheure.format(heureArrivee)}',style: TextStyle(fontSize: 18), ),
+                Text('Départ :  ${formatheure.format(widget.voyageRetour.heureDepart)}',style: TextStyle(fontSize: 18), ),
+                //Container(height: 10,),
+                //Text('Arrivée : ${formatheure.format(widget.voyageRetour.heureDestination)}',style: TextStyle(fontSize: 18), ),
                 Container(height: 15,),
                 Text("Nombre de passager(s) : ${widget.nombrepassager}",style:TextStyle(fontSize: 15)),
                 Container(height: 10,),

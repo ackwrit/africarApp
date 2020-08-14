@@ -55,8 +55,7 @@ class homeSingle extends State<singleTrajetController>{
 
 
   Widget bodyPage(){
-    DateTime heuredepart=conversion().stringtoDateTime(widget.voyage.heureDepart);
-    DateTime heureArrivee = conversion().stringtoDateTime(widget.voyage.heureDestination);
+
     return Container(
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
@@ -82,7 +81,7 @@ class homeSingle extends State<singleTrajetController>{
               ),
               Text("${formatjour.format(widget.momentDepart)}",style: TextStyle(fontSize: 22),),
               Container(height: 20,),
-              Text('Départ :  ${formatheure.format(heuredepart)}',style: TextStyle(fontSize: 18), ),
+              Text('Départ :  ${formatheure.format(widget.voyage.heureDepart)}',style: TextStyle(fontSize: 18), ),
              // Container(height: 10,),
              // Text('Arrivée : ${formatheure.format(heureArrivee)}',style: TextStyle(fontSize: 18), ),
               Container(height: 15,),
@@ -154,7 +153,7 @@ class homeSingle extends State<singleTrajetController>{
                          backTrajetController(trajetAller:widget.voyage,retour: widget.retour,depart: widget.voyage.depart,arrivee: widget.voyage.destination,heureArrivee: widget.momentArrivee,heureDepart: widget.momentDepart,nombrepassager: widget.nombrepassager,momenDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,)
                          :
                          //booking billet
-                         bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: heuredepart,momentArrivee: heureArrivee,nombrePassager: widget.nombrepassager,);
+                         bookingController(retour: widget.retour,voyageAller: widget.voyage,momentDepart: widget.voyage.heureDepart,momentArrivee: widget.voyage.heureDestination,nombrePassager: widget.nombrepassager,);
                        }
                     ));
                   }

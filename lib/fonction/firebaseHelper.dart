@@ -5,6 +5,7 @@ import 'package:africars/model/billet.dart';
 import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -34,7 +35,7 @@ Future<FirebaseUser> handleCreateMailCompagnie({String nif,String adresse,String
     'prenomDirigeant':prenomDirigeant,
     'offre':'gratuit'
   };
-  addCompagnie(uid, map);
+  addCompagnie(map, uid);
   return user;
 
 }
@@ -98,10 +99,15 @@ Future<void> signOTP(smsCode,verifId)async{
 
 //database
   static final base=FirebaseDatabase.instance.reference();
+  static final data_instance = Firestore.instance;
   final base_user=base.child("utilisateur");
   final base_compagnie=base.child('compagnie');
   final base_trajet=base.child('trajet');
   final base_billet=base.child('billet');
+  final fire_compagnie = data_instance.collection("compagnie");
+  final fire_user =data_instance.collection("utilisateur");
+  final fire_trajet=data_instance.collection("trajets");
+  final fire_billet=data_instance.collection("billets");
 
   //storage
 
@@ -119,14 +125,14 @@ Future<void> signOTP(smsCode,verifId)async{
     base_user.child(uid).set(map);
   }
 
-  addCompagnie(String uid,Map map)
+  addCompagnie(Map <String,dynamic>map,String uid)
   {
-    base_compagnie.child(uid).set(map);
+    fire_compagnie.document(uid).setData(map);
   }
 
-  addBillet(String uid,Map map)
+  addBillet(String uid,Map<String,dynamic>map)
   {
-    base_billet.child(uid).set(map);
+    fire_billet.document(uid).setData(map);
   }
 
 
@@ -170,15 +176,9 @@ Future<void> signOTP(smsCode,verifId)async{
   }
 
 
-  addTrajet(String uid,Map map)
-  {
-    base_trajet.child(uid).set(map);
-  }
 
-  Future<trajet> getTrajet(String uid) async{
-    DataSnapshot snapshot = await base_trajet.child(uid).once();
-    return trajet(snapshot);
-  }
+
+
 
 
 }

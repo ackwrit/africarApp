@@ -89,7 +89,7 @@ class homeBooking extends State<bookingController>{
                   Container(height: 10,),
                   Text("Référence du billet : $refBillet"),
                   Container(height: 10,),
-                  Text(formatjour.format(widget.momentDepart)),
+                  //Text(formatjour.format(widget.momentDepart)),
                   Container(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -118,8 +118,8 @@ class homeBooking extends State<bookingController>{
 
 
                   ),
-                  Text("Départ : ${formatheure.format(conversion().stringtoDateTime(widget.voyageAller.heureDepart))}",style: TextStyle(fontSize: 18),),
-                  Text("Arrivée : ${formatheure.format(conversion().stringtoDateTime(widget.voyageAller.heureDestination))}",style: TextStyle(fontSize: 18)),
+                  Text("Départ : ${formatheure.format(widget.voyageAller.heureDepart)}",style: TextStyle(fontSize: 18),),
+                  //Text("Arrivée : ${formatheure.format(widget.voyageAller.heureDestination)}",style: TextStyle(fontSize: 18)),
                   Container(height: 10,)
 
 
@@ -169,8 +169,8 @@ class homeBooking extends State<bookingController>{
 
 
                   ),
-                  Text("Départ : ${formatheure.format(conversion().stringtoDateTime(widget.voyageRetour.heureDepart))}",style: TextStyle(fontSize: 18),),
-                  Text("Arrivée : ${formatheure.format(conversion().stringtoDateTime(widget.voyageRetour.heureDestination))}",style: TextStyle(fontSize: 18)),
+                  Text("Départ : ${formatheure.format(widget.voyageRetour.heureDepart)}",style: TextStyle(fontSize: 18),),
+                  //Text("Arrivée : ${formatheure.format(widget.voyageRetour.heureDestination)}",style: TextStyle(fontSize: 18)),
                   Container(height: 10,)
 
 

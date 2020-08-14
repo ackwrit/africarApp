@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:date_format/date_format.dart';
 
 class conversion{
@@ -17,4 +18,16 @@ class conversion{
 
 
   }
+
+  DateTime readTimestamp(Timestamp timestamp)
+  {
+    DateTime now= timestamp.toDate();
+    print(formatDate(now, [yyyy, '/', mm, '/', dd, ' ', hh, ':', nn, ':', ss, ' ', am]));
+    return now;
+
+
+
+  }
+
+
 }

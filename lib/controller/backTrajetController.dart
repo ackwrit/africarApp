@@ -1,9 +1,12 @@
 import 'package:africars/controller/backTrajetControllerReview.dart';
 import 'package:africars/controller/bookingController.dart';
+import 'package:africars/controller/singleTrajetController.dart';
 import 'package:africars/fonction/conversion.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
+import 'package:africars/view/my_material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/material.dart';
@@ -71,15 +74,140 @@ class homeBack extends State<backTrajetController>{
 
 
   Widget bodyPage(){
+    return StreamBuilder<QuerySnapshot>
+      (
+        stream:firebaseHelper().fire_trajet.snapshots(),
+        builder: (BuildContext context, AsyncSnapshot <QuerySnapshot>snapshot){
+          if (!snapshot.hasData){
+            return LoadingCenter();
+          }
+          else
+          {
+            List<DocumentSnapshot>documents =snapshot.data.documents;
+            return NestedScrollView(
+                headerSliverBuilder: (BuildContext build,bool srolled){
+                  return [
+                    SliverAppBar(
+                      leading: Container(),
+                      pinned: true,
+                      backgroundColor: Colors.orangeAccent,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Text('Les trajets'),
+                        centerTitle: true,
 
-    return Container(
+
+
+                      ),
+
+                    )
+
+                  ];
+                },
+
+                body: ListView.builder(
+                    itemCount: documents.length,
+                    itemBuilder: (BuildContext ctx,int index){
+                      trajet entreprise = trajet(documents[index]);
+                      if(entreprise.depart==widget.arrivee && entreprise.destination==widget.depart)
+                      {
+                        return GestureDetector(
+                          child: Card(
+                            elevation: 5,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                            child: Column(
+                              children: [
+                                Padding(padding: EdgeInsets.all(2)),
+                                Text(formatjour.format(widget.heureDepart)),
+                                ListTile(
+                                  title: Text("${entreprise.depart} - ${entreprise.destination}",textAlign: TextAlign.start,),
+
+                                  trailing: Text(formatheure.format(entreprise.heureDepart)),
+                                  subtitle: Text('prix : ${entreprise.prix} CFA'),
+
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                  children: [
+                                    Image.network(entreprise.logoCompagnie,height: 80,width: 80,),
+                                    Text(entreprise.nomCompagnie),
+                                    //Text(logoCompagnie)
+
+
+
+
+
+                                  ],
+                                ),
+                              ],
+                            ),
+
+
+                          ),
+                          onTap: (){
+
+                            //Trajet Aller
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context)
+                                {
+                                  return backTrajetControllerReview(retour: widget.retour,trajetsRetour: entreprise,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
+                                }
+                            ));
+
+                          },
+
+                        );
+
+                      }
+                      else
+                      {
+                        return Container();
+                      }
+                      /*return InkWell(
+                          onTap: (){
+                            //print('direction page détail voyageur');
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context)
+                                {
+                                  //return detailTrajetController(entreprise);
+                                }
+                            ));
+                          },
+                          child: Card(
+                              child: ListTile(
+                                leading:Image.network(entreprise.logoCompagnie),
+                                title: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(entreprise.nomCompagnie),
+                                    Text("${entreprise.depart} - ${entreprise.destination}"),
+                                    Text("Prix : ${entreprise.prix.toString()} CFA")
+
+                                  ],
+                                ),
+
+                                trailing: Text("Départ : ${formatheure.format(entreprise.heureDepart)}"),
+                              )
+
+                          )
+
+                      );*/
+
+
+
+                    }
+                ));
+          }
+        });
+
+    /*return Container(
       padding: EdgeInsets.all(20),
       child: Column(
         children: [
           Container(
             height: 5,
           ),
-          FirebaseAnimatedList(
+
+          /*FirebaseAnimatedList(
               padding: EdgeInsets.all(10),
               query: firebaseHelper().base_trajet,
               defaultChild: Text("Actuellement, il n'y a aucun trajet"),
@@ -162,12 +290,13 @@ class homeBack extends State<backTrajetController>{
 
 
               }
-          ),
+          ),*/
+
 
 
         ],
       ),
-    );
+    );*/
 
   }
 

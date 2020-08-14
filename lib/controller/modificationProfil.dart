@@ -102,40 +102,41 @@ class homeSettingsProfil extends State<modificationProfil> {
         :Center(
       child: Container(
         padding: EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Padding(padding: EdgeInsets.all(5),),
-            (profil.image==null)? Container(
-              width: 70,
-              height: 70,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit: BoxFit.fill,
-                    image: AssetImage("assets/userIcon.png"),
-                  )
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Padding(padding: EdgeInsets.all(5),),
+              (profil.image==null)? Container(
+                width: 70,
+                height: 70,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      fit: BoxFit.fill,
+                      image: AssetImage("assets/userIcon.png"),
+                    )
+                ),
+              ):Container(
+                width: 100,
+                height: 100,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                        fit:BoxFit.fill,
+                        image: NetworkImage(profil.image)
+                    )
+                ),
               ),
-            ):Container(
-              width: 100,
-              height: 100,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                    fit:BoxFit.fill,
-                      image: NetworkImage(profil.image)
-                  )
+              Padding(padding: EdgeInsets.all(5),),
+              RaisedButton(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                color: Colors.black,
+                onPressed: imagePicker,
+                child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
               ),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            RaisedButton(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              color: Colors.black,
-              onPressed: imagePicker,
-              child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            /*TextField(
+              Padding(padding: EdgeInsets.all(5),),
+              /*TextField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
@@ -151,81 +152,84 @@ class homeSettingsProfil extends State<modificationProfil> {
               },
             ),
             Padding(padding: EdgeInsets.all(5),),*/
-            TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'nom',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+              TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: 'nom',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
                 ),
-              ),
-              onChanged: (text){
-                setState(() {
-                  profil.nom=text;
-                });
-              },
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'Prénom',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onChanged: (text){
-                setState(() {
-                  profil.prenom=text;
-                });
-              },
-            ),
-            Padding(padding: EdgeInsets.all(5),),
-            RaisedButton(
-              child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
-              onPressed: (){
-                Map map ={
-                  'prenom':profil.prenom,
-                  'id':identifiant,
-                  'nom':profil.nom,
-                  'image':urlImage,
-                  'login':profil.pseudo,
-                  'typeUtilisateur':profil.type_utilisateur
-
-
-                };
-                firebaseHelper().addUser(identifiant, map);
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context)
-                        {
-                          return settingsProfilController();
-                        }
-                ));
-
-              },
-              color: Colors.black,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            ),
-            RaisedButton(
-                onPressed: (){
-                 Navigator.push(context, MaterialPageRoute(
-                     builder: (BuildContext context){
-                       return settingsProfilController();
-                     }
-                 ));
+                onChanged: (text){
+                  setState(() {
+                    profil.nom=text;
+                  });
                 },
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Text('Retour',style: TextStyle(color: Colors.orange),),
-              color: Colors.black,
-            )
+              ),
+              Padding(padding: EdgeInsets.all(5),),
+              TextField(
+                decoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  hintText: 'Prénom',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                onChanged: (text){
+                  setState(() {
+                    profil.prenom=text;
+                  });
+                },
+              ),
+              Padding(padding: EdgeInsets.all(5),),
+              RaisedButton(
+                child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
+                onPressed: (){
+                  Map map ={
+                    'prenom':profil.prenom,
+                    'id':identifiant,
+                    'nom':profil.nom,
+                    'image':urlImage,
+                    'login':profil.pseudo,
+                    'typeUtilisateur':profil.type_utilisateur,
+                    'image':urlImage
 
-            //Portemonnaie virtuel
+
+                  };
+                  firebaseHelper().addUser(identifiant, map);
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (BuildContext context)
+                      {
+                        return settingsProfilController();
+                      }
+                  ));
+
+                },
+                color: Colors.black,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              ),
+              RaisedButton(
+                onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(
+                      builder: (BuildContext context){
+                        return settingsProfilController();
+                      }
+                  ));
+                },
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                child: Text('Retour',style: TextStyle(color: Colors.orange),),
+                color: Colors.black,
+              )
+
+              //Portemonnaie virtuel
 
 
-          ],
+            ],
+          ),
         ),
+
       ),
 
     );
@@ -240,11 +244,12 @@ class homeSettingsProfil extends State<modificationProfil> {
     image = await FilePicker.getFile(
       type: FileType.image,
     );
+    setState(()async {
+      urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(identifiant));
+    });
 
     urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(identifiant));
-    Map map=profil.toMap();
-    map['image']=urlImage;
-    firebaseHelper().addUser(identifiant, map);
+
 
 
 

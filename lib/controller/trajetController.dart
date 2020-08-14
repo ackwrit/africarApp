@@ -354,7 +354,7 @@ class homeTrajet extends State<trajetController>{
 
                       }
               ),
-              Padding(padding: EdgeInsets.all(10),),
+              Padding(padding: EdgeInsets.all(5),),
               TimePickerSpinner(
                 isForce2Digits: true,
                 minutesInterval: 15,

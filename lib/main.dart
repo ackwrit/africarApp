@@ -36,11 +36,11 @@ class MyApp extends StatelessWidget {
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context,snapshot){
           if(snapshot.hasData){
-            return principalController();
+            return MyHomePage();
           }
           else
           {
-            return profilController();
+            return MyHomePage();
           }
 
         }

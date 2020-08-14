@@ -127,6 +127,18 @@ class homeSettingsProfil extends State<settingsProfilController> {
           Text(profil.nom),
           Padding(padding: EdgeInsets.all(5),),
           Text(profil.prenom),
+          Padding(padding: EdgeInsets.all(5),),
+          FlatButton(
+              onPressed: (){
+                FirebaseAuth.instance.signOut();
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return MyApp();
+                    }
+                ));
+              },
+              child: Text('Se déconnecter'))
+
 
           //Portemonnaie virtuel
 
