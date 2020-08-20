@@ -40,6 +40,7 @@ dependencies:
   file_picker: ^1.13.0+1
   cloud_firestore: ^0.13.7
   carousel_slider: ^2.2.1
+  flappy_search_bar: ^1.7.2
 
 
   # The following adds the Cupertino Icons font to your application.

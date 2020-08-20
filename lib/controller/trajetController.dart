@@ -1,6 +1,7 @@
 
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/registerController.dart';
+import 'package:africars/view/locationSelection.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,6 +22,7 @@ class trajetController extends StatefulWidget{
 }
 
 class homeTrajet extends State<trajetController>{
+  GlobalKey <ScaffoldState>_globalkey = GlobalKey<ScaffoldState>();
   TextEditingController depart = new TextEditingController(text: 'Depart');
   TextEditingController arrivee =new TextEditingController(text: 'Arrivée');
   DateTime momentDepart=DateTime.now();
@@ -70,6 +72,7 @@ class homeTrajet extends State<trajetController>{
     formatmois = DateFormat.M('fr_FR');
 
 
+
     // TODO: implement build
     return bodyPage();
   }
@@ -80,6 +83,7 @@ class homeTrajet extends State<trajetController>{
   Widget bodyPage()
   {
     return Container(
+      key: _globalkey,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
@@ -88,6 +92,8 @@ class homeTrajet extends State<trajetController>{
       child: SingleChildScrollView(
         child: Column(
           children: [
+            //fonction search bar
+            //SearchBar(),
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -119,6 +125,20 @@ class homeTrajet extends State<trajetController>{
                   ),
                 ],
               ),
+            ),
+            TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                fillColor: Colors.white,
+                filled: true,
+                hintText: 'Choisir votre départ'
+              ),
+              onTap: (){
+                _globalkey.currentState.showBottomSheet((builder) => locationSelection());
+                print('appuyer');
+              },
             ),
             IconButton(icon: Icon(Icons.swap_vertical_circle),
                 onPressed: ()=>swapVille()
