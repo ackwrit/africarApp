@@ -1,4 +1,5 @@
 import 'package:africars/controller/dateController.dart';
+import 'package:africars/controller/informationController.dart';
 import 'package:africars/controller/principalController.dart';
 import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
@@ -32,6 +33,9 @@ class MyApp extends StatelessWidget {
 
 
   Widget authentification(){
+    PageController pageController=PageController(initialPage: 0);
+    int BottomSelectedIndex=0;
+
     return StreamBuilder<FirebaseUser>(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context,snapshot){
@@ -61,16 +65,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  PageController pageController=PageController(initialPage: 0);
+  int bottomSelectedIndex=0;
 
 
   @override
   Widget build(BuildContext context) {
   if(Theme.of(context).platform==TargetPlatform.iOS)
     {
-      return iosConfig();
+      return Configuration();
     }
     else{
-    return androidConfig();
+    return Configuration();
     }
 
 
@@ -79,6 +85,107 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+  }
+
+
+  Widget Configuration(){
+    return Scaffold(
+      appBar: new AppBar(
+        actions: <Widget>[
+          IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
+          {
+            Navigator.push(context, MaterialPageRoute(
+                builder: (BuildContext context)
+                {
+                  return profilController();
+                }
+            ));
+
+          }
+          )
+
+        ],
+
+        //title: Image.asset('assets/NYMBEUL.png',height: 100,),
+        centerTitle: true,
+        flexibleSpace: Image.asset("assets/logo.png",height: 800,width: 800,),
+
+        backgroundColor: Colors.black,
+
+
+
+      ),
+      body: PageView(
+        controller: pageController,
+        onPageChanged: (index)
+        {
+          pageChanged(index);
+        },
+
+        children: [
+          trajetController(),
+          trajetInternationalController(),
+          dateController(),
+          informationController(),
+        ],
+      ),
+
+
+        bottomNavigationBar: Theme(
+          data: Theme.of(context).copyWith(
+              canvasColor: Colors.black,
+              primaryColor: Colors.orange,
+              textTheme: Theme.of(context).textTheme.copyWith(
+                  caption: TextStyle(color: Colors.orange)
+              )
+          ),
+          child: BottomNavigationBar(
+
+
+            currentIndex: bottomSelectedIndex,
+            selectedItemColor: Colors.orangeAccent,
+
+
+
+
+
+            onTap: (index){
+              bottomTapped(index);
+
+            },
+            items: [
+              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("International",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
+              new BottomNavigationBarItem(icon: new Icon(Icons.bubble_chart),title: new Text('Information',style: TextStyle(fontSize: 18),)),
+
+            ],
+            backgroundColor: Colors.blue,
+
+          ),
+
+
+
+        )
+
+    );
+  }
+
+
+
+
+  void pageChanged(int index) {
+    setState(() {
+      bottomSelectedIndex = index;
+    });
+  }
+
+
+  void bottomTapped(int index) {
+    setState(() {
+      bottomSelectedIndex = index;
+      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+    });
   }
 
 
@@ -97,6 +204,7 @@ class _MyHomePageState extends State<MyHomePage> {
               new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("International",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
+              new BottomNavigationBarItem(icon: new Icon(Icons.bubble_chart),title: new Text('Information',style: TextStyle(fontSize: 18),)),
 
 
 
@@ -121,6 +229,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                 }
                 )
+
               ],
 
               title:Image.asset("assets/logo.png",height: 225,),
@@ -138,7 +247,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget androidConfig(){
     
     return new DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
           title:Image.asset("assets/logo.png",height: 225,),
@@ -166,6 +275,7 @@ class _MyHomePageState extends State<MyHomePage> {
               Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
                 Tab(icon:new Icon(Icons.map),child: new Text("Interational") ,),
             Tab(icon:new Icon(Icons.bookmark),child: new Text("Réservation") ,),
+                Tab(icon: Icon(Icons.bubble_chart),child: Text("Information"),)
           ]
           ),
 
@@ -186,6 +296,7 @@ class _MyHomePageState extends State<MyHomePage> {
       trajetController(),
       trajetInternationalController(),
      dateController(),
+      informationController(),
 
 
 

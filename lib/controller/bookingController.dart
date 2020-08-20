@@ -7,6 +7,7 @@ import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:random_string/random_string.dart';
 
@@ -47,9 +48,12 @@ class homeBooking extends State<bookingController>{
   String refBillet=randomAlphaNumeric(13);
   utilisateur profil;
   String identifiant;
+  PhoneNumber number= PhoneNumber(isoCode: 'ML');
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  String nom='Nom';
+  String prenom='Prénom';
   @override
   void initState() {
     // TODO: implement initState
@@ -185,34 +189,109 @@ class homeBooking extends State<bookingController>{
 
 
                 :Container(),
-            RaisedButton(onPressed: (){
-              //partie paiement
-
-              print(widget.retour);
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context)
-                      {
-                        return infoPersoBilletController(
-                          aller: widget.voyageAller,
-                          retour: widget.voyageRetour,
-                          qrCodeAller: generateQRCode,
-                          qrCodeRetour: generateQRCodeRetour,
-                          refBillet: refBillet,
-                          nombrePassager: widget.nombrePassager,
-                          billetRetour: widget.retour,
-                          jourDepart: widget.momentDepart,
-                          jourRetour: widget.momentArrivee,
-                        );
-                      }
-              ));
 
 
-            },
-              elevation: 10,
-              child: Text('Réservation',style: TextStyle(color: Colors.white),),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            SizedBox(height: 20,),
+            Text('Passager',style: TextStyle(fontSize: 25),),
+            SizedBox(height: 15,),
+            InternationalPhoneNumberInput(
+              initialValue: number,
+              onInputChanged: (text){
+                number=text;
+              },
+              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+              inputDecoration: InputDecoration(
+                  fillColor: Colors.white,
+                  filled: true,
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20)
+                  )
+              ),
+            ),
+            SizedBox(height: 15,),
+            TextField(
+              onChanged: (String text){
+                setState(() {
+                  nom=text;
+                });
+              },
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                hintText: nom,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+
+            ),
+            SizedBox(height: 15,),
+            TextField(
+              onChanged: (String text){
+                setState(() {
+                  prenom=text;
+                });
+              },
+              decoration: InputDecoration(
+                fillColor: Colors.white,
+                filled: true,
+                hintText: prenom,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+
+            ),
+            SizedBox(height: 15,),
+            Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+            SizedBox(height: 15,),
+
+
+
+
+            //reservation total;
+            RaisedButton(
               color: Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              onPressed: (){
+                print(widget.retour);
+                //Enregistrement billet en mode provisoire
+                Map <String,dynamic>map={
+                  'emission':DateTime.now().millisecondsSinceEpoch,
+                  'departAller':widget.voyageAller.depart,
+                  'telephone':number.toString(),
+                  'retourAller':(widget.retour)?widget.voyageAller.destination:'',
+                  'departRetour':(widget.retour)?widget.voyageRetour.depart:'',
+                  'retourRetour':(widget.retour)?widget.voyageRetour.destination:'',
+                  'logoCompagnieAller':widget.voyageAller.logoCompagnie,
+                  'logoCompagnieRetour':(widget.retour)?widget.voyageRetour.logoCompagnie:'',
+                  'lieuDepart': widget.voyageAller.depart.toString(),
+                  'lieuArrivee':widget.voyageAller.destination.toString(),
+                  'nbPassager':widget.nombrePassager,
+                  'nomPassager':nom,
+                  'prenomPassager':prenom,
+                  'qrCodeAller':generateQRCode,
+                  'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
+                  'billerRetour':widget.retour,
+                  'validate':false,
+                  'jourAller':widget.momentDepart.millisecondsSinceEpoch,
+                  'jourRetour':(widget.retour)?widget.momentDepartRetour.millisecondsSinceEpoch:'',
+
+                };
+                firebaseHelper().addBillet(refBillet, map);
+
+
+
+
+                Navigator.push(context, MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return reservationController(refbillet: refBillet,);
+                    }
+                ));
+              },
+              child: Text('Réservation',style: TextStyle(color: Colors.white),),
             )
+
           ],
         ),
       ),
