@@ -1,16 +1,17 @@
 
 import 'package:africars/controller/listingTrajet.dart';
-import 'package:africars/controller/registerController.dart';
-import 'package:africars/view/locationSelection.dart';
+import 'package:africars/controller/verificationRetour.dart';
+import 'package:africars/view/my_material.dart';
+import 'package:animate_icons/animate_icons.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
+import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
+import 'package:searchable_dropdown/searchable_dropdown.dart';
 
 class trajetController extends StatefulWidget{
   @override
@@ -22,7 +23,7 @@ class trajetController extends StatefulWidget{
 }
 
 class homeTrajet extends State<trajetController>{
-  GlobalKey <ScaffoldState>_globalkey = GlobalKey<ScaffoldState>();
+  GlobalKey <ScaffoldState> globalkey = GlobalKey<ScaffoldState>();
   TextEditingController depart = new TextEditingController(text: 'Depart');
   TextEditingController arrivee =new TextEditingController(text: 'Arrivée');
   DateTime momentDepart=DateTime.now();
@@ -73,6 +74,7 @@ class homeTrajet extends State<trajetController>{
 
 
 
+
     // TODO: implement build
     return bodyPage();
   }
@@ -83,7 +85,7 @@ class homeTrajet extends State<trajetController>{
   Widget bodyPage()
   {
     return Container(
-      key: _globalkey,
+      key: globalkey,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
@@ -92,95 +94,109 @@ class homeTrajet extends State<trajetController>{
       child: SingleChildScrollView(
         child: Column(
           children: [
-            //fonction search bar
-            //SearchBar(),
             Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
+              height: 60,
+              child: DropdownSearch<String>(
 
-                  Text('Départ : '),
-                  DropdownButton <String>(
-                      underline: Container(
-                        height: 0,
-                      ),
-                      iconSize: 0,
-                      items: destination.map((String value) {
-                        return DropdownMenuItem(
-                            value: value,
+                validator: (v) => v == null ? "required field" : null,
+                hint: "Choisir votre départ",
+                searchBoxDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    hintText: 'Indiquer votre ville de départ',
+                    alignLabelWithHint: true,
 
-                            child: Text(value)
-                        );
-                      }).toList(),
-                      hint: Text(destinationSelectionDepart),
-                      onChanged: (newVal){
-                        setState(() {
-                          destinationSelectionDepart=newVal;
-                        });
-                      }
-                  ),
-                ],
-              ),
-            ),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
                 ),
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'Choisir votre départ'
+                showSearchBox: true,
+                dropdownSearchDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
+
+                ),
+                mode: Mode.DIALOG,
+                showSelectedItem: true,
+                items: destination,
+                showClearButton: false,
+                onChanged: (text){
+                  setState(() {
+                    destinationSelectionDepart=text;
+                  });
+                },
+
+                selectedItem: destinationSelectionDepart,
               ),
-              onTap: (){
-                _globalkey.currentState.showBottomSheet((builder) => locationSelection());
-                print('appuyer');
-              },
             ),
-            IconButton(icon: Icon(Icons.swap_vertical_circle),
-                onPressed: ()=>swapVille()
+
+
+            Align(
+              alignment: Alignment.center,
+              child: AnimateIcons(
+                startIcon: Icons.swap_vertical_circle,
+                endIcon: Icons.swap_vertical_circle,
+                size: 50.0,
+                onStartIconPress: (){
+                  swapVille();
+                  return true;
+                },
+                onEndIconPress: () {
+                  swapVille();
+                  return true;
+                },
+                duration: Duration(milliseconds: 500),
+                color: Colors.white,
+                clockwise: false,
+              ),
             ),
             Container(
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(20),
+              height: 60,
+              child: DropdownSearch<String>(
+                validator: (v) => v == null ? "required field" : null,
+                hint: "Choisir votre arrivée",
+                searchBoxDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    alignLabelWithHint: true,
+
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
+                ),
+                showSearchBox: true,
+                dropdownSearchDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(20))
+
+                ),
+                mode: Mode.DIALOG,
+                showSelectedItem: true,
+                items: destination,
+                showClearButton: false,
+                onChanged: (String text){
+                  print(text);
+                  setState(() {
+                    destinationSelectionArrivee = text;
+
+
+                  });
+                },
+
+                selectedItem: destinationSelectionArrivee,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text('Arrivée : '),
-                  DropdownButton <String>(
-                      underline: Container(
-                        height: 0,
-                      ),
-                      iconSize: 0,
 
-
-
-                      items: destination.map((String value) {
-                        return DropdownMenuItem(
-
-
-
-                            value: value,
-
-                            child: Text(value)
-                        );
-                      }).toList(),
-                      hint:Text(destinationSelectionArrivee),
-
-                      onChanged: (newVal){
-                        setState(() {
-                          destinationSelectionArrivee=newVal;
-                        });
-                      }
-                  ),
-                ],
-              ),
             ),
+
+
+
+
+
+
+
+
+
+
+
+
             Container(
               height: 20,
             ),
@@ -309,12 +325,16 @@ class homeTrajet extends State<trajetController>{
 
             RaisedButton(
               onPressed: (){
-
-
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                     {
-                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
+                      return listingTrajet(
+                        retour: retour,
+                        depart: destinationSelectionDepart,
+                        arrivee: destinationSelectionArrivee,
+                        heureArrivee: momentArrivee,
+                        heureDepart: momentDepart,
+                        nombrepassager: nbpassager,);
                     }
                 ));
 

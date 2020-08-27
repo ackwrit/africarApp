@@ -37,6 +37,11 @@
 	<true/>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Accès pour la photo de profil</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Accès pour la caméra de profil</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Accès pour le microphone de profil</string>
+
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>remote-notification</string>

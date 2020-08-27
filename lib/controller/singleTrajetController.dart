@@ -75,8 +75,8 @@ class homeSingle extends State<singleTrajetController>{
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  Image.network(widget.voyage.logoCompagnie,height: 120,width: 120,),
-                  Text(widget.voyage.nomCompagnie)
+                  (widget.voyage.logoCompagnie==null)?Container():Image.network(widget.voyage.logoCompagnie,height: 120,width: 120,),
+                  (widget.voyage.nomCompagnie==null)?Container():Text(widget.voyage.nomCompagnie)
                 ],
               ),
               Text("${formatjour.format(widget.momentDepart)}",style: TextStyle(fontSize: 22),),

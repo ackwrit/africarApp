@@ -48,6 +48,7 @@ class homeBooking extends State<bookingController>{
   String refBillet=randomAlphaNumeric(13);
   utilisateur profil;
   String identifiant;
+  int compteur=1;
   PhoneNumber number= PhoneNumber(isoCode: 'ML');
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
@@ -114,8 +115,8 @@ class homeBooking extends State<bookingController>{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Image.network(widget.voyageAller.logoCompagnie,height: 100,),
-                      Text(widget.voyageAller.nomCompagnie),
+                      (widget.voyageAller.logoCompagnie==null)?Container():Image.network(widget.voyageAller.logoCompagnie,height: 100,),
+                      (widget.voyageAller.nomCompagnie==null)?Container():Text(widget.voyageAller.nomCompagnie),
 
 
                     ],
@@ -165,8 +166,8 @@ class homeBooking extends State<bookingController>{
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Image.network(widget.voyageRetour.logoCompagnie,height: 100,),
-                      Text(widget.voyageRetour.nomCompagnie),
+                      (widget.voyageRetour.logoCompagnie==null)?Container():Image.network(widget.voyageRetour.logoCompagnie,height: 100,),
+                      (widget.voyageRetour.nomCompagnie==null)?Container():Text(widget.voyageRetour.nomCompagnie),
 
 
                     ],
@@ -192,8 +193,6 @@ class homeBooking extends State<bookingController>{
 
 
             SizedBox(height: 20,),
-            Text('Passager',style: TextStyle(fontSize: 25),),
-            SizedBox(height: 15,),
             InternationalPhoneNumberInput(
               initialValue: number,
               onInputChanged: (text){
@@ -209,7 +208,13 @@ class homeBooking extends State<bookingController>{
               ),
             ),
             SizedBox(height: 15,),
-            TextField(
+            Text('Passager',style: TextStyle(fontSize: 25),),
+
+
+            SizedBox(height: 15,),
+            ajout(),
+
+           /* TextField(
               onChanged: (String text){
                 setState(() {
                   nom=text;
@@ -242,7 +247,8 @@ class homeBooking extends State<bookingController>{
               ),
 
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 15,),*/
+
             Image.asset("assets/logoorangemoney.jpeg",width: 180,),
             SizedBox(height: 15,),
 
@@ -297,6 +303,80 @@ class homeBooking extends State<bookingController>{
       ),
 
 
+    );
+
+  }
+
+  Widget ajout()
+  {
+
+
+    return ListView.builder(
+      itemCount: widget.nombrePassager,
+        shrinkWrap: true,
+        itemBuilder: (BuildContext context,int index){
+        return Column(
+          children: [
+            Row(
+
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(
+                  width: MediaQuery.of(context).size.width/2-30,
+                  child:  TextField(
+                    onChanged: (String text){
+                      setState(() {
+                        nom=text;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: nom,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+
+                  ),
+                ),
+                SizedBox(
+                  width: 15,
+                ),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width/2-30,
+                  child: TextField(
+                    onChanged: (String text){
+                      setState(() {
+                        prenom=text;
+                      });
+                    },
+                    decoration: InputDecoration(
+                      fillColor: Colors.white,
+                      filled: true,
+                      hintText: prenom,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+
+                  ),
+                ),
+
+
+
+
+
+              ],
+            ),
+            SizedBox(height: 15,),
+          ],
+
+
+        );
+
+
+        }
     );
 
   }

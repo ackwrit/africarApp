@@ -10,7 +10,8 @@ class trajet{
   String destination;
   DateTime heureDepart;
   DateTime heureDestination;
-  int prix;
+  String prix;
+  bool retour;
   String idCompagnie;
   String logoCompagnie;
   String nomCompagnie;
@@ -25,10 +26,11 @@ class trajet{
     destination=map['destination'];
     heureDepart=conversion().readTimestamp(map['heureDepart']);
     //heureDestination=conversion().readTimestamp(map['heureDestination']);
-    prix=map['prix'];
+    prix=map['prix'].toString();
     idCompagnie=map['idCompagnie'];
     logoCompagnie=map['logoCompagnie'];
     nomCompagnie=map['nomCompagnie'];
+    retour = map['retour'];
   }
 
   Map toMap(){
@@ -38,10 +40,11 @@ class trajet{
       map['destination']:destination,
       map['heureDepart']:heureDepart.millisecondsSinceEpoch,
       //map['heureDestination']:Timestamp.fromMillisecondsSinceEpoch(heureDestination.millisecondsSinceEpoch),
-      map['prix']:prix,
+      map['prix']:int.parse(prix),
       map['idCompagnie']:idCompagnie,
       map['nomCompagnie']:nomCompagnie,
       map['logoCompagnie']:logoCompagnie,
+      map['retour']:retour,
 
     };
 
