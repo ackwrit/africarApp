@@ -1,17 +1,15 @@
 
 import 'package:africars/controller/listingTrajet.dart';
-import 'package:africars/controller/verificationRetour.dart';
 import 'package:africars/view/my_material.dart';
+import 'package:africars/view/my_snack.dart';
 import 'package:animate_icons/animate_icons.dart';
-import 'package:calendar_strip/calendar_strip.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
-import 'package:searchable_dropdown/searchable_dropdown.dart';
+
 
 class trajetController extends StatefulWidget{
   @override
@@ -24,10 +22,11 @@ class trajetController extends StatefulWidget{
 
 class homeTrajet extends State<trajetController>{
   GlobalKey <ScaffoldState> globalkey = GlobalKey<ScaffoldState>();
+
+
   TextEditingController depart = new TextEditingController(text: 'Depart');
   TextEditingController arrivee =new TextEditingController(text: 'Arrivée');
-  DateTime momentDepart=DateTime.now();
-  DateTime momentArrivee=DateTime.now();
+
   DateFormat formatjour;
   DateFormat formatheure;
   DateFormat formatmois;
@@ -61,6 +60,8 @@ class homeTrajet extends State<trajetController>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    momentDepartNational=DateTime.now();
+    momentArriveeNational=DateTime.now();
 
   }
   @override
@@ -76,7 +77,10 @@ class homeTrajet extends State<trajetController>{
 
 
     // TODO: implement build
-    return bodyPage();
+    return Scaffold(
+      key: globalkey,
+      body: bodyPage(),
+    );
   }
 
 
@@ -85,7 +89,6 @@ class homeTrajet extends State<trajetController>{
   Widget bodyPage()
   {
     return Container(
-      key: globalkey,
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       padding: EdgeInsets.all(20),
@@ -209,13 +212,14 @@ class homeTrajet extends State<trajetController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Aller'),
-                  Text(formatjour.format(momentDepart)),
+                  Text(formatjour.format(momentDepartNational)),
 
 
                   FlatButton(
-                    onPressed:()=>affichageSnackBar('depart'),
+                    //snack bar
+                    onPressed:()=> affichageSnack('depart'),//affichageSnackBar('depart'),
 
-                    child: Text(formatheure.format(momentDepart)),
+                    child: Text(formatheure.format(momentDepartNational)),
 
                   ),
 
@@ -248,13 +252,13 @@ class homeTrajet extends State<trajetController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Retour'),
-                  Text(formatjour.format(momentArrivee)),
+                  Text(formatjour.format(momentArriveeNational)),
 
 
                   FlatButton(
-                    onPressed:()=>affichageSnackBar('arrivee'),
+                    onPressed:()=>affichageSnack('arrivee'),
 
-                    child: Text(formatheure.format(momentArrivee)),
+                    child: Text(formatheure.format(momentArriveeNational)),
 
                   ),
 
@@ -332,8 +336,8 @@ class homeTrajet extends State<trajetController>{
                         retour: retour,
                         depart: destinationSelectionDepart,
                         arrivee: destinationSelectionArrivee,
-                        heureArrivee: momentArrivee,
-                        heureDepart: momentDepart,
+                        heureArrivee: momentArriveeNational,
+                        heureDepart: momentDepartNational,
                         nombrepassager: nbpassager,);
                     }
                 ));
@@ -388,84 +392,14 @@ class homeTrajet extends State<trajetController>{
 
   }
 
-  affichageSnackBar(String periode)
+
+  affichageSnack(String periode)
   {
-
-    final snackbar =SnackBar(
-        duration: Duration(seconds: 30),
-        backgroundColor: Colors.orangeAccent,
-        content: Container(
-
-          height: MediaQuery.of(context).size.height/2,
-
-          child: Column(
-            children: [
-              Text('Horaire'),
-
-              CalendarStrip(
-                  containerHeight: 160,
-
-                  onDateSelected: (heure)
-                  {
-                    if(periode=='depart')
-                    {
-                      setState(() {
-                        momentDepart=heure;
-                      });
-
-                    }
-                    else
-                    {
-                      setState(() {
-                        momentArrivee=heure;
-                      });
-                    }
-
-                  }
-              ),
-              Padding(padding: EdgeInsets.all(5),),
-              TimePickerSpinner(
-                isForce2Digits: true,
-                minutesInterval: 15,
-                highlightedTextStyle: TextStyle(color: Colors.black,fontSize: 30),
-                normalTextStyle: TextStyle(color: Colors.white,fontSize: 20),
-                onTimeChange: (time)
-                {
-                  if(periode=='depart')
-                  {
-                    DateTime hour = new DateTime(momentDepart.year,momentDepart.month,momentDepart.day,time.hour,time.minute);
-                    setState(() {
-                      momentDepart=hour;
-                    });
-                  }
-                  else
-                  {
-                    DateTime houre = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
-                    setState(() {
-                      momentArrivee=houre;
-                    });
-
-                  }
-                },
-
-              ),
-
-            ],
-          ),
-        ),
-        action: SnackBarAction(
-            label: 'OK',
-            onPressed: (){
-              print(momentDepart);
-              String stringmoment=momentDepart.toIso8601String();
-              print(stringmoment);
-            })
-
-    );
-    Scaffold.of(context).showSnackBar(snackbar);
-
+    globalkey.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartNational,momentArrivee: momentArriveeNational,periode:periode));
 
   }
+
+
 
 
 

@@ -1,4 +1,6 @@
 import 'package:africars/controller/listingTrajet.dart';
+import 'package:africars/view/my_snack.dart';
+import 'package:africars/view/my_widgets/constants.dart';
 import 'package:animate_icons/animate_icons.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -9,6 +11,7 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class trajetInternationalController extends StatefulWidget{
+
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -18,6 +21,7 @@ class trajetInternationalController extends StatefulWidget{
 }
 
 class homeInternational extends State<trajetInternationalController>{
+  GlobalKey <ScaffoldState> globalkeyInternational = GlobalKey<ScaffoldState>();
   TextEditingController depart = new TextEditingController(text: 'Depart');
   TextEditingController arrivee =new TextEditingController(text: 'Arrivée');
   DateTime momentDepart=DateTime.now();
@@ -53,6 +57,8 @@ class homeInternational extends State<trajetInternationalController>{
   void initState() {
     // TODO: implement initState
     super.initState();
+    momentDepartInternational=DateTime.now();
+    momentArriveeInternational=DateTime.now();
 
   }
   @override
@@ -62,10 +68,15 @@ class homeInternational extends State<trajetInternationalController>{
     initializeDateFormatting('fr_FR');
     formatjour= DateFormat.yMMMMd('fr_FR');
     formatheure = DateFormat.Hm('fr_FR');
+    bool passage=false;
 
 
     // TODO: implement build
-    return bodyPage();
+    return Scaffold(
+      key:globalkeyInternational,
+      body: bodyPage(),
+
+    );
   }
   Widget bodyPage()
   {
@@ -181,13 +192,13 @@ class homeInternational extends State<trajetInternationalController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Aller'),
-                  Text(formatjour.format(momentDepart)),
+                  Text(formatjour.format(momentDepartInternational)),
 
 
                   FlatButton(
-                    onPressed:()=>affichageSnackBar('depart'),
+                    onPressed:()=>affichageSnack('depart'),
 
-                    child: Text(formatheure.format(momentDepart)),
+                    child: Text(formatheure.format(momentDepartInternational)),
 
                   ),
 
@@ -220,13 +231,13 @@ class homeInternational extends State<trajetInternationalController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Retour'),
-                  Text(formatjour.format(momentArrivee)),
+                  Text(formatjour.format(momentArriveeInternational)),
 
 
                   FlatButton(
-                    onPressed:()=>affichageSnackBar('arrivee'),
+                    onPressed:()=>affichageSnack('arrivee'),
 
-                    child: Text(formatheure.format(momentArrivee)),
+                    child: Text(formatheure.format(momentArriveeInternational)),
 
                   ),
 
@@ -300,7 +311,7 @@ class homeInternational extends State<trajetInternationalController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                     {
-                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArrivee,heureDepart: momentDepart,nombrepassager: nbpassager,);
+                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArriveeInternational,heureDepart: momentDepartInternational,nombrepassager: nbpassager,);
                     }
                 ));
 
@@ -349,6 +360,13 @@ class homeInternational extends State<trajetInternationalController>{
       destinationSelectionArrivee=tempo;
     });
 
+
+  }
+
+
+  affichageSnack(String periode)
+  {
+    globalkeyInternational.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartInternational,momentArrivee: momentArriveeInternational,periode:periode));
 
   }
 

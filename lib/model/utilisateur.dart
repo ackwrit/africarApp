@@ -9,6 +9,8 @@ class utilisateur{
   String telephone;
   String image;
   String type_utilisateur;
+  String sexe;
+  DateTime naissance;
   String pseudo;
   String mail;
 
@@ -24,6 +26,8 @@ class utilisateur{
     pseudo= map['login'];
     image =map['image'];
     mail=map['mail'];
+    sexe=map['sexe'];
+    naissance=map['naissance'];
     type_utilisateur =map['typeUtilisateur'];
   }
 
@@ -41,6 +45,9 @@ class utilisateur{
       'typeUtilisateur':type_utilisateur,
       'login':pseudo,
       'mail':mail,
+      'sexe':sexe,
+      'naissance':naissance,
+
     };
   }
 }

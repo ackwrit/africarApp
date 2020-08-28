@@ -11,6 +11,14 @@ utilisateur globalUser;
 Widget imagebar = Image.asset("assets/logo.png",height: 225);
 
 
+//horaire
+DateTime momentDepartNational;
+DateTime momentArriveeNational;
+DateTime momentDepartInternational;
+DateTime momentArriveeInternational;
+
+
+
 //couleur
 Color background = Colors.orangeAccent;
 Color backgroundbar =Colors.black;

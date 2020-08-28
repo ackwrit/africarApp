@@ -1,14 +1,13 @@
 
-
-import 'package:africars/controller/administrationController.dart';
-import 'package:africars/controller/listingTrajet.dart';
-import 'package:africars/controller/registerProController.dart';
-import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/view/my_material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class registerController extends StatefulWidget{
@@ -28,11 +27,23 @@ class homeRegister extends State<registerController>{
   String initialCountry = 'NG';
   PhoneNumber number= PhoneNumber(isoCode: 'ML');
   String phone;
+  String nom=null;
+  String prenom=null;
   String smsCode,verificationId;
   bool codeSent=false;
+  bool sexe=false;
+  bool passage=false;
+  DateTime naissance;
+  DateFormat formatjour;
+  DateFormat formatheure;
+  DateFormat formatmois;
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('fr_FR');
+    formatjour= DateFormat.yMMMMd('fr_FR');
+    formatheure = DateFormat.Hm('fr_FR');
+    formatmois = DateFormat.M('fr_FR');
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
@@ -55,10 +66,89 @@ class homeRegister extends State<registerController>{
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Padding(padding: EdgeInsets.all(10)),
-          InternationalPhoneNumberInput(
+          Center(
+            child: Text('Inscription',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+          ),
+          TextField(
+            onChanged: (text){
+              setState(() {
+                nom=text;
+                passage=false;
+              });
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              hintText: 'Entre votre nom',
+              fillColor: Colors.white,
+              filled: true,
+
+            ),
+          ),
+
+          (nom==null || nom=='')?Container():TextField(
+            onChanged: (text){
+              setState(() {
+                prenom=text;
+                passage=false;
+              });
+            },
+            decoration: InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+              hintText: 'Entre votre prénom',
+              fillColor: Colors.white,
+              filled: true,
+
+            ),
+          ),
+          (prenom==null||prenom =='')?Container():Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Homme'),
+              Switch.adaptive(
+                  value: sexe,
+                  onChanged: (bool t){
+                    setState(() {
+                      sexe =t;
+                    });
+
+                  }),
+              Text('Femme')
+
+            ],
+          ),
+          (prenom==null||prenom =='')?Container():RaisedButton.icon(
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+            color: backgroundbar,
+            elevation: 5.0,
+            icon: Icon(Icons.access_time,color: background,),
+              onPressed: (){
+                DatePicker.showDatePicker(context,
+                    showTitleActions: true,
+                    minTime: DateTime(1918, 1, 1),
+                    maxTime: DateTime(2030, 6, 7), onChanged: (date) {
+                      print('change $date');
+                    }, onConfirm: (date) {
+                      setState(() {
+                        naissance=date;
+                      });
+                    }, currentTime: DateTime.now(), locale: LocaleType.fr);
+                setState(() {
+                  passage=true;
+                });
+              },
+              label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 18),)
+          ),
+
+          
+          
+          
+
+
+
+
+          (prenom==null||prenom =='')?Container():InternationalPhoneNumberInput(
             initialValue: number,
             onInputChanged: (text){
               number=text;
@@ -67,14 +157,20 @@ class homeRegister extends State<registerController>{
             inputDecoration: InputDecoration(
               fillColor: Colors.white,
               filled: true,
+              
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(20)
               )
             ),
           ),
-          Padding(padding: EdgeInsets.all(10)),
+
           (codeSent)?TextField(
             decoration: InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+              ),
 
               hintText: 'Entrer le code'
 
@@ -87,7 +183,7 @@ class homeRegister extends State<registerController>{
 
           ):Container(),
         
-          FlatButton(
+          (passage)?FlatButton(
             onPressed: (){
               print(number.phoneNumber.trim());
               print(number.toString().trim());
@@ -100,7 +196,7 @@ class homeRegister extends State<registerController>{
             child: (codeSent)?Text('Enregister'):Text('Validation')
               
 
-          ),
+          ):Container(),
 
         ],
       ),
@@ -165,10 +261,12 @@ Future <void> handleOTP(smsCode,verifId) async{
   Map map ={
     'uid':uid,
     'login':'',
-    'prenom':'',
-    'nom':'',
+    'prenom':prenom,
+    'nom':nom,
     'mail':'',
     'typeUtilisateur':'particulier',
+    'sexe':(sexe)?'Femme':'Homme',
+    'naissance':naissance
 
 
   };
