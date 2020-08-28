@@ -1,8 +1,8 @@
 import 'package:africars/controller/modificationProfil.dart';
-import 'package:africars/controller/registerController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:africars/view/my_material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -32,7 +32,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
       firebaseHelper().getUser(identifiant).then((user)
       {
         setState(() {
-          profil=user;
+          globalUser=user;
         });
 
       });
@@ -78,7 +78,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
 
 
   Widget bodyPage(){
-    return (profil==null)?Column(
+    return (globalUser==null)?Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
@@ -100,7 +100,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           Padding(padding: EdgeInsets.all(5),),
-          (profil.image==null)? Container(
+          (globalUser.image==null)? Container(
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
@@ -117,16 +117,16 @@ class homeSettingsProfil extends State<settingsProfilController> {
                   shape: BoxShape.circle,
                   image: DecorationImage(
                     fit: BoxFit.fill,
-                      image: NetworkImage(profil.image)
+                      image: NetworkImage(globalUser.image)
                   )
                 ),
               ),
           Padding(padding: EdgeInsets.all(5),),
           //Text(profil.pseudo),
           Padding(padding: EdgeInsets.all(5),),
-          Text(profil.nom),
+          Text(globalUser.nom),
           Padding(padding: EdgeInsets.all(5),),
-          Text(profil.prenom),
+          Text(globalUser.prenom),
           Padding(padding: EdgeInsets.all(5),),
           FlatButton(
               onPressed: (){

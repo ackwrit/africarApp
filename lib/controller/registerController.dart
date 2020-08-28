@@ -27,13 +27,13 @@ class homeRegister extends State<registerController>{
   String initialCountry = 'NG';
   PhoneNumber number= PhoneNumber(isoCode: 'ML');
   String phone;
-  String nom=null;
-  String prenom=null;
+  String nom='';
+  String prenom='';
   String smsCode,verificationId;
   bool codeSent=false;
   bool sexe=false;
   bool passage=false;
-  DateTime naissance;
+  DateTime naissance=DateTime.now();
   DateFormat formatjour;
   DateFormat formatheure;
   DateFormat formatmois;
@@ -127,13 +127,14 @@ class homeRegister extends State<registerController>{
                 DatePicker.showDatePicker(context,
                     showTitleActions: true,
                     minTime: DateTime(1918, 1, 1),
-                    maxTime: DateTime(2030, 6, 7), onChanged: (date) {
-                      print('change $date');
-                    }, onConfirm: (date) {
+                    maxTime: DateTime(2030, 6, 7),
+                     onConfirm: (DateTime date) {
                       setState(() {
                         naissance=date;
                       });
-                    }, currentTime: DateTime.now(), locale: LocaleType.fr);
+                    },
+                    currentTime: DateTime.now(),
+                    locale: LocaleType.fr);
                 setState(() {
                   passage=true;
                 });
@@ -258,7 +259,7 @@ Future <void> handleOTP(smsCode,verifId) async{
   AuthResult authResult= await FirebaseAuth.instance.signInWithCredential(authCredential);
   FirebaseUser user =authResult.user;
   String uid = user.uid;
-  Map map ={
+  Map <String,dynamic>map ={
     'uid':uid,
     'login':'',
     'prenom':prenom,

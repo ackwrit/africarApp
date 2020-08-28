@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/compagnie.dart';
-import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -120,9 +119,9 @@ Future<void> signOTP(smsCode,verifId)async{
 
 
 
-  addUser(String uid,Map map)
+  addUser(String uid,Map <String,dynamic>map)
   {
-    base_user.child(uid).set(map);
+    fire_user.document(uid).setData(map);
   }
 
   addCompagnie(Map <String,dynamic>map,String uid)
@@ -171,7 +170,7 @@ Future<void> signOTP(smsCode,verifId)async{
 
   Future<utilisateur> getUser(String uid) async
   {
-    DataSnapshot snapshot = await base_user.child(uid).once();
+    DocumentSnapshot snapshot = await fire_user.document(uid).get();
     return utilisateur(snapshot);
   }
 

@@ -4,6 +4,7 @@ import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:africars/view/my_material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -28,20 +29,7 @@ class homeSettingsProfil extends State<modificationProfil> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    firebaseHelper().myId().then((uid)
-    {
-      setState(() {
-        identifiant=uid;
-      });
-      firebaseHelper().getUser(identifiant).then((user)
-      {
-        setState(() {
-          profil=user;
-        });
 
-      });
-
-    });
   }
   @override
   Widget build(BuildContext context) {
@@ -107,7 +95,7 @@ class homeSettingsProfil extends State<modificationProfil> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Padding(padding: EdgeInsets.all(5),),
-              (profil.image==null)? Container(
+              (globalUser.image==null)? Container(
                 width: 70,
                 height: 70,
                 decoration: BoxDecoration(
@@ -124,7 +112,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                     shape: BoxShape.circle,
                     image: DecorationImage(
                         fit:BoxFit.fill,
-                        image: NetworkImage(profil.image)
+                        image: NetworkImage(globalUser.image)
                     )
                 ),
               ),
@@ -136,7 +124,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                 child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
               ),
               Padding(padding: EdgeInsets.all(5),),
-              /*TextField(
+              TextField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
@@ -147,54 +135,27 @@ class homeSettingsProfil extends State<modificationProfil> {
               ),
               onChanged: (text){
                 setState(() {
-                  profil.pseudo=text;
+                  globalUser.pseudo=text;
                 });
               },
             ),
-            Padding(padding: EdgeInsets.all(5),),*/
-              TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'nom',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                onChanged: (text){
-                  setState(() {
-                    profil.nom=text;
-                  });
-                },
-              ),
+            Padding(padding: EdgeInsets.all(5),),
+              Text(globalUser.nom),
+
               Padding(padding: EdgeInsets.all(5),),
-              TextField(
-                decoration: InputDecoration(
-                  fillColor: Colors.white,
-                  filled: true,
-                  hintText: 'Prénom',
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                onChanged: (text){
-                  setState(() {
-                    profil.prenom=text;
-                  });
-                },
-              ),
+              Text(globalUser.prenom),
               Padding(padding: EdgeInsets.all(5),),
               RaisedButton(
                 child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
                 onPressed: (){
                   Map map ={
-                    'prenom':profil.prenom,
-                    'id':identifiant,
-                    'nom':profil.nom,
+                    'prenom':globalUser.prenom,
+                    'id':globalUser.id,
+                    'nom':globalUser.nom,
                     'image':urlImage,
-                    'login':profil.pseudo,
-                    'typeUtilisateur':profil.type_utilisateur,
-                    'image':urlImage
+                    'login':globalUser.pseudo,
+                    'typeUtilisateur':globalUser.type_utilisateur,
+
 
 
                   };

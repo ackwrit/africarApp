@@ -6,7 +6,6 @@ import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -155,10 +154,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
             },
             items: [
-              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("International",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),title: new Text("National",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.language),title: new Text("International",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
-              new BottomNavigationBarItem(icon: new Icon(Icons.bubble_chart),title: new Text('Information',style: TextStyle(fontSize: 18),)),
+              new BottomNavigationBarItem(icon: new Icon(Icons.forum),title: new Text('Information',style: TextStyle(fontSize: 18),)),
 
             ],
             backgroundColor: Colors.blue,

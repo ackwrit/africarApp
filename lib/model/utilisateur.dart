@@ -1,5 +1,6 @@
 
-import 'package:firebase_database/firebase_database.dart';
+import 'package:africars/fonction/conversion.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class utilisateur{
   String id;
@@ -15,10 +16,10 @@ class utilisateur{
   String mail;
 
 
-  utilisateur(DataSnapshot snapshot)
+  utilisateur(DocumentSnapshot snapshot)
   {
-    id=snapshot.key;
-    Map map = snapshot.value;
+    id=snapshot.documentID;
+    Map map = snapshot.data;
     nom = map['nom'];
     prenom = map['prenom'];
     compagnie =map['compagnie'];
@@ -27,7 +28,7 @@ class utilisateur{
     image =map['image'];
     mail=map['mail'];
     sexe=map['sexe'];
-    naissance=map['naissance'];
+    naissance=conversion().readTimestamp(map['naissance']);
     type_utilisateur =map['typeUtilisateur'];
   }
 
@@ -46,7 +47,7 @@ class utilisateur{
       'login':pseudo,
       'mail':mail,
       'sexe':sexe,
-      'naissance':naissance,
+      'naissance':naissance.millisecondsSinceEpoch,
 
     };
   }
