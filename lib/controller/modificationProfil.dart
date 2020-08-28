@@ -25,10 +25,24 @@ class homeSettingsProfil extends State<modificationProfil> {
   utilisateur profil;
   File image;
   String urlImage;
+  String uid;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    firebaseHelper().myId().then((value){
+      setState(() {
+        uid=value;
+      });
+
+      firebaseHelper().getUser(uid).then((value){
+        setState(() {
+          globalUser = value;
+        });
+
+      });
+
+    });
 
   }
   @override
@@ -70,7 +84,7 @@ class homeSettingsProfil extends State<modificationProfil> {
 
 
   Widget bodyPage(){
-    return (profil==null)?Column(
+    return (globalUser==null)?Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Row(
@@ -124,7 +138,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                 child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
               ),
               Padding(padding: EdgeInsets.all(5),),
-              TextField(
+              /*TextField(
               decoration: InputDecoration(
                 fillColor: Colors.white,
                 filled: true,
@@ -138,7 +152,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                   globalUser.pseudo=text;
                 });
               },
-            ),
+            ),*/
             Padding(padding: EdgeInsets.all(5),),
               Text(globalUser.nom),
 
@@ -152,6 +166,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                     'prenom':globalUser.prenom,
                     'id':globalUser.id,
                     'nom':globalUser.nom,
+                    'naissance':globalUser.naissance,
                     'image':urlImage,
                     'login':globalUser.pseudo,
                     'typeUtilisateur':globalUser.type_utilisateur,

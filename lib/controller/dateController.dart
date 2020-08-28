@@ -3,8 +3,10 @@ import 'package:africars/controller/detailDateController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:africars/view/my_widgets/constants.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -33,7 +35,7 @@ class homeDate extends State<dateController>{
       firebaseHelper().getUser(identifiant).then((user)
       {
         setState(() {
-          profil=user;
+          globalUser=user;
         });
 
       });
@@ -45,7 +47,23 @@ class homeDate extends State<dateController>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-    return new Container(
+    return (globalUser==null)?Container(
+      height: MediaQuery.of(context).size.height/2,
+      width: MediaQuery.of(context).size.width/2,
+      color: background,
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Aucune Réservation',style: TextStyle(fontSize: 40),),
+          SizedBox(height: 20,),
+          Image.asset('assets/nodata.png',width: 200,height: 200,),
+
+        ],
+      ),
+
+
+    ):
+    new Container(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       color: Colors.orangeAccent,
