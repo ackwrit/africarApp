@@ -22,6 +22,7 @@ class registerController extends StatefulWidget{
 class homeRegister extends State<registerController>{
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final auth=FirebaseAuth.instance;
+  String identifiant;
 
   final TextEditingController controller = TextEditingController();
   String initialCountry = 'NG';
@@ -37,6 +38,24 @@ class homeRegister extends State<registerController>{
   DateFormat formatjour;
   DateFormat formatheure;
   DateFormat formatmois;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    firebaseHelper().myId().then((value){
+      setState(() {
+        identifiant=value;
+      });
+      firebaseHelper().getUser(identifiant).then((value){
+        setState(() {
+          globalUser = value;
+        });
+      });
+
+    });
+
+  }
 
   @override
   Widget build(BuildContext context) {

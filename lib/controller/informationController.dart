@@ -21,7 +21,14 @@ class homeInformation extends State<informationController>{
   Widget bodyPage(){
     return Container(
       color: Colors.orangeAccent,
-      child: Text('Liste des messages reçus'),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text('Aucune message',style: TextStyle(fontSize: 40),),
+          SizedBox(height: 20,),
+          Image.asset('assets/nodata.png',width: 200,height: 200,),
+        ],
+      )
     );
   }
 

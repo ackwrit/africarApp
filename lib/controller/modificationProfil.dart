@@ -21,10 +21,9 @@ class modificationProfil extends StatefulWidget{
 
 
 class homeSettingsProfil extends State<modificationProfil> {
-  String identifiant;
   utilisateur profil;
   File image;
-  String urlImage;
+  String urlimage;
   String uid;
   @override
   void initState() {
@@ -162,19 +161,19 @@ class homeSettingsProfil extends State<modificationProfil> {
               RaisedButton(
                 child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
                 onPressed: (){
-                  Map map ={
+                  Map <String,dynamic> map ={
                     'prenom':globalUser.prenom,
                     'id':globalUser.id,
                     'nom':globalUser.nom,
                     'naissance':globalUser.naissance,
-                    'image':urlImage,
+                    'image':urlimage,
                     'login':globalUser.pseudo,
                     'typeUtilisateur':globalUser.type_utilisateur,
 
 
 
                   };
-                  firebaseHelper().addUser(identifiant, map);
+                  firebaseHelper().addUser(uid, map);
                   Navigator.push(context, MaterialPageRoute(
                       builder: (BuildContext context)
                       {
@@ -221,10 +220,15 @@ class homeSettingsProfil extends State<modificationProfil> {
       type: FileType.image,
     );
     setState(()async {
-      urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(identifiant));
+      urlimage= await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(uid));
     });
 
-    urlImage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(identifiant));
+    setState(() async {
+      urlimage = await firebaseHelper().savePicture(image, firebaseHelper().storage_profil.child(uid));
+      globalUser.image=urlimage;
+    });
+
+
 
 
 

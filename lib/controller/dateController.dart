@@ -72,7 +72,9 @@ class homeDate extends State<dateController>{
           defaultChild: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Text("Il n' y a aucun achat effectué")
+              Text('Aucune Réservation',style: TextStyle(fontSize: 40),),
+              SizedBox(height: 20,),
+              Image.asset('assets/nodata.png',width: 200,height: 200,),
             ],
           ),
           itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double> animation,int index){
@@ -95,6 +97,10 @@ class homeDate extends State<dateController>{
                   ),
 
                 );
+              }
+            else
+              {
+                return Container();
               }
 
 

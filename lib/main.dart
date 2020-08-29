@@ -5,6 +5,7 @@ import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
+import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -88,12 +89,15 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+
+
   Widget Configuration(){
     return Scaffold(
       appBar: new AppBar(
         actions: <Widget>[
           IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
           {
+
             Navigator.push(context, MaterialPageRoute(
                 builder: (BuildContext context)
                 {

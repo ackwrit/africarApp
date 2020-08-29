@@ -1,12 +1,15 @@
 import 'dart:math';
 
+import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/singleTrajetController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/compagnie.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/view/my_material.dart';
+import 'package:animations/animations.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:intl/intl.dart';
 
 class listingTrajet extends StatefulWidget{
@@ -101,80 +104,96 @@ class homeListing extends State<listingTrajet>{
                   ];
                 },
 
-                body: ListView.builder(
-                    itemCount: documents.length,
-                    itemBuilder: (BuildContext ctx,int index){
+                body: AnimationLimiter(
+                    child: ListView.builder(
+                        itemCount: documents.length,
+                        
+                        itemBuilder: (BuildContext ctx,int index){
 
-                      trajet entreprise = trajet(documents[index]);
+                          trajet entreprise = trajet(documents[index]);
 
-                        if (entreprise.depart == widget.depart &&
-                            entreprise.destination == widget.arrivee) {
-                          return GestureDetector(
-                            child: Card(
-                              elevation: 5,
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20)),
-                              child: Column(
-                                children: [
-                                  Padding(padding: EdgeInsets.all(2)),
-                                  Text(formatjour.format(widget.heureDepart)),
-                                  ListTile(
-                                    title: Text(
-                                      "${entreprise.depart} - ${entreprise
-                                          .destination}",
-                                      textAlign: TextAlign.start,),
-
-                                    trailing: Text(formatheure.format(
-                                        entreprise.heureDepart)),
-                                    subtitle: Text(
-                                        'prix : ${entreprise.prix} CFA'),
-
-                                  ),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment
-                                        .spaceAround,
-                                    children: [
-                                      (entreprise.logoCompagnie!=null)?Image.network(
-                                        entreprise.logoCompagnie, height: 80,
-                                        width: 80,):Container(),
-                                      (entreprise.nomCompagnie!=null)?Text(entreprise.nomCompagnie):Container(),
-                                      //Text(logoCompagnie)
+                          if (entreprise.depart == widget.depart &&
+                              entreprise.destination == widget.arrivee) {
+                            return AnimationConfiguration.staggeredList(
+                                position: index,
+                                duration: const Duration(milliseconds: 425),
+                                child: SlideAnimation(
+                                  verticalOffset: 50.0,
+                                    child: FadeInAnimation(
+                                        child:OpenContainer(
+                                          closedColor: background,
+                                            transitionDuration: Duration(milliseconds:950),
 
 
-                                    ],
-                                  ),
-                                ],
-                              ),
+                                            closedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                                            closedBuilder: (BuildContext context,VoidCallback action)=> Card(
+                                              elevation: 5,
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(20)),
+                                              child: Column(
+                                                children: [
+                                                  Padding(padding: EdgeInsets.all(2)),
+                                                  Text(formatjour.format(widget.heureDepart)),
+                                                  ListTile(
+                                                    title: Text(
+                                                      "${entreprise.depart} - ${entreprise
+                                                          .destination}",
+                                                      textAlign: TextAlign.start,),
+
+                                                    trailing: Text(formatheure.format(
+                                                        entreprise.heureDepart)),
+                                                    subtitle: Text(
+                                                        'prix : ${entreprise.prix} CFA'),
+
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment: MainAxisAlignment
+                                                        .spaceAround,
+                                                    children: [
+                                                      (entreprise.logoCompagnie!=null)?Image.network(
+                                                        entreprise.logoCompagnie, height: 80,
+                                                        width: 80,):Container(),
+                                                      (entreprise.nomCompagnie!=null)?Text(entreprise.nomCompagnie):Container(),
+                                                      //Text(logoCompagnie)
 
 
-                            ),
-                            onTap: () {
-                              //Trajet Aller
-                              Navigator.push(context, MaterialPageRoute(
-                                  builder: (BuildContext context) {
-                                    return singleTrajetController(
-                                      retour: widget.retour,
-                                      trajets: entreprise,
-                                      momentDepart: widget.heureDepart,
-                                      momentArrivee: widget.HeureArrivee,
-                                      nombrepassager: widget.nombrepassager,);
-                                  }
-                              ));
-                            },
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
 
-                          );
+
+                                            ),
+                                            openBuilder: (BuildContext context, VoidCallback action)=>singleTrajetController(
+                                              retour: widget.retour,
+                                              trajets: entreprise,
+                                              momentDepart: widget.heureDepart,
+                                              momentArrivee: widget.HeureArrivee,
+                                              nombrepassager: widget.nombrepassager,)
+                                        ),
+
+                                    )
+                                )
+
+                            );
+
+                          }
+                          else {
+                            return Container();
+                          }
+
+
+
+
+
                         }
-                        else {
-                          return Container();
-                        }
-
-
-
-
-
-                    }
-                ));
+                    ))
+                );
           }
+
+
+
+
         });
 
 
@@ -183,6 +202,9 @@ class homeListing extends State<listingTrajet>{
 
       
   }
+
+
+
 
 
 
