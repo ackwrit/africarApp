@@ -80,147 +80,156 @@ class homeRegister extends State<registerController>{
 
 
   Widget bodyPage(){
-    return Container(
-      padding: EdgeInsets.all(20),
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          Center(
-            child: Text('Inscription',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
-          ),
-          TextField(
-            onChanged: (text){
-              setState(() {
-                nom=text;
-                passage=false;
-              });
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              hintText: 'Entre votre nom',
-              fillColor: Colors.white,
-              filled: true,
-
-            ),
-          ),
-
-          (nom==null || nom=='')?Container():TextField(
-            onChanged: (text){
-              setState(() {
-                prenom=text;
-                passage=false;
-              });
-            },
-            decoration: InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
-              hintText: 'Entre votre prénom',
-              fillColor: Colors.white,
-              filled: true,
-
-            ),
-          ),
-          (prenom==null||prenom =='')?Container():Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+    return SingleChildScrollView(
+      child:Container(
+        padding: EdgeInsets.all(20),
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: InkWell(
+          onTap: (()=>FocusScope.of(context).requestFocus(FocusNode())),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              Text('Homme'),
-              Switch.adaptive(
-                  value: sexe,
-                  onChanged: (bool t){
-                    setState(() {
-                      sexe =t;
-                    });
+              Center(
+                child: Text('Inscription',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
+              ),
+              TextField(
+                onChanged: (text){
+                  setState(() {
+                    nom=text;
+                    passage=false;
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                  hintText: 'Entre votre nom',
+                  fillColor: Colors.white,
+                  filled: true,
 
-                  }),
-              Text('Femme')
+                ),
+              ),
+
+              (nom==null || nom=='')?Container():TextField(
+                onChanged: (text){
+                  setState(() {
+                    prenom=text;
+                    passage=false;
+                  });
+                },
+                decoration: InputDecoration(
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(20)),
+                  hintText: 'Entre votre prénom',
+                  fillColor: Colors.white,
+                  filled: true,
+
+                ),
+              ),
+              (prenom==null||prenom =='')?Container():Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text('Homme'),
+                  Switch.adaptive(
+                      value: sexe,
+                      onChanged: (bool t){
+                        setState(() {
+                          sexe =t;
+                        });
+
+                      }),
+                  Text('Femme')
+
+                ],
+              ),
+              (prenom==null||prenom =='')?Container():RaisedButton.icon(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  color: backgroundbar,
+                  elevation: 5.0,
+                  icon: Icon(Icons.access_time,color: background,),
+                  onPressed: (){
+                    DatePicker.showDatePicker(context,
+                        showTitleActions: true,
+                        minTime: DateTime(1918, 1, 1),
+                        maxTime: DateTime(2030, 6, 7),
+                        onConfirm: (DateTime date) {
+                          setState(() {
+                            naissance=date;
+                          });
+                        },
+                        currentTime: DateTime.now(),
+                        locale: LocaleType.fr);
+                    setState(() {
+                      passage=true;
+                    });
+                  },
+                  label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 18),)
+              ),
+
+
+
+
+
+
+
+
+              (prenom==null||prenom =='')?Container():InternationalPhoneNumberInput(
+                initialValue: number,
+                onInputChanged: (text){
+                  number=text;
+                },
+                selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
+                inputDecoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(20)
+                    )
+                ),
+              ),
+
+              (codeSent)?TextField(
+                decoration: InputDecoration(
+                    fillColor: Colors.white,
+                    filled: true,
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+
+                    hintText: 'Entrer le code'
+
+                ),
+                onChanged: (value){
+                  setState(() {
+                    smsCode=value;
+                  });
+                },
+
+              ):Container(),
+
+              (passage)?FlatButton(
+                  onPressed: (){
+                    print(number.phoneNumber.trim());
+                    print(number.toString().trim());
+                    print(number.phoneNumber);
+                    (codeSent)?handleOTP(smsCode, verificationId):handleSignWithSign(number.toString().trim());
+
+
+                    //firebaseHelper().handleSignPhone(number.toString());
+                  },
+                  child: (codeSent)?Text('Enregister'):Text('Validation')
+
+
+              ):Container(),
 
             ],
           ),
-          (prenom==null||prenom =='')?Container():RaisedButton.icon(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            color: backgroundbar,
-            elevation: 5.0,
-            icon: Icon(Icons.access_time,color: background,),
-              onPressed: (){
-                DatePicker.showDatePicker(context,
-                    showTitleActions: true,
-                    minTime: DateTime(1918, 1, 1),
-                    maxTime: DateTime(2030, 6, 7),
-                     onConfirm: (DateTime date) {
-                      setState(() {
-                        naissance=date;
-                      });
-                    },
-                    currentTime: DateTime.now(),
-                    locale: LocaleType.fr);
-                setState(() {
-                  passage=true;
-                });
-              },
-              label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 18),)
-          ),
 
-          
-          
-          
+        ),
 
-
-
-
-          (prenom==null||prenom =='')?Container():InternationalPhoneNumberInput(
-            initialValue: number,
-            onInputChanged: (text){
-              number=text;
-            },
-            selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-            inputDecoration: InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20)
-              )
-            ),
-          ),
-
-          (codeSent)?TextField(
-            decoration: InputDecoration(
-              fillColor: Colors.white,
-              filled: true,
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-              ),
-
-              hintText: 'Entrer le code'
-
-            ),
-            onChanged: (value){
-              setState(() {
-                smsCode=value;
-              });
-            },
-
-          ):Container(),
-        
-          (passage)?FlatButton(
-            onPressed: (){
-              print(number.phoneNumber.trim());
-              print(number.toString().trim());
-              print(number.phoneNumber);
-              (codeSent)?handleOTP(smsCode, verificationId):handleSignWithSign(number.toString().trim());
-
-
-                //firebaseHelper().handleSignPhone(number.toString());
-            },
-            child: (codeSent)?Text('Enregister'):Text('Validation')
-              
-
-          ):Container(),
-
-        ],
-      ),
+      )
     );
+
+
 
   }
 

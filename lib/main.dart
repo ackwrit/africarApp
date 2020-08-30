@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/informationController.dart';
 import 'package:africars/controller/principalController.dart';
@@ -5,8 +8,10 @@ import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
+import 'package:africars/fonction/pushNotification.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -68,6 +73,38 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   PageController pageController=PageController(initialPage: 0);
   int bottomSelectedIndex=0;
+  pushNotification _notification;
+  FirebaseMessaging fcm =FirebaseMessaging();
+
+
+  @override
+  void initState(){
+    // TODO: implement initState
+
+    super.initState();
+    if (Platform.isIOS) {
+
+
+      fcm.requestNotificationPermissions(IosNotificationSettings());
+    }
+    fcm.configure(
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message");
+      },
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+    );
+    initialisation();
+
+
+
+  }
 
 
   @override
@@ -92,6 +129,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Widget Configuration(){
+
+
     return Scaffold(
       appBar: new AppBar(
         actions: <Widget>[
@@ -176,7 +215,14 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+Future initialisation() async {
 
+  String token = await fcm.getToken();
+  print("Firebase messaging: $token");
+
+
+
+}
 
   void pageChanged(int index) {
     setState(() {

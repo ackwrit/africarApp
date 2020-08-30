@@ -15,6 +15,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "198233373524-k7sujb1846s0obhvk7vjl3ej52t3nd5l.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "lightphoenix.africars",
+            "certificate_hash": "c52bd0318daf79c0ca15ea100989c6668c77d966"
+          }
+        },
+        {
           "client_id": "198233373524-o0rtha7lq3oqno50b6ca9e0fv7dfbj16.apps.googleusercontent.com",
           "client_type": 3
         }
@@ -32,10 +40,10 @@
               "client_type": 3
             },
             {
-              "client_id": "198233373524-kdo1o8gf3dbu193jdsktig9dcgol90ol.apps.googleusercontent.com",
+              "client_id": "198233373524-foppub31hppumc58u8efgb93u8uriegc.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "lightphoenix.africacars"
+                "bundle_id": "lightphoenix.africars"
               }
             }
           ]

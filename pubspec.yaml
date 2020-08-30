@@ -46,6 +46,7 @@ dependencies:
   flutter_datetime_picker: ^1.4.0
   flutter_staggered_animations: ^0.1.2
   animations: ^1.1.2
+  firebase_messaging:
 
 
   # The following adds the Cupertino Icons font to your application.

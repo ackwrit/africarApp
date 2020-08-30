@@ -71,7 +71,7 @@ class homeReviewBack extends State<backTrajetControllerReview>{
                 Container(
                   height: 10,
                 ),
-                Text("${widget.voyageAller.depart} - ${widget.voyageAller.destination}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
+                Text("${widget.voyageAller.destination} - ${widget.voyageAller.depart}",style: TextStyle(fontSize: 20,fontWeight: FontWeight.bold),),
                 Container(
                   height: 10,
                 ),

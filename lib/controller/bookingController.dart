@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:africars/controller/infoPersoBilletController.dart';
 import 'package:africars/controller/paymentController.dart';
 import 'package:africars/controller/reservationController.dart';
@@ -5,6 +8,7 @@ import 'package:africars/fonction/conversion.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -55,11 +59,16 @@ class homeBooking extends State<bookingController>{
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   String nom='Nom';
   String prenom='Prénom';
+  FirebaseMessaging _fcm =FirebaseMessaging();
+  StreamSubscription iosSubscription;
   @override
   void initState() {
     // TODO: implement initState
 
+
+
     super.initState();
+
   }
   @override
   Widget build(BuildContext context) {
@@ -192,7 +201,7 @@ class homeBooking extends State<bookingController>{
                 :Container(),
 
 
-            SizedBox(height: 20,),
+            SizedBox(height: 5,),
             InternationalPhoneNumberInput(
               initialValue: number,
               onInputChanged: (text){
@@ -207,12 +216,15 @@ class homeBooking extends State<bookingController>{
                   )
               ),
             ),
-            SizedBox(height: 15,),
+            SizedBox(height: 5,),
             Text('Passager',style: TextStyle(fontSize: 25),),
 
 
-            SizedBox(height: 15,),
+            SizedBox(height: 5,),
+
             ajout(),
+
+
 
            /* TextField(
               onChanged: (String text){
@@ -332,7 +344,7 @@ class homeBooking extends State<bookingController>{
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: nom,
+                      hintText: '$nom',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -380,5 +392,7 @@ class homeBooking extends State<bookingController>{
     );
 
   }
+
+
 
 }
