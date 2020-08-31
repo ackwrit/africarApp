@@ -46,6 +46,7 @@ class homeListing extends State<listingTrajet>{
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre = new NumberFormat("#,###", "fr_FR");
   String heuredepart;
   String heurearrivee;
 
@@ -143,7 +144,7 @@ class homeListing extends State<listingTrajet>{
                                                     trailing: Text(formatheure.format(
                                                         entreprise.heureDepart)),
                                                     subtitle: Text(
-                                                        'prix : ${entreprise.prix} CFA'),
+                                                        'prix : ${formatchiffre.format(entreprise.prix)} CFA'),
 
                                                   ),
                                                   Row(

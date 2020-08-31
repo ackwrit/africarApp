@@ -52,6 +52,7 @@ class homeBooking extends State<bookingController>{
   String refBillet=randomAlphaNumeric(13);
   utilisateur profil;
   String identifiant;
+  var formatchiffre = new NumberFormat('#,###','fr_FR');
   int compteur=1;
   PhoneNumber number= PhoneNumber(isoCode: 'ML');
 
@@ -103,7 +104,7 @@ class homeBooking extends State<bookingController>{
                   Container(height: 10,),
                   Text("Référence du billet : $refBillet"),
                   Container(height: 10,),
-                  //Text(formatjour.format(widget.momentDepart)),
+                  Text(formatjour.format(widget.momentDepart)),
                   Container(height: 10,),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,

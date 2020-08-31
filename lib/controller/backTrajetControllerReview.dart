@@ -37,6 +37,7 @@ class homeReviewBack extends State<backTrajetControllerReview>{
   int bagage =0;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre = new NumberFormat('#,###','fr_FR');
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -139,7 +140,7 @@ class homeReviewBack extends State<backTrajetControllerReview>{
                   ),
 
                 ),
-                Text('Prix ${widget.voyageAller.prix} cfa'),
+                Text('Prix ${formatchiffre.format(widget.voyageRetour.prix)} cfa'),
                 Container(height: 10,),
                 RaisedButton(
                     color: Colors.black,

@@ -85,12 +85,19 @@ class _MyHomePageState extends State<MyHomePage> {
     if (Platform.isIOS) {
 
 
-      fcm.requestNotificationPermissions(IosNotificationSettings());
+      fcm.requestNotificationPermissions(IosNotificationSettings(
+        sound: true,
+        badge: true,
+        alert: true,
+      ));
+      fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+        print('IOS settings register');
+
+
+      });
+
     }
     fcm.configure(
-      onMessage: (Map<String, dynamic> message) async {
-        print("onMessage: $message");
-      },
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
         // TODO optional
@@ -99,8 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
         print("onResume: $message");
         // TODO optional
       },
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message ");
+      },
+
+
     );
     initialisation();
+
 
 
 

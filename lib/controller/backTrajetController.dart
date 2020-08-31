@@ -49,6 +49,7 @@ class homeBack extends State<backTrajetController>{
   compagnie partenaire;
   String offrepartenaire,logoCompagnie;
   String nameCompagnie;
+  var formatchiffre = new NumberFormat('#,###','fr_FR');
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
@@ -117,12 +118,12 @@ class homeBack extends State<backTrajetController>{
                             child: Column(
                               children: [
                                 Padding(padding: EdgeInsets.all(2)),
-                                Text(formatjour.format(widget.heureDepart)),
+                                Text(formatjour.format(widget.momentarrivee)),
                                 ListTile(
                                   title: Text("${entreprise.depart} - ${entreprise.destination}",textAlign: TextAlign.start,),
 
                                   trailing: Text(formatheure.format(entreprise.heureDepart)),
-                                  subtitle: Text('prix : ${entreprise.prix} CFA'),
+                                  subtitle: Text('prix : ${formatchiffre.format(entreprise.prix)} CFA'),
 
                                 ),
                                 Row(

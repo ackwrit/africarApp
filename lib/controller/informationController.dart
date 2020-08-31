@@ -24,7 +24,7 @@ class homeInformation extends State<informationController>{
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text('Aucune message',style: TextStyle(fontSize: 40),),
+          Text('Aucun message',style: TextStyle(fontSize: 40),),
           SizedBox(height: 20,),
           Image.asset('assets/nodata.png',width: 200,height: 200,),
         ],

@@ -35,6 +35,7 @@ class homeSingle extends State<singleTrajetController>{
   int bagage =0;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre =new NumberFormat('#,###','fr_FR');
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -136,7 +137,7 @@ class homeSingle extends State<singleTrajetController>{
                 ),
 
               ),
-              Text('Prix ${widget.voyage.prix} cfa'),
+              Text('Prix ${formatchiffre.format(widget.voyage.prix)} cfa'),
               Container(height: 10,),
               RaisedButton(
                 color: Colors.black,
