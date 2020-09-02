@@ -1,5 +1,4 @@
 import 'dart:math';
-
 import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/singleTrajetController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
@@ -19,6 +18,7 @@ class listingTrajet extends StatefulWidget{
   DateTime heureDepart;
   DateTime HeureArrivee;
   int nombrepassager;
+
   
   listingTrajet({bool retour,String depart,String arrivee,DateTime heureDepart,DateTime heureArrivee,int nombrepassager}){
     this.retour =retour;

@@ -1,4 +1,5 @@
 import 'package:africars/controller/listingTrajet.dart';
+import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_snack.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:animate_icons/animate_icons.dart';
@@ -90,7 +91,7 @@ class homeInternational extends State<trajetInternationalController>{
         child: Column(
           children: [
             Container(
-              height: 55,
+              height: 65,
               child: DropdownSearch<String>(
 
                 validator: (v) => v == null ? "required field" : null,
@@ -144,7 +145,7 @@ class homeInternational extends State<trajetInternationalController>{
               ),
             ),
             Container(
-              height: 55,
+              height: 65,
               child: DropdownSearch<String>(
 
                 validator: (v) => v == null ? "required field" : null,
@@ -311,7 +312,7 @@ class homeInternational extends State<trajetInternationalController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                     {
-                      return listingTrajet(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArriveeInternational,heureDepart: momentDepartInternational,nombrepassager: nbpassager,);
+                      return verificationController(retour: retour,depart: destinationSelectionDepart,arrivee: destinationSelectionArrivee,heureArrivee: momentArriveeInternational,heureDepart: momentDepartInternational,nombrepassager: nbpassager,);
                     }
                 ));
 

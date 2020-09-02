@@ -1,5 +1,6 @@
 
 import 'package:africars/controller/listingTrajet.dart';
+import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:africars/view/my_snack.dart';
 import 'package:animate_icons/animate_icons.dart';
@@ -100,7 +101,7 @@ class homeTrajet extends State<trajetController>{
 
             //
             Container(
-              height: 60,
+              height: 65,
               child: DropdownSearch<String>(
 
                 validator: (v) => v == null ? "required field" : null,
@@ -155,7 +156,7 @@ class homeTrajet extends State<trajetController>{
               ),
             ),
             Container(
-              height: 60,
+              height: 65,
               child: DropdownSearch<String>(
                 validator: (v) => v == null ? "required field" : null,
                 hint: "Choisir votre arrivée",
@@ -334,7 +335,7 @@ class homeTrajet extends State<trajetController>{
                 Navigator.push(context, MaterialPageRoute(
                     builder: (BuildContext context)
                     {
-                      return listingTrajet(
+                      return verificationController(
                         retour: retour,
                         depart: destinationSelectionDepart,
                         arrivee: destinationSelectionArrivee,
