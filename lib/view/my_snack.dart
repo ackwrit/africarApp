@@ -23,7 +23,7 @@ class SnackbarState extends State<Mysnackbar>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-        height: MediaQuery.of(context).size.height/2.3,
+        height: MediaQuery.of(context).size.height/1.43,
       color: background,
       child:Container(
 
@@ -32,10 +32,11 @@ class SnackbarState extends State<Mysnackbar>{
             borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
         ),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             CalendarStrip(
-                containerHeight: 80,
+                containerHeight: 100,
+
 
                 onDateSelected: (heure)
                 {
@@ -55,6 +56,7 @@ class SnackbarState extends State<Mysnackbar>{
 
                 }
             ),
+            Text('Horaire',style: TextStyle(fontSize: 20),),
             TimePickerSpinner(
               isForce2Digits: true,
               minutesInterval: 15,
@@ -84,7 +86,6 @@ class SnackbarState extends State<Mysnackbar>{
             ),
             RaisedButton(
                 onPressed: (){
-                  print('valeur snack');
                   print(widget.momentDepart);
                   Navigator.pop(context,widget.momentDepart);
                 },

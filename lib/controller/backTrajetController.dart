@@ -150,7 +150,7 @@ class homeBack extends State<backTrajetController>{
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context)
                                 {
-                                  return backTrajetControllerReview(retour: widget.retour,trajetsRetour: entreprise,momentDepart: widget.heureDepart,momentArrivee: widget.HeureArrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
+                                  return backTrajetControllerReview(retour: widget.retour,trajetsRetour: entreprise,momentDepart: widget.momentDepart,momentArrivee: widget.momentarrivee,nombrepassager: widget.nombrepassager,trajetAller: widget.voyageAller,);
                                 }
                             ));
 

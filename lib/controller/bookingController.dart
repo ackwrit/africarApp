@@ -276,7 +276,7 @@ class homeBooking extends State<bookingController>{
                 print(widget.retour);
                 //Enregistrement billet en mode provisoire
                 Map <String,dynamic>map={
-                  'emission':DateTime.now().millisecondsSinceEpoch,
+                  'emission':DateTime.now(),
                   'departAller':widget.voyageAller.depart,
                   'telephone':number.toString(),
                   'retourAller':(widget.retour)?widget.voyageAller.destination:'',
@@ -293,8 +293,8 @@ class homeBooking extends State<bookingController>{
                   'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
                   'billerRetour':widget.retour,
                   'validate':false,
-                  'jourAller':widget.momentDepart.millisecondsSinceEpoch,
-                  'jourRetour':(widget.retour)?widget.momentDepartRetour.millisecondsSinceEpoch:'',
+                  'jourAller':widget.momentDepart,
+                  'jourRetour':(widget.retour)?widget.momentArrivee:DateTime.now(),
 
                 };
                 firebaseHelper().addBillet(refBillet, map);

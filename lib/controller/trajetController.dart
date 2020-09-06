@@ -328,7 +328,7 @@ class homeTrajet extends State<trajetController>{
             ),
 
 
-            Padding(padding: EdgeInsets.all(5),),
+            Padding(padding: EdgeInsets.all(2),),
 
             RaisedButton(
               onPressed: (){
