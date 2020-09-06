@@ -27,6 +27,7 @@ class listingTrajet extends StatefulWidget{
     this.heureDepart=heureDepart;
     this.HeureArrivee=heureArrivee;
     this.nombrepassager=nombrepassager;
+
   }
   @override
   State<StatefulWidget> createState() {

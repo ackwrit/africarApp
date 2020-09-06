@@ -1,4 +1,5 @@
 
+import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/view/my_material.dart';
@@ -11,6 +12,21 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 
 class registerController extends StatefulWidget{
+  bool retour;
+  String depart;
+  String arrivee;
+  DateTime heureDepart;
+  DateTime HeureArrivee;
+  int nombrepassager;
+  registerController({bool retour,String depart,String arrivee,DateTime heureDepart,DateTime heureArrivee,int nombrepassager})
+  {
+    this.retour =retour;
+    this.depart=depart;
+    this.arrivee=arrivee;
+    this.heureDepart=heureDepart;
+    this.HeureArrivee=heureArrivee;
+    this.nombrepassager=nombrepassager;
+  }
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -302,7 +318,14 @@ Future <void> handleOTP(smsCode,verifId) async{
   firebaseHelper().addUser(uid, map);
   Navigator.push(context, MaterialPageRoute(
       builder: (BuildContext context){
-        return settingsProfilController();
+        return (widget.depart!=null)?listingTrajet(
+          retour: widget.retour,
+          depart: widget.depart,
+          arrivee: widget.arrivee,
+          heureArrivee: widget.HeureArrivee,
+          heureDepart: widget.heureDepart,
+          nombrepassager: widget.nombrepassager,
+        ):settingsProfilController();
       }
   ));
 }

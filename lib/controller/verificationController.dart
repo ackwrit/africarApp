@@ -44,7 +44,14 @@ class verifState extends State<verificationController> {
               nombrepassager: widget.nombrepassager,);
           }
           else {
-            return registerController();
+            return registerController(
+              retour: widget.retour,
+              depart: widget.depart,
+              arrivee: widget.arrivee,
+              heureArrivee: widget.HeureArrivee,
+              heureDepart: widget.heureDepart,
+              nombrepassager: widget.nombrepassager,
+            );
           }
         }
     );
