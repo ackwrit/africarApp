@@ -1,19 +1,23 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:io';
 
-import 'package:africars/controller/infoPersoBilletController.dart';
-import 'package:africars/controller/paymentController.dart';
+
 import 'package:africars/controller/reservationController.dart';
-import 'package:africars/fonction/conversion.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/model/my_token.dart';
+import 'package:africars/model/my_token_payment.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
+import 'package:africars/view/my_widgets/constants.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:random_string/random_string.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 class bookingController extends StatefulWidget{
   bool retour;
@@ -62,15 +66,7 @@ class homeBooking extends State<bookingController>{
   String prenom='Prénom';
   FirebaseMessaging _fcm =FirebaseMessaging();
   StreamSubscription iosSubscription;
-  @override
-  void initState() {
-    // TODO: implement initState
 
-
-
-    super.initState();
-
-  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -309,7 +305,13 @@ class homeBooking extends State<bookingController>{
                 ));
               },
               child: Text('Réservation',style: TextStyle(color: Colors.white),),
-            )
+            ),
+            RaisedButton(
+              color: Colors.black,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              onPressed: ()=> paye(),
+              child:Text('Paiement',style:TextStyle(color: Colors.white)),
+            ),
 
           ],
         ),
@@ -317,6 +319,82 @@ class homeBooking extends State<bookingController>{
 
 
     );
+
+  }
+
+
+  Future paye() async {
+    int prixTotal=0;
+    if(widget.retour){
+      prixTotal = widget.voyageAller.prix + widget.voyageRetour.prix;
+
+    }
+    else
+      {
+        prixTotal=widget.voyageAller.prix;
+
+      }
+
+    //Récupération du token pour le paiement
+    var credentials= globalCredentials;
+    Map<String,String>headerToken={
+      HttpHeaders.authorizationHeader :'Basic $credentials',
+    };
+    Map<String,dynamic> bodyToken ={
+      "grant_type":"client_credentials",
+      "token_type": "Bearer",
+      "expires_in": "777600",
+      "access_token": ""
+
+    };
+    var response =await http.post('https://api.orange.com/oauth/v2/token',headers: headerToken,body: bodyToken);
+
+    Token body = Token.fromJson(jsonDecode(response.body));
+
+
+
+    ///////////////////////////////////
+    //activation payment
+    Map <String,String> headerpayment={
+      HttpHeaders.authorizationHeader :"${body.token_type} ${body.access_token}",
+      HttpHeaders.acceptHeader:"application/json",
+      HttpHeaders.hostHeader:"api.orange.com",
+      HttpHeaders.contentTypeHeader:"application/json"
+      //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
+    };
+    DateTime orderid = DateTime.now();
+
+
+    Map <String,dynamic> bodypayment ={
+      "Content-Type": "application/json",
+      "merchant_key": "bd77ff4d",
+      "currency": "OUV",
+      "order_id": "${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}",
+      "amount": prixTotal.toString(),
+      "return_url": "http://myvirtualshop.webnode.es",
+      "cancel_url": "http://myvirtualshop.webnode.es/txncncld/",
+      "notif_url": "http://www.merchant-example2.org/notif",
+      "lang": "fr",
+      "reference":"Africar",
+
+    };
+
+    http.Response paymentResponse = await http.post(
+        urlPaiement,
+        headers: headerpayment,
+        body: jsonEncode(bodypayment)
+
+    );
+    TokenPayment paymenttoken = TokenPayment.fromJson(jsonDecode(paymentResponse.body));
+
+
+    //Lancement de la page paiement
+    if (await canLaunch(paymenttoken.payment_url)) {
+      await launch(paymenttoken.payment_url);
+    } else {
+      throw 'Could not launch ${paymenttoken.payment_url}';
+    }
+
 
   }
 

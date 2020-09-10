@@ -144,7 +144,6 @@ class homeSingle extends State<singleTrajetController>{
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   child: Text('Valider',style:TextStyle(color: Colors.white),),
                   onPressed: (){
-                  print(widget.retour);
                   
                   //déterminer choix si voyage de retour
                     Navigator.push(context, MaterialPageRoute(

@@ -47,6 +47,8 @@ dependencies:
   flutter_staggered_animations: ^0.1.2
   animations: ^1.1.2
   firebase_messaging:
+  http: ^0.12.2
+  url_launcher: ^5.5.3
 
 
   # The following adds the Cupertino Icons font to your application.
