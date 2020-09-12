@@ -1,5 +1,6 @@
 
 import 'package:africars/fonction/conversion.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'dart:convert';
 
@@ -9,8 +10,8 @@ class billet{
   DateTime emission;
   DateTime jourAller;
   DateTime jourRetour;
-  String departAller;
-  String retourAller;
+  String depart;
+  String retour;
   String retourRetour;
   String departRetour;
   String logoCompagnieAller;
@@ -25,20 +26,21 @@ class billet{
   bool  validate;
   String idVoyageur;
   String vide;
+  int prix;
 
 
 
 
-  billet(DataSnapshot snapshot)
+  billet(DocumentSnapshot snapshot)
   {
 
 
-    id=snapshot.key;
-    Map map = snapshot.value;
+    id=snapshot.documentID;
+    Map map = snapshot.data;
     //Convertir  les informations en DateTime
     emission = conversion().stringtoDateTime(map['emission']);
-    departAller=map['departAller'];
-    retourAller=map['retourAller'];
+    depart=map['depart'];
+    retour=map['retour'];
     departRetour=map['departRetour'];
     retourRetour=map['retourRetour'];
     logoCompagnieAller=map['logoCompagnieAller'];
@@ -52,6 +54,7 @@ class billet{
     qrCodeRetour=map['qrCodeRetour'];
     billetretour=map['billetRetour'];
     validate=map['validate'];
+    prix=map['prix'];
     jourAller=conversion().stringtoDateTime(map['jourAller']);
     (billetretour==true)?jourRetour=conversion().stringtoDateTime(map['jourRetour']):vide='';
     idVoyageur=map['idVoyageur'];
@@ -63,8 +66,8 @@ class billet{
     Map map;
     return map ={
       map['emission']:emission,
-    map['departAller']:departAller,
-    map['retourAller']:retourAller,
+    map['departAller']:depart,
+    map['retourAller']:retour,
     map['departRetour']:departRetour,
     map['retourRetour']:retourRetour,
     map['logoCompagnieAller']:logoCompagnieAller,
@@ -81,6 +84,7 @@ class billet{
       map['jourAller']:jourAller,
       map['jourRetour']:jourRetour,
       map['idVoyageur']:idVoyageur,
+      map['prix']:prix,
 
     };
   }

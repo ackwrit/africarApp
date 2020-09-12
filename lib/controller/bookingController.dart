@@ -66,6 +66,27 @@ class homeBooking extends State<bookingController>{
   String prenom='Prénom';
   FirebaseMessaging _fcm =FirebaseMessaging();
   StreamSubscription iosSubscription;
+  String uid;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    firebaseHelper().myId().then((value){
+      setState(() {
+        uid=value;
+      });
+
+      firebaseHelper().getUser(uid).then((value){
+        setState(() {
+          globalUser = value;
+        });
+
+      });
+
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -257,61 +278,18 @@ class homeBooking extends State<bookingController>{
 
             ),
             SizedBox(height: 15,),*/
+           InkWell(
+             onTap: ()=>paye(),
+             child: Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+           ),
 
-            Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+
             SizedBox(height: 15,),
 
 
 
 
-            //reservation total;
-            RaisedButton(
-              color: Colors.black,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              onPressed: (){
-                print(widget.retour);
-                //Enregistrement billet en mode provisoire
-                Map <String,dynamic>map={
-                  'emission':DateTime.now(),
-                  'departAller':widget.voyageAller.depart,
-                  'telephone':number.toString(),
-                  'retourAller':(widget.retour)?widget.voyageAller.destination:'',
-                  'departRetour':(widget.retour)?widget.voyageRetour.depart:'',
-                  'retourRetour':(widget.retour)?widget.voyageRetour.destination:'',
-                  'logoCompagnieAller':widget.voyageAller.logoCompagnie,
-                  'logoCompagnieRetour':(widget.retour)?widget.voyageRetour.logoCompagnie:'',
-                  'lieuDepart': widget.voyageAller.depart.toString(),
-                  'lieuArrivee':widget.voyageAller.destination.toString(),
-                  'nbPassager':widget.nombrePassager,
-                  'nomPassager':nom,
-                  'prenomPassager':prenom,
-                  'qrCodeAller':generateQRCode,
-                  'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
-                  'billerRetour':widget.retour,
-                  'validate':false,
-                  'jourAller':widget.momentDepart,
-                  'jourRetour':(widget.retour)?widget.momentArrivee:DateTime.now(),
 
-                };
-                firebaseHelper().addBillet(refBillet, map);
-
-
-
-
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return reservationController(refbillet: refBillet,);
-                    }
-                ));
-              },
-              child: Text('Réservation',style: TextStyle(color: Colors.white),),
-            ),
-            RaisedButton(
-              color: Colors.black,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              onPressed: ()=> paye(),
-              child:Text('Paiement',style:TextStyle(color: Colors.white)),
-            ),
 
           ],
         ),
@@ -323,7 +301,50 @@ class homeBooking extends State<bookingController>{
   }
 
 
+
+  void billetrecording(bool validate)
+  {
+    int prixtotal=0;
+    if(widget.retour){
+      prixtotal =widget.voyageAller.prix +widget.voyageRetour.prix;
+    }
+    else
+    {
+      prixtotal = widget.voyageAller.prix;
+    }
+
+    //Enregistrement billet en mode provisoire
+    Map <String,dynamic>map={
+      'emission':DateTime.now(),
+      'departAller':widget.voyageAller.depart,
+      'telephone':number.toString(),
+      'retourAller':(widget.retour)?widget.voyageAller.destination:'',
+      'departRetour':(widget.retour)?widget.voyageRetour.depart:'',
+      'retourRetour':(widget.retour)?widget.voyageRetour.destination:'',
+      'logoCompagnieAller':widget.voyageAller.logoCompagnie,
+      'logoCompagnieRetour':(widget.retour)?widget.voyageRetour.logoCompagnie:'',
+      'lieuDepart': widget.voyageAller.depart.toString(),
+      'lieuArrivee':widget.voyageAller.destination.toString(),
+      'nbPassager':widget.nombrePassager,
+      'nomPassager':nom,
+      'idvoyageur':globalUser.id,
+      'prenomPassager':prenom,
+      'qrCodeAller':generateQRCode,
+      'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
+      'billerRetour':widget.retour,
+      'validate':validate,
+      'jourAller':widget.momentDepart,
+      'jourRetour':(widget.retour)?widget.momentArrivee:DateTime.now(),
+      'prix':prixtotal,
+
+    };
+    firebaseHelper().addBillet(refBillet, map);
+
+  }
+
+
   Future paye() async {
+    billetrecording(false);
     int prixTotal=0;
     if(widget.retour){
       prixTotal = widget.voyageAller.prix + widget.voyageRetour.prix;
@@ -363,17 +384,18 @@ class homeBooking extends State<bookingController>{
       //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
     };
     DateTime orderid = DateTime.now();
+    String orderNumber ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
 
 
     Map <String,dynamic> bodypayment ={
-      "Content-Type": "application/json",
-      "merchant_key": "bd77ff4d",
-      "currency": "OUV",
-      "order_id": "${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}",
+      "Content-Type":"application/json",
+      "merchant_key":"bd77ff4d",
+      "currency":"OUV",
+      "order_id":orderNumber,
       "amount": prixTotal.toString(),
-      "return_url": "http://myvirtualshop.webnode.es",
-      "cancel_url": "http://myvirtualshop.webnode.es/txncncld/",
-      "notif_url": "http://www.merchant-example2.org/notif",
+      "return_url": "http://www.koko0017.odns.fr",
+      "cancel_url": "http://www.koko0017.odns.fr",
+      "notif_url":"http://www.koko0017.odns.fr/notifications",
       "lang": "fr",
       "reference":"Africar",
 
@@ -388,14 +410,39 @@ class homeBooking extends State<bookingController>{
     TokenPayment paymenttoken = TokenPayment.fromJson(jsonDecode(paymentResponse.body));
 
 
+    //headerverification
+    Map<String,String>headerverification ={
+      HttpHeaders.authorizationHeader:"${body.token_type} ${body.access_token}",
+      HttpHeaders.acceptHeader:"application/json",
+      //HttpHeaders.contentTypeHeader:"application/json"
+
+
+    };
+
+
     //Lancement de la page paiement
+    Map<String,dynamic> bodyverification ={
+      "order_id":orderNumber,
+      "amount":prixTotal.toString(),
+      "pay_token":paymenttoken.pay_token
+
+    };
     if (await canLaunch(paymenttoken.payment_url)) {
       await launch(paymenttoken.payment_url);
+
+
     } else {
       throw 'Could not launch ${paymenttoken.payment_url}';
     }
+    Timer(Duration(seconds:30), () async {
+      http.Response verificationPaiement = await http.post(
+          "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+          ,body: bodyverification,headers: headerverification);
+      print("affichage notification");
+      print(verificationPaiement.body);
 
 
+    });
   }
 
   Widget ajout()

@@ -4,6 +4,7 @@ import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
@@ -63,52 +64,71 @@ class homeDate extends State<dateController>{
 
 
     ):
-    new Container(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      color: Colors.orangeAccent,
-      child: FirebaseAnimatedList(
-          query: firebaseHelper().base_billet,
-          defaultChild: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text('Aucune Réservation',style: TextStyle(fontSize: 40),),
-              SizedBox(height: 20,),
-              Image.asset('assets/nodata.png',width: 200,height: 200,),
-            ],
-          ),
-          itemBuilder: (BuildContext context,DataSnapshot snapshot,Animation<double> animation,int index){
-            billet ticket= billet(snapshot);
-            if(ticket.idVoyageur==identifiant && ticket.validate==true)
-              {
-                return Card(
-                  child: ListTile(
-                    leading: Text("${formatjour.format(ticket.jourAller)}"),
-                    title: Text("${ticket.lieuDepart}-${ticket.lieuArrivee}"),
-                    trailing: Text("${formatheure.format(ticket.jourAller)}"),
-                    onTap: (){
-                      Navigator.push(context, MaterialPageRoute(
-                          builder: (BuildContext context){
-                            return detailDateController(ticket: ticket,);
-                          }
-                      ));
-
-                    },
-                  ),
-
-                );
-              }
-            else
-              {
-                return Container();
-              }
-
-
-
-
+    StreamBuilder(
+        stream: firebaseHelper().fire_billet.snapshots(),
+        builder: (BuildContext context,AsyncSnapshot<QuerySnapshot>snapshot){
+          if(!snapshot.hasData){
+            return Text('coucou');//LoadingCenter();
 
           }
-      )
+          else
+          {
+            List<DocumentSnapshot>documents =snapshot.data.documents;
+            return NestedScrollView(
+                headerSliverBuilder: (BuildContext build,bool srolled){
+                  return [
+                    SliverAppBar(
+                      leading: Container(),
+                      pinned: true,
+                      backgroundColor: Colors.orangeAccent,
+                      flexibleSpace: FlexibleSpaceBar(
+                        title: Text('Les billets'),
+                        centerTitle: true,
+
+
+
+                      ),
+
+                    )
+
+                  ];
+                },
+
+                body: ListView.builder(
+                    itemCount: documents.length,
+                    itemBuilder: (BuildContext ctx,int index){
+                      billet entreprise=billet(documents[index]);
+
+                      if(entreprise.validate==false){
+                        return InkWell(
+                          child: Card(
+                            elevation: 10,
+                            child: ListTile(
+                              title: Text("${entreprise.lieuDepart} - ${entreprise.lieuArrivee} "),
+                             // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
+                            ),
+                          ),
+                          onTap: (){
+                            Navigator.push(context, MaterialPageRoute(
+                                builder: (BuildContext context){
+                                  return null;//billetValidation(billets: entreprise,);
+                                }
+                            ));
+                          },
+                        );
+
+                      }
+                      else
+                      {
+                        return Container();
+                      }
+
+
+
+                    }
+                ));
+          }
+        }
     );
   }
 

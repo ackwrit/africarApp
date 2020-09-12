@@ -153,10 +153,7 @@ Future<void> signOTP(smsCode,verifId)async{
 
 
 
-  Future<billet> getBillet(String uid) async{
-    DataSnapshot snapshot = await base_compagnie.child(uid).once();
-    return billet(snapshot);
-  }
+
 
   Future<compagnie> getCompagnie(String uid) async{
     DataSnapshot snapshot = await base_compagnie.child(uid).once();
