@@ -6,16 +6,10 @@ import 'dart:convert';
 
 class billet{
   String id;
-  bool billetretour;
+  bool billetRetour;
   DateTime emission;
-  DateTime jourAller;
-  DateTime jourRetour;
-  String depart;
-  String retour;
-  String retourRetour;
-  String departRetour;
-  String logoCompagnieAller;
-  String logoCompagnieRetour;
+  DateTime depart;
+  DateTime retour;
   String lieuDepart;
   String lieuArrivee;
   String qrCodeAller;
@@ -23,41 +17,37 @@ class billet{
   int nbPassager;
   String nomPassager;
   String prenomPassager;
-  bool  validate;
-  String idVoyageur;
-  String vide;
+  String logoCompagnieAller;
+  String logoCompagnieRetour;
+  String telephobne;
+  bool validate;
   int prix;
-
+  String idVoyageur;
 
 
 
   billet(DocumentSnapshot snapshot)
   {
-
-
     id=snapshot.documentID;
     Map map = snapshot.data;
+    billetRetour = map['billerRetour'];
     //Convertir  les informations en DateTime
-    emission = conversion().stringtoDateTime(map['emission']);
-    depart=map['depart'];
-    retour=map['retour'];
-    departRetour=map['departRetour'];
-    retourRetour=map['retourRetour'];
-    logoCompagnieAller=map['logoCompagnieAller'];
-    logoCompagnieRetour=map['logoCompagnieRetour'];
+    emission = conversion().readTimestamp(map['emission']);
+    depart = conversion().readTimestamp(map['jourAller']);
+    retour = conversion().readTimestamp(map['jourRetour']);
     lieuDepart = map['lieuDepart'];
     lieuArrivee = map['lieuArrivee'];
-    nbPassager =map['nbPassager'];
+    logoCompagnieAller= map['logoCompagnieAller'];
+    logoCompagnieRetour= map['logoCompagnieRetour'];
+    qrCodeAller = map['qrCodeAller'];
+    qrCodeRetour =map['qrCodeRetour'];
+    idVoyageur=map['idvoyageur'];
+    nbPassager = map['nbPassager'];
     nomPassager = map['nomPassager'];
     prenomPassager = map['prenomPassager'];
-    qrCodeAller=map['qrCodeAller'];
-    qrCodeRetour=map['qrCodeRetour'];
-    billetretour=map['billetRetour'];
-    validate=map['validate'];
+    telephobne =map ['telephone'];
+    validate =map['validate'];
     prix=map['prix'];
-    jourAller=conversion().stringtoDateTime(map['jourAller']);
-    (billetretour==true)?jourRetour=conversion().stringtoDateTime(map['jourRetour']):vide='';
-    idVoyageur=map['idVoyageur'];
 
   }
 
@@ -66,25 +56,21 @@ class billet{
     Map map;
     return map ={
       map['emission']:emission,
-    map['departAller']:depart,
-    map['retourAller']:retour,
-    map['departRetour']:departRetour,
-    map['retourRetour']:retourRetour,
-    map['logoCompagnieAller']:logoCompagnieAller,
-    map['logoCompagnieRetour']:logoCompagnieRetour,
-   map['lieuDepart']: lieuDepart,
-    map['lieuArrivee']:lieuArrivee,
-     map['nbPassager']:nbPassager,
-     map['nomPassager']:nomPassager,
-    map['prenomPassager']:prenomPassager,
-    map['qrCodeAller']:qrCodeAller,
-    map['qrCodeRetour']:qrCodeRetour,
-      map['billerRetour']:billetretour,
+      map['depart']:depart,
+      map['retour']:retour,
+      map['lieuDepart']:lieuDepart,
+      map['lieuArrivee']:lieuArrivee,
+      map['qrCodeAller']:qrCodeAller,
+      map['qrCodeRetour']:qrCodeRetour,
+      map['nbPassager']:nbPassager,
+      map['nomPassager']:nomPassager,
+      map['prenomPassager']:prenomPassager,
+      map['logoCompagnieAller']:logoCompagnieAller,
+      map['logoCompagnieRetour']:logoCompagnieRetour,
+      map['telephone']:telephobne,
       map['validate']:validate,
-      map['jourAller']:jourAller,
-      map['jourRetour']:jourRetour,
-      map['idVoyageur']:idVoyageur,
       map['prix']:prix,
+      map['idVoyageur']:idVoyageur
 
     };
   }

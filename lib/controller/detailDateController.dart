@@ -45,7 +45,7 @@ class homeDetail extends State<detailDateController>{
           //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
           children: [
             SizedBox(height: 20,),
-            Text("billet crée le ${formatjour.format(widget.ticket.emission)} à ${formatheure.format(widget.ticket.emission)}"),
+            //Text("billet crée le ${formatjour.format(widget.ticket.emission)} à ${formatheure.format(widget.ticket.emission)}"),
             SizedBox(height: 20,),
 
             QrImage(
@@ -55,7 +55,7 @@ class homeDetail extends State<detailDateController>{
             ),
 
             SizedBox(height: 20,),
-            Text("Départ : ${formatjour.format(widget.ticket.jourAller)} à ${formatheure.format(widget.ticket.jourAller)}",style: TextStyle(fontSize: 20),),
+            //Text("Départ : ${formatjour.format(widget.ticket.jourAller)} à ${formatheure.format(widget.ticket.jourAller)}",style: TextStyle(fontSize: 20),),
             SizedBox(height: 20,),
             Text('${widget.ticket.lieuDepart} - ${widget.ticket.lieuArrivee}',style: TextStyle(fontSize: 25),),
             SizedBox(height: 20,),

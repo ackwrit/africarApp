@@ -4,11 +4,13 @@ import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/billet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
+import 'package:africars/view/my_widgets/loading_center.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 
 class dateController extends StatefulWidget{
@@ -68,7 +70,7 @@ class homeDate extends State<dateController>{
         stream: firebaseHelper().fire_billet.snapshots(),
         builder: (BuildContext context,AsyncSnapshot<QuerySnapshot>snapshot){
           if(!snapshot.hasData){
-            return Text('coucou');//LoadingCenter();
+            return LoadingCenter();
 
           }
           else
@@ -99,21 +101,19 @@ class homeDate extends State<dateController>{
                     itemBuilder: (BuildContext ctx,int index){
                       billet entreprise=billet(documents[index]);
 
-                      if(entreprise.validate==false){
+                      if(entreprise.idVoyageur==identifiant){
                         return InkWell(
                           child: Card(
                             elevation: 10,
                             child: ListTile(
                               title: Text("${entreprise.lieuDepart} - ${entreprise.lieuArrivee} "),
+                             trailing:(entreprise.validate)?Icon(FontAwesome.check):Icon(FontAwesome.history),
                              // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
                             ),
                           ),
                           onTap: (){
-                            Navigator.push(context, MaterialPageRoute(
-                                builder: (BuildContext context){
-                                  return null;//billetValidation(billets: entreprise,);
-                                }
-                            ));
+                            print("coucou");
+
                           },
                         );
 
