@@ -12,8 +12,10 @@ import 'package:africars/model/my_token_payment.dart';
 import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
+import 'package:africars/view/my_widgets/my_information.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
 import 'package:qr_flutter/qr_flutter.dart';
@@ -53,6 +55,7 @@ class bookingController extends StatefulWidget{
 }
 
 class homeBooking extends State<bookingController>{
+  GlobalKey <ScaffoldState> keyinfo = GlobalKey<ScaffoldState>();
   String generateQRCode=randomAlphaNumeric(20);
   String generateQRCodeRetour=randomAlphaNumeric(20);
   String refBillet=randomAlphaNumeric(13);
@@ -64,8 +67,8 @@ class homeBooking extends State<bookingController>{
 
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
-  String nom='Nom';
-  String prenom='Prénom';
+  String nom;
+  String prenom;
   FirebaseMessaging _fcm =FirebaseMessaging();
   StreamSubscription iosSubscription;
   String uid;
@@ -95,6 +98,7 @@ class homeBooking extends State<bookingController>{
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      key:keyinfo,
       appBar: AppBar(
         leading: IconButton(icon:Icon(Icons.home,size: 35,),onPressed:(){
           Navigator.push(context, MaterialPageRoute(
@@ -162,6 +166,25 @@ class homeBooking extends State<bookingController>{
 
 
                   ),
+
+
+                  SizedBox(height: 15,),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      ((nom==null )||(nom==''))?Text(globalUser.nom,style: TextStyle(fontSize: 18),):Text(nom,style: TextStyle(fontSize: 18),),
+                      ((prenom==null )||(prenom==''))?Text(globalUser.prenom,style: TextStyle(fontSize: 18),):Text(prenom,style: TextStyle(fontSize: 18),),
+
+                    ],
+                  ),
+
+
+
+
+
+                  SizedBox(height: 15,),
+
                   Text("Départ : ${formatheure.format(widget.voyageAller.heureDepart)}",style: TextStyle(fontSize: 18),),
                   //Text("Arrivée : ${formatheure.format(widget.voyageAller.heureDestination)}",style: TextStyle(fontSize: 18)),
                   Container(height: 10,)
@@ -243,6 +266,8 @@ class homeBooking extends State<bookingController>{
                     onChanged: (bool t){
                       setState(() {
                         personne =t;
+                        nom='';
+                        prenom='';
                       });
 
                     }),
@@ -312,10 +337,25 @@ class homeBooking extends State<bookingController>{
 
             ),
             SizedBox(height: 15,),*/
+            SizedBox(height: 15,),
            InkWell(
              onTap: ()=>paye(),
-             child: Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+             child: Column(
+             children:[
+               Text('Paiement par Orange Money'),
+               SizedBox(height: 5,),
+               Image.asset("assets/logoorangemoney.jpeg",width: 180,),
+               
+             ],
+             ),
            ),
+            SizedBox(height: 25,),
+            RaisedButton.icon(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+              color: backgroundbar,
+                onPressed:()=>affichage(),
+                icon: Icon(FontAwesome.mobile_phone,color: background,size: 40,),
+                label: Text('être rappeler',style: TextStyle(color: background,fontSize: 20),),),
 
 
             SizedBox(height: 15,),
@@ -332,6 +372,13 @@ class homeBooking extends State<bookingController>{
 
     );
 
+  }
+
+
+  affichage()
+  {
+    billetrecording(false);
+   keyinfo.currentState.showBottomSheet((builder)=>Myinformation(refbillet: refBillet,));
   }
 
 
@@ -578,7 +625,7 @@ class homeBooking extends State<bookingController>{
                 SizedBox(
                   width: MediaQuery.of(context).size.width/2-30,
                   child:  TextField(
-                    onChanged: (String text){
+                    onChanged: (text){
                       setState(() {
                         nom=text;
                       });
@@ -586,7 +633,7 @@ class homeBooking extends State<bookingController>{
                     decoration: InputDecoration(
                       fillColor: Colors.white,
                       filled: true,
-                      hintText: '$nom',
+                      hintText: nom,
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -600,9 +647,10 @@ class homeBooking extends State<bookingController>{
                 SizedBox(
                   width: MediaQuery.of(context).size.width/2-30,
                   child: TextField(
-                    onChanged: (String text){
+                    onChanged: (text){
                       setState(() {
                         prenom=text;
+                        print(prenom);
                       });
                     },
                     decoration: InputDecoration(

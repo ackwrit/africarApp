@@ -27,6 +27,7 @@ class homeDate extends State<dateController>{
   utilisateur profil;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+  DateFormat formatminimum = DateFormat.yMd('fr_FR');
   @override
   void initState() {
     // TODO: implement initState
@@ -109,7 +110,7 @@ class homeDate extends State<dateController>{
                           child: Card(
                             elevation: 10,
                             child: ListTile(
-                              leading: Text("Départ: ${formatjour.format(entreprise.depart)}"),
+                              leading: Text("${formatminimum.format(entreprise.depart)}"),
                               title: Text("${entreprise.lieuDepart} - ${entreprise.lieuArrivee} "),
                              trailing:(entreprise.validate)?Icon(FontAwesome.check,color: Colors.green,):Icon(FontAwesome.history,color: Colors.orange,),
                              // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
