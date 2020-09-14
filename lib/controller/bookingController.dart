@@ -5,6 +5,8 @@ import 'dart:io';
 
 import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/main.dart';
+import 'package:africars/model/my_checkout_payment.dart';
 import 'package:africars/model/my_token.dart';
 import 'package:africars/model/my_token_payment.dart';
 import 'package:africars/model/trajet.dart';
@@ -67,6 +69,7 @@ class homeBooking extends State<bookingController>{
   FirebaseMessaging _fcm =FirebaseMessaging();
   StreamSubscription iosSubscription;
   String uid;
+  bool personne=false;
 
   @override
   void initState() {
@@ -93,6 +96,15 @@ class homeBooking extends State<bookingController>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(icon:Icon(Icons.home,size: 35,),onPressed:(){
+          Navigator.push(context, MaterialPageRoute(
+              builder: (BuildContext context)
+                  {
+                    return MyHomePage();
+                  }
+          ));
+
+        },),
         title: Image.asset("assets/logo.png",height: 225,),
         centerTitle: true,
         backgroundColor: Colors.black,
@@ -218,9 +230,31 @@ class homeBooking extends State<bookingController>{
 
                 :Container(),
 
+            SizedBox(height: 10,),
 
-            SizedBox(height: 5,),
-            InternationalPhoneNumberInput(
+
+            Text("Réservation pour une tierce personne"),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('NON'),
+                Switch.adaptive(
+                    value: personne,
+                    onChanged: (bool t){
+                      setState(() {
+                        personne =t;
+                      });
+
+                    }),
+                Text('OUI'),
+              ],
+            ),
+
+
+
+
+            (personne==true)?SizedBox(height: 5,):Container(),
+            (personne==true)?InternationalPhoneNumberInput(
               initialValue: number,
               onInputChanged: (text){
                 number=text;
@@ -233,14 +267,14 @@ class homeBooking extends State<bookingController>{
                       borderRadius: BorderRadius.circular(20)
                   )
               ),
-            ),
-            SizedBox(height: 5,),
-            Text('Passager',style: TextStyle(fontSize: 25),),
+            ):Container(),
+            (personne==true)?SizedBox(height: 5,):Container(),
+            (personne==true)?Text('Passager',style: TextStyle(fontSize: 25),):Container(),
 
 
-            SizedBox(height: 5,),
+            (personne==true)?SizedBox(height: 5,):Container(),
 
-            ajout(),
+            (personne==true)?ajout():Container(),
 
 
 
@@ -304,6 +338,8 @@ class homeBooking extends State<bookingController>{
 
   void billetrecording(bool validate)
   {
+    DateTime momentRetour;
+    DateTime jourRetour;
     int prixtotal=0;
     if(widget.retour){
       prixtotal =widget.voyageAller.prix +widget.voyageRetour.prix;
@@ -312,12 +348,21 @@ class homeBooking extends State<bookingController>{
     {
       prixtotal = widget.voyageAller.prix;
     }
+    DateTime momentDepart=widget.momentDepart;
+    if(widget.retour)
+    {
+      momentRetour = widget.momentDepartRetour;
+      jourRetour=new DateTime(momentRetour.year,momentRetour.month,momentRetour.day,widget.voyageRetour.heureDepart.hour,widget.voyageRetour.heureDepart.minute);
+    }
+
+   DateTime jourDepart =new DateTime(momentDepart.year,momentDepart.month,momentDepart.day,widget.voyageAller.heureDepart.hour,widget.voyageAller.heureDepart.minute);
+
 
     //Enregistrement billet en mode provisoire
     Map <String,dynamic>map={
       'emission':DateTime.now(),
       'departAller':widget.voyageAller.depart,
-      'telephone':number.toString(),
+      'telephone':(personne==false)?globalUser.telephone:number.toString(),
       'retourAller':(widget.retour)?widget.voyageAller.destination:'',
       'departRetour':(widget.retour)?widget.voyageRetour.depart:'',
       'retourRetour':(widget.retour)?widget.voyageRetour.destination:'',
@@ -326,16 +371,17 @@ class homeBooking extends State<bookingController>{
       'lieuDepart': widget.voyageAller.depart.toString(),
       'lieuArrivee':widget.voyageAller.destination.toString(),
       'nbPassager':widget.nombrePassager,
-      'nomPassager':nom,
+      'nomPassager':(personne==false)?globalUser.nom:nom,
       'idvoyageur':globalUser.id,
-      'prenomPassager':prenom,
+      'prenomPassager':(personne==false)?globalUser.prenom:prenom,
       'qrCodeAller':generateQRCode,
       'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
       'billerRetour':widget.retour,
       'validate':validate,
-      'jourAller':widget.momentDepart,
-      'jourRetour':(widget.retour)?widget.momentArrivee:DateTime.now(),
+      'jourAller':jourDepart,
+      'jourRetour':(widget.retour)?jourRetour:DateTime.now(),
       'prix':prixtotal,
+      'idBillet':refBillet,
 
     };
     firebaseHelper().addBillet(refBillet, map);
@@ -384,14 +430,14 @@ class homeBooking extends State<bookingController>{
       //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
     };
     DateTime orderid = DateTime.now();
-    String orderNumber ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
+    String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
 
 
     Map <String,dynamic> bodypayment ={
       "Content-Type":"application/json",
       "merchant_key":"bd77ff4d",
       "currency":"OUV",
-      "order_id":orderNumber,
+      "order_id":number_order,
       "amount": prixTotal.toString(),
       "return_url": "http://www.koko0017.odns.fr",
       "cancel_url": "http://www.koko0017.odns.fr",
@@ -414,17 +460,31 @@ class homeBooking extends State<bookingController>{
     Map<String,String>headerverification ={
       HttpHeaders.authorizationHeader:"${body.token_type} ${body.access_token}",
       HttpHeaders.acceptHeader:"application/json",
-      //HttpHeaders.contentTypeHeader:"application/json"
+      HttpHeaders.hostHeader:"api.orange.com",
+      //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
 
 
     };
+    Map<String,dynamic>bodynotification={
+      "status":"SUCCESS",
+      "notif_token":paymenttoken.notif_token,
+      "txnid": ""
+
+    };
+    http.Response notificationpage = await http.post("http://www.koko0017.odns.fr/notifications",body: bodynotification);
+
 
 
     //Lancement de la page paiement
     Map<String,dynamic> bodyverification ={
-      "order_id":orderNumber,
+      "order_id":number_order,
       "amount":prixTotal.toString(),
-      "pay_token":paymenttoken.pay_token
+      "pay_token":paymenttoken.pay_token,
+      "payment_url":paymenttoken.payment_url,
+      "notif_token":paymenttoken.notif_token,
+      "txnid": "",
+      "content-type":"application/json; charset=UTF-8"
+
 
     };
     if (await canLaunch(paymenttoken.payment_url)) {
@@ -434,12 +494,68 @@ class homeBooking extends State<bookingController>{
     } else {
       throw 'Could not launch ${paymenttoken.payment_url}';
     }
+    int counter=0;
     Timer(Duration(seconds:30), () async {
       http.Response verificationPaiement = await http.post(
           "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
-          ,body: bodyverification,headers: headerverification);
-      print("affichage notification");
-      print(verificationPaiement.body);
+          ,body: json.encode(bodyverification),headers: headerverification);
+      CheckoutPayment paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
+
+      if(verificationPaiement.statusCode==201)
+        {
+
+          print(paymentcheck.status);
+          if(paymentcheck.status=='INITIATED'){
+            Timer.periodic(Duration(seconds: 30), (timer) async {
+              if(counter<10)
+                {
+                  counter++;
+                  print(counter);
+                  verificationPaiement = await http.post(
+                      "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+                      ,body: json.encode(bodyverification),headers: headerverification);
+                  paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
+                  print(paymentcheck.status);
+                  if(paymentcheck.status=='SUCCESS')
+                    {
+                      print('enregistrement dans timer');
+                      billetrecording(true);
+
+                      timer.cancel();
+                    }
+                  if(paymentcheck.status=="FAILED")
+                    {
+                      timer.cancel();
+                    }
+
+                }
+              else
+                {
+                  timer.cancel();
+                  print('fini');
+                }
+
+            });
+          }
+
+          if(paymentcheck.status=='SUCCESS')
+            {
+              print("enregistrement");
+              billetrecording(true);
+            }
+          if(paymentcheck.status=='FAILED')
+          {
+            print('non timer');
+            billetrecording(false);
+          }
+
+
+        }
+      else
+        {
+          print('non');
+        }
+
 
 
     });

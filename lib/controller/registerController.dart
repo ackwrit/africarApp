@@ -309,6 +309,7 @@ Future <void> handleOTP(smsCode,verifId) async{
     'prenom':prenom,
     'nom':nom,
     'mail':'',
+    'telephone':number.phoneNumber,
     'typeUtilisateur':'particulier',
     'sexe':(sexe)?'Femme':'Homme',
     'naissance':naissance

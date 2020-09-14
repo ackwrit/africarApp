@@ -31,6 +31,7 @@ class billet{
     id=snapshot.documentID;
     Map map = snapshot.data;
     billetRetour = map['billerRetour'];
+    id=map['idBillet'];
     //Convertir  les informations en DateTime
     emission = conversion().readTimestamp(map['emission']);
     depart = conversion().readTimestamp(map['jourAller']);
@@ -70,7 +71,8 @@ class billet{
       map['telephone']:telephobne,
       map['validate']:validate,
       map['prix']:prix,
-      map['idVoyageur']:idVoyageur
+      map['idVoyageur']:idVoyageur,
+      map['idBillet']:id
 
     };
   }
