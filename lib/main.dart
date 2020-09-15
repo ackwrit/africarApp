@@ -164,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         //title: Image.asset('assets/NYMBEUL.png',height: 100,),
         centerTitle: true,
-        flexibleSpace: Image.asset("assets/logo.png",height: 800,width: 800,),
+        flexibleSpace: Image.asset("assets/newlogo.jpg",height: 800,width: 800,),
 
         backgroundColor: Colors.black,
 
@@ -295,7 +295,7 @@ Future initialisation() async {
 
               ],
 
-              title:Image.asset("assets/logo.png",height: 225,),
+              title:Image.asset("assets/newlogo.jpg",height: 225,),
               backgroundColor: Colors.black,),
             body: controllerSelected,
 
@@ -313,7 +313,7 @@ Future initialisation() async {
       length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title:Image.asset("assets/logo.png",height: 225,),
+          title:Image.asset("assets/newlogo.jpg",height: 225,),
           backgroundColor: Colors.black,
           actions: [
             IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()

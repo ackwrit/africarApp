@@ -45,7 +45,7 @@ class admin extends State<administrationController>{
           Widget controllerSelected = controller()[index];
           return Scaffold(
             appBar: AppBar(
-              title: Image.asset("assets/logo.png",height: 225,),
+              title: Image.asset("assets/newlogo.jpg",height: 225,),
               backgroundColor: Colors.black,
 
             ),
@@ -64,7 +64,7 @@ class admin extends State<administrationController>{
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title:Image.asset("assets/logo.png",height: 225,),
+            title:Image.asset("assets/newlogo.jpg",height: 225,),
             backgroundColor: Colors.black,
             centerTitle: true,
             bottom: TabBar
