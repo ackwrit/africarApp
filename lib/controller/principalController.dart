@@ -73,7 +73,7 @@ class homePrincipal extends State<principalController>{
                 )
               ],
 
-              title:Image.asset("assets/logo.png",height: 225,),
+              title:Image.asset("assets/newlogo.jpg",height: 225,),
               backgroundColor: Colors.black,),
             body: controllerSelected,
 
@@ -91,7 +91,7 @@ class homePrincipal extends State<principalController>{
         length: 3,
         child: Scaffold(
           appBar: AppBar(
-            title:Image.asset("assets/logo.png",height: 225,),
+            title:Image.asset("assets/newlogo.jpg",height: 225,),
             backgroundColor: Colors.black,
             actions: [
               IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
