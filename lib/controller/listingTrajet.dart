@@ -78,7 +78,7 @@ class homeListing extends State<listingTrajet>{
 
     return StreamBuilder<QuerySnapshot>
       (
-        stream:firebaseHelper().fire_trajet.snapshots(),
+        stream:firebaseHelper().fire_trajet.orderBy('heureDepart',descending: false).snapshots(),
         builder: (BuildContext context, AsyncSnapshot <QuerySnapshot>snapshot){
           if (!snapshot.hasData){
             return LoadingCenter();

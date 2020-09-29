@@ -1,3 +1,4 @@
+import 'package:africars/main.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:flutter/material.dart';
 
@@ -39,6 +40,18 @@ class MyinformationState extends State<Myinformation>{
               Text("Merci d'avoir effectué votre réservation n°${widget.refbillet}, Vous allez être appeller afin d'effectuer votre paiement.",style: TextStyle(fontSize: 18),),
               SizedBox(height: 15,),
               Text("Merci de vous prémunir du numéro de réservation n°${widget.refbillet} lors de l'appel",style: TextStyle(fontSize: 18),),
+              RaisedButton(
+                color: backgroundbar,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                  onPressed: (){
+                    Navigator.push(context, MaterialPageRoute(
+                        builder: (BuildContext context){
+                          return MyHomePage();
+                        }
+                    ));
+                  },
+                child: Text('OK',style: TextStyle(color: background),),
+              ),
 
 
 

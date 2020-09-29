@@ -21,7 +21,10 @@ class billet{
   String logoCompagnieRetour;
   String telephobne;
   bool validate;
-  int prix;
+  int prixAller;
+  int prixRetour;
+  String idCompagnieAller;
+  String idCompagnieRetour;
   String idVoyageur;
 
 
@@ -31,7 +34,6 @@ class billet{
     id=snapshot.documentID;
     Map map = snapshot.data;
     billetRetour = map['billerRetour'];
-    id=map['idBillet'];
     //Convertir  les informations en DateTime
     emission = conversion().readTimestamp(map['emission']);
     depart = conversion().readTimestamp(map['jourAller']);
@@ -42,13 +44,17 @@ class billet{
     logoCompagnieRetour= map['logoCompagnieRetour'];
     qrCodeAller = map['qrCodeAller'];
     qrCodeRetour =map['qrCodeRetour'];
-    idVoyageur=map['idvoyageur'];
     nbPassager = map['nbPassager'];
     nomPassager = map['nomPassager'];
     prenomPassager = map['prenomPassager'];
     telephobne =map ['telephone'];
     validate =map['validate'];
-    prix=map['prix'];
+    prixAller=map['prixAller'];
+    prixRetour=map['prixRetour'];
+    idCompagnieAller=map['idCompagnieAller'];
+    idCompagnieRetour=map['idCompagnieRetour'];
+    idVoyageur=map['idvoyageur'];
+
 
   }
 
@@ -70,9 +76,11 @@ class billet{
       map['logoCompagnieRetour']:logoCompagnieRetour,
       map['telephone']:telephobne,
       map['validate']:validate,
-      map['prix']:prix,
-      map['idVoyageur']:idVoyageur,
-      map['idBillet']:id
+      map['prixAller']:prixAller,
+      map['prixRetour']:prixRetour,
+      map['idCompagnieAller']:idCompagnieAller,
+      map['idCompagnieRetour']:idCompagnieRetour,
+      map['idvoyageur']:idVoyageur
 
     };
   }

@@ -73,6 +73,8 @@ class homeBooking extends State<bookingController>{
   StreamSubscription iosSubscription;
   String uid;
   bool personne=false;
+  bool avoir=false;
+  int sommeAvoir=0;
 
   @override
   void initState() {
@@ -254,6 +256,26 @@ class homeBooking extends State<bookingController>{
                 :Container(),
 
             SizedBox(height: 10,),
+            //Choix pour l'avoir
+            Text('Utilisation de votre avoir'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('NON'),
+                Switch.adaptive(
+                    value: avoir,
+                    onChanged: (value){
+                      setState(() {
+                        avoir=value;
+                      });
+                    }),
+
+                Text('OUI'),
+              ],
+            ),
+            SizedBox(height: 10,),
+            (avoir==true && globalUser.avoir!=null)?Text('Vous avez ${globalUser.avoir} CFA sur votre compte'):Container(),
+            SizedBox(height: 10,),
 
 
             Text("Réservation pour une tierce personne"),
@@ -274,6 +296,7 @@ class homeBooking extends State<bookingController>{
                 Text('OUI'),
               ],
             ),
+
 
 
 
@@ -398,7 +421,7 @@ class homeBooking extends State<bookingController>{
     DateTime momentDepart=widget.momentDepart;
     if(widget.retour)
     {
-      momentRetour = widget.momentDepartRetour;
+      momentRetour = widget.momentArrivee;
       jourRetour=new DateTime(momentRetour.year,momentRetour.month,momentRetour.day,widget.voyageRetour.heureDepart.hour,widget.voyageRetour.heureDepart.minute);
     }
 
@@ -414,7 +437,9 @@ class homeBooking extends State<bookingController>{
       'departRetour':(widget.retour)?widget.voyageRetour.depart:'',
       'retourRetour':(widget.retour)?widget.voyageRetour.destination:'',
       'logoCompagnieAller':widget.voyageAller.logoCompagnie,
+      'idCompagnieAller':widget.voyageAller.idCompagnie,
       'logoCompagnieRetour':(widget.retour)?widget.voyageRetour.logoCompagnie:'',
+      'idCompagnieRetour':(widget.retour)?widget.voyageRetour.idCompagnie:'',
       'lieuDepart': widget.voyageAller.depart.toString(),
       'lieuArrivee':widget.voyageAller.destination.toString(),
       'nbPassager':widget.nombrePassager,
@@ -427,7 +452,8 @@ class homeBooking extends State<bookingController>{
       'validate':validate,
       'jourAller':jourDepart,
       'jourRetour':(widget.retour)?jourRetour:DateTime.now(),
-      'prix':prixtotal,
+      'prixAller':widget.voyageAller.prix,
+      'prixRetour':(widget.retour)?widget.voyageRetour.prix:0,
       'idBillet':refBillet,
 
     };
@@ -438,6 +464,9 @@ class homeBooking extends State<bookingController>{
 
   Future paye() async {
     billetrecording(false);
+    if(globalUser.avoir==null){
+      sommeAvoir=0;
+    }
     int prixTotal=0;
     if(widget.retour){
       prixTotal = widget.voyageAller.prix + widget.voyageRetour.prix;
@@ -449,112 +478,140 @@ class homeBooking extends State<bookingController>{
 
       }
 
-    //Récupération du token pour le paiement
-    var credentials= globalCredentials;
-    Map<String,String>headerToken={
-      HttpHeaders.authorizationHeader :'Basic $credentials',
-    };
-    Map<String,dynamic> bodyToken ={
-      "grant_type":"client_credentials",
-      "token_type": "Bearer",
-      "expires_in": "777600",
-      "access_token": ""
-
-    };
-    var response =await http.post('https://api.orange.com/oauth/v2/token',headers: headerToken,body: bodyToken);
-
-    Token body = Token.fromJson(jsonDecode(response.body));
 
 
 
-    ///////////////////////////////////
-    //activation payment
-    Map <String,String> headerpayment={
-      HttpHeaders.authorizationHeader :"${body.token_type} ${body.access_token}",
-      HttpHeaders.acceptHeader:"application/json",
-      HttpHeaders.hostHeader:"api.orange.com",
-      HttpHeaders.contentTypeHeader:"application/json"
-      //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
-    };
-    DateTime orderid = DateTime.now();
-    String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
+    if(globalUser.avoir>=prixTotal){
+      sommeAvoir=globalUser.avoir-prixTotal;
+      billetrecording(true);
+      Map <String,dynamic>userMap={
+        'nom':globalUser.nom,
+        'prenom':globalUser.prenom,
+        'id':globalUser.id,
+        'compagnie':globalUser.compagnie,
+        'telephone':globalUser.telephone,
+        'image':globalUser.image,
+        'typeUtilisateur':globalUser.type_utilisateur,
+        'login':globalUser.pseudo,
+        'mail':globalUser.mail,
+        'sexe':globalUser.sexe,
+        'naissance':globalUser.naissance,
+        'avoir':sommeAvoir,
 
-
-    Map <String,dynamic> bodypayment ={
-      "Content-Type":"application/json",
-      "merchant_key":"bd77ff4d",
-      "currency":"OUV",
-      "order_id":number_order,
-      "amount": prixTotal.toString(),
-      "return_url": "http://www.koko0017.odns.fr",
-      "cancel_url": "http://www.koko0017.odns.fr",
-      "notif_url":"http://www.koko0017.odns.fr/notifications",
-      "lang": "fr",
-      "reference":"Africar",
-
-    };
-
-    http.Response paymentResponse = await http.post(
-        urlPaiement,
-        headers: headerpayment,
-        body: jsonEncode(bodypayment)
-
-    );
-    TokenPayment paymenttoken = TokenPayment.fromJson(jsonDecode(paymentResponse.body));
-
-
-    //headerverification
-    Map<String,String>headerverification ={
-      HttpHeaders.authorizationHeader:"${body.token_type} ${body.access_token}",
-      HttpHeaders.acceptHeader:"application/json",
-      HttpHeaders.hostHeader:"api.orange.com",
-      //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
-
-
-    };
-    Map<String,dynamic>bodynotification={
-      "status":"SUCCESS",
-      "notif_token":paymenttoken.notif_token,
-      "txnid": ""
-
-    };
-    http.Response notificationpage = await http.post("http://www.koko0017.odns.fr/notifications",body: bodynotification);
-
-
-
-    //Lancement de la page paiement
-    Map<String,dynamic> bodyverification ={
-      "order_id":number_order,
-      "amount":prixTotal.toString(),
-      "pay_token":paymenttoken.pay_token,
-      "payment_url":paymenttoken.payment_url,
-      "notif_token":paymenttoken.notif_token,
-      "txnid": "",
-      "content-type":"application/json; charset=UTF-8"
-
-
-    };
-    if (await canLaunch(paymenttoken.payment_url)) {
-      await launch(paymenttoken.payment_url);
-
-
-    } else {
-      throw 'Could not launch ${paymenttoken.payment_url}';
+      };
+      firebaseHelper().addUser(globalUser.id, userMap);
     }
-    int counter=0;
-    Timer(Duration(seconds:30), () async {
-      http.Response verificationPaiement = await http.post(
-          "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
-          ,body: json.encode(bodyverification),headers: headerverification);
-      CheckoutPayment paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
+    else
+      {
+        //Récupération du token pour le paiement
+        var credentials= globalCredentials;
+        Map<String,String>headerToken={
+          HttpHeaders.authorizationHeader :'Basic $credentials',
+        };
+        Map<String,dynamic> bodyToken ={
+          "grant_type":"client_credentials",
+          "token_type": "Bearer",
+          "expires_in": "777600",
+          "access_token": ""
 
-      if(verificationPaiement.statusCode==201)
-        {
+        };
+        var response =await http.post('https://api.orange.com/oauth/v2/token',headers: headerToken,body: bodyToken);
 
-          print(paymentcheck.status);
-          if(paymentcheck.status=='INITIATED'){
-            Timer.periodic(Duration(seconds: 30), (timer) async {
-              if(counter<10)
+        Token body = Token.fromJson(jsonDecode(response.body));
+
+
+
+        ///////////////////////////////////
+        //activation payment
+        Map <String,String> headerpayment={
+          HttpHeaders.authorizationHeader :"${body.token_type} ${body.access_token}",
+          HttpHeaders.acceptHeader:"application/json",
+          HttpHeaders.hostHeader:"api.orange.com",
+          HttpHeaders.contentTypeHeader:"application/json"
+          //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
+        };
+        DateTime orderid = DateTime.now();
+        String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
+        int prixResume=prixTotal-globalUser.avoir;
+
+
+        Map <String,dynamic> bodypayment ={
+          "Content-Type":"application/json",
+          "merchant_key":"bd77ff4d",
+          "currency":"OUV",
+          "order_id":number_order,
+          "amount": (avoir)?prixResume.toString():prixTotal.toString(),
+          "return_url": "http://www.koko0017.odns.fr",
+          "cancel_url": "http://www.koko0017.odns.fr",
+          "notif_url":"http://www.koko0017.odns.fr/notifications",
+          "lang": "fr",
+          "reference":"Africar",
+
+        };
+
+        http.Response paymentResponse = await http.post(
+            urlPaiement,
+            headers: headerpayment,
+            body: jsonEncode(bodypayment)
+
+        );
+        TokenPayment paymenttoken = TokenPayment.fromJson(jsonDecode(paymentResponse.body));
+
+
+        //headerverification
+        Map<String,String>headerverification ={
+          HttpHeaders.authorizationHeader:"${body.token_type} ${body.access_token}",
+          HttpHeaders.acceptHeader:"application/json",
+          HttpHeaders.hostHeader:"api.orange.com",
+          //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
+
+
+        };
+        Map<String,dynamic>bodynotification={
+          "status":"SUCCESS",
+          "notif_token":paymenttoken.notif_token,
+          "txnid": ""
+
+        };
+        http.Response notificationpage = await http.post("http://www.koko0017.odns.fr/notifications",body: bodynotification);
+
+
+
+
+
+        //Lancement de la page paiement
+        Map<String,dynamic> bodyverification ={
+          "order_id":number_order,
+          "amount":(avoir)?prixResume.toString():prixTotal.toString(),
+          "pay_token":paymenttoken.pay_token,
+          "payment_url":paymenttoken.payment_url,
+          "notif_token":paymenttoken.notif_token,
+          "txnid": "",
+          "content-type":"application/json; charset=UTF-8"
+
+
+        };
+        if (await canLaunch(paymenttoken.payment_url)) {
+          await launch(paymenttoken.payment_url);
+
+
+        } else {
+          throw 'Could not launch ${paymenttoken.payment_url}';
+        }
+        int counter=0;
+        Timer(Duration(seconds:30), () async {
+          http.Response verificationPaiement = await http.post(
+              "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+              ,body: json.encode(bodyverification),headers: headerverification);
+          CheckoutPayment paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
+
+          if(verificationPaiement.statusCode==201)
+          {
+
+            print(paymentcheck.status);
+            if(paymentcheck.status=='INITIATED'){
+              Timer.periodic(Duration(seconds: 30), (timer) async {
+                if(counter<10)
                 {
                   counter++;
                   print(counter);
@@ -564,48 +621,51 @@ class homeBooking extends State<bookingController>{
                   paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
                   print(paymentcheck.status);
                   if(paymentcheck.status=='SUCCESS')
-                    {
-                      print('enregistrement dans timer');
-                      billetrecording(true);
+                  {
+                    print('enregistrement dans timer');
+                    billetrecording(true);
 
-                      timer.cancel();
-                    }
+                    timer.cancel();
+                  }
                   if(paymentcheck.status=="FAILED")
-                    {
-                      timer.cancel();
-                    }
+                  {
+                    timer.cancel();
+                  }
 
                 }
-              else
+                else
                 {
                   timer.cancel();
                   print('fini');
                 }
 
-            });
-          }
+              });
+            }
 
-          if(paymentcheck.status=='SUCCESS')
+            if(paymentcheck.status=='SUCCESS')
             {
               print("enregistrement");
               billetrecording(true);
             }
-          if(paymentcheck.status=='FAILED')
+            if(paymentcheck.status=='FAILED')
+            {
+              print('non timer');
+              billetrecording(false);
+            }
+
+
+          }
+          else
           {
-            print('non timer');
-            billetrecording(false);
+            print('non');
           }
 
 
-        }
-      else
-        {
-          print('non');
-        }
+
+        });
+      }
 
 
-
-    });
   }
 
   Widget ajout()

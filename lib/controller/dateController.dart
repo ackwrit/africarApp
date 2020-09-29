@@ -87,6 +87,7 @@ class homeDate extends State<dateController>{
                       flexibleSpace: FlexibleSpaceBar(
                         title: Text('Les billets'),
                         centerTitle: true,
+                        
 
 
 

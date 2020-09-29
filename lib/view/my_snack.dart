@@ -70,6 +70,7 @@ class SnackbarState extends State<Mysnackbar>{
                   setState(() {
                     momentDepartNational=hour;
                     momentDepartInternational=hour;
+
                   });
                 }
                 else
@@ -78,6 +79,7 @@ class SnackbarState extends State<Mysnackbar>{
                   setState(() {
                     momentArriveeNational=houre;
                     momentArriveeInternational=houre;
+
                   });
 
                 }

@@ -312,7 +312,8 @@ Future <void> handleOTP(smsCode,verifId) async{
     'telephone':number.phoneNumber,
     'typeUtilisateur':'particulier',
     'sexe':(sexe)?'Femme':'Homme',
-    'naissance':naissance
+    'naissance':naissance,
+    'avoir':0
 
 
   };

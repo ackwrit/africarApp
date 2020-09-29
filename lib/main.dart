@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:africars/controller/avoirController.dart';
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/informationController.dart';
 import 'package:africars/controller/principalController.dart';
@@ -9,6 +10,7 @@ import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/controller/trajetInternationalController.dart';
 import 'package:africars/fonction/pushNotification.dart';
+import 'package:africars/model/testingPage.dart';
 import 'package:animations/animations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -162,7 +164,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ],
 
-        //title: Image.asset('assets/NYMBEUL.png',height: 100,),
+
         centerTitle: true,
         flexibleSpace: Image.asset("assets/newlogo.jpg",height: 800,width: 800,),
 
@@ -180,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         children: [
           trajetController(),
-          trajetInternationalController(),
+          testingPage(),
           dateController(),
           informationController(),
         ],
@@ -210,8 +212,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
             },
             items: [
-              new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),title: new Text("National",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.language),title: new Text("International",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),title: new Text("Trajet",style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.credit_card_rounded),title: new Text("Porte-Monnaie",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
               new BottomNavigationBarItem(icon: new Icon(Icons.forum),title: new Text('Information',style: TextStyle(fontSize: 18),)),
 
@@ -335,7 +337,7 @@ Future initialisation() async {
             indicatorColor: Colors.orange,
 
               tabs: [
-              Tab(icon:new Icon(Icons.map),child: new Text("National") ,),
+              Tab(icon:new Icon(Icons.map),child: new Text("Trajet") ,),
                 Tab(icon:new Icon(Icons.map),child: new Text("Interational") ,),
             Tab(icon:new Icon(Icons.bookmark),child: new Text("Réservation") ,),
                 Tab(icon: Icon(Icons.bubble_chart),child: Text("Information"),)
@@ -357,7 +359,8 @@ Future initialisation() async {
   List <Widget> controllers (){
     return [
       trajetController(),
-      trajetInternationalController(),
+      Text("porte-monnaie"),
+      //trajetInternationalController(),
      dateController(),
       informationController(),
 

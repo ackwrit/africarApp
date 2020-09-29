@@ -1,165 +1,143 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:africars/fonction/conversion.dart';
-import 'package:africars/fonction/firebaseHelper.dart';
-import 'package:africars/main.dart';
-import 'package:africars/model/billet.dart';
 import 'package:africars/model/my_checkout_payment.dart';
 import 'package:africars/model/my_token.dart';
 import 'package:africars/model/my_token_payment.dart';
+import 'package:http/http.dart' as http;
+
+import 'package:africars/fonction/firebaseHelper.dart';
+import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
-import 'package:qr_flutter/qr_flutter.dart';
-import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 
-class detailDateController extends StatefulWidget{
-  billet ticket;
-  bool validation;
-  detailDateController({billet ticket, bool validation})
-  {
-    this.ticket=ticket;
-    this.validation=validation;
-  }
-
+class avoirController extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-   return homeDetail();
+    return homeAvoir();
   }
 
 }
 
-class homeDetail extends State<detailDateController>{
-  DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
-  DateFormat formatheure = DateFormat.Hm('fr_FR');
+class homeAvoir extends State<avoirController>{
+  String uid;
+  utilisateur globalUser;
+  TextEditingController controllerMontant= new TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    firebaseHelper().myId().then((value){
+      setState(() {
+        uid=value;
+      });
+
+      firebaseHelper().getUser(uid).then((value){
+        setState(() {
+          globalUser = value;
+        });
+
+      });
+
+    });
+  }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset("assets/newlogo.jpg",height: 225,),
-        backgroundColor: Colors.black,
-      ),
       backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
     );
   }
 
 
-
   Widget bodyPage(){
-    return SingleChildScrollView(
-      child: (widget.validation)?Container(
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            SizedBox(height: 20,),
-            //Text("billet crée le ${formatjour.format(widget.ticket.emission)} à ${formatheure.format(widget.ticket.emission)}"),
-            SizedBox(height: 20,),
+    return Container(
+      child: Column(
+        //mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          SizedBox(height: 15,),
+          Card(
+            elevation: 5.0,
+            child: ListTile(
+              leading: Icon(Icons.credit_card_rounded),
+              title: (globalUser.avoir==null)?Text('0 CFA'):Text('${globalUser.avoir} CFA'),
+              trailing: RaisedButton.icon(
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                color: Colors.orangeAccent,
+                icon: Icon(Icons.upload_rounded),
+                onPressed: ()=>addAvoir(),
+                label: Text('Recharger'),
 
-            QrImage(
-              data: widget.ticket.qrCodeAller,
-              size: 100,
-              version: QrVersions.auto,
+              ),
             ),
+          ),
 
-            SizedBox(height: 20,),
-            Text("Départ : ${formatjour.format(widget.ticket.depart)} à ${formatheure.format(widget.ticket.depart)}",style: TextStyle(fontSize: 20),),
-
-            SizedBox(height: 20,),
-            Text('${widget.ticket.lieuDepart} - ${widget.ticket.lieuArrivee}',style: TextStyle(fontSize: 25),),
-            SizedBox(height: 20,),
-            Text('${widget.ticket.nomPassager} ${widget.ticket.prenomPassager}',style: TextStyle(fontSize: 25)),
+          SizedBox(height: 15,),
 
 
+          TextField(
+
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
 
 
-            (widget.ticket.logoCompagnieAller==null)?Container():Image.network(widget.ticket.logoCompagnieAller,height: 120,width: 120,),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(20),
+                borderSide: BorderSide.none,
+              ),
+              hintText: 'Taper le montant',
+              labelStyle: TextStyle(color: Colors.black),
+              hoverColor: Colors.black,
 
-            SizedBox(height: 20,),
 
-            SizedBox(height: 20,),
-            Text("nombre de passager: ${widget.ticket.nbPassager.toString()}",style: TextStyle(fontSize: 25),),
-            SizedBox(height: 20,),
-            RaisedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context){
-                    return MyHomePage();
-                  }
-              ));
+            ),
+            controller: controllerMontant,
+            onChanged: (text){
+              setState(() {
+                controllerMontant.text=text;
 
+              });
             },
-              color: backgroundbar,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              child: Text('Ok',style: TextStyle(color: background),),
 
-            )
-
+          ),
+          SizedBox(height: 15,),
+          Image.asset('assets/money_with_wings.gif'),
 
 
-          ],
-        ),
-      ):Center(
-        child: RaisedButton(
-            onPressed: ()=>paye(),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-          color: backgroundbar,
-          child: Text('Paiement',style: TextStyle(color: background),),
-        ),
+
+
+        ],
       ),
-
+      padding: EdgeInsets.all(15),
+      
     );
-  }
-
-
-
-
-  void billetrecording(bool validate)
-  {
-
-    //Enregistrement billet en mode provisoire
-    Map <String,dynamic>map={
-      'emission':DateTime.now(),
-      'departAller':widget.ticket.depart,
-      'telephone':globalUser.telephone,
-      'retourAller':widget.ticket.depart,
-      'departRetour':widget.ticket.retour,
-      'retourRetour':widget.ticket.retour,
-      'logoCompagnieAller':widget.ticket.logoCompagnieAller,
-      'logoCompagnieRetour':(widget.ticket.billetRetour)?widget.ticket.logoCompagnieRetour:'',
-      'lieuDepart': widget.ticket.lieuDepart,
-      'lieuArrivee':widget.ticket.lieuArrivee,
-      'nbPassager':widget.ticket.nbPassager,
-      'nomPassager':globalUser.nom,
-      'idvoyageur':globalUser.id,
-      'prenomPassager':globalUser.prenom,
-      'qrCodeAller':widget.ticket.qrCodeAller,
-      'qrCodeRetour':(widget.ticket.billetRetour)?widget.ticket.qrCodeRetour:'',
-      'billerRetour':widget.ticket.billetRetour,
-      'validate':validate,
-      'idCompagnieAller':widget.ticket.idCompagnieAller,
-        'idCompagnieRetour':(widget.ticket.billetRetour)?widget.ticket.idCompagnieRetour:'',
-      'jourAller':widget.ticket.depart,
-      'jourRetour':(widget.ticket.billetRetour)?widget.ticket.retour:DateTime.now(),
-      'prixAller':widget.ticket.prixAller,
-      'prixRetour':widget.ticket.prixRetour,
-      'idBillet':widget.ticket.id,
-
-    };
-    firebaseHelper().addBillet(widget.ticket.id, map);
+      
 
   }
 
 
+  addAvoir() async{
 
-  Future paye() async {
-    billetrecording(false);
-    int prixTotal = widget.ticket.prixAller+widget.ticket.prixRetour;
+
+    int avoirTotal=0;
+    int avoirPrecedent=0;
+    if(globalUser==null){
+      avoirPrecedent=0;
+    }
+    else
+      {
+        avoirPrecedent=globalUser.avoir;
+      }
+
+    int avoirenregsitre=int.parse(controllerMontant.text);
+
+    avoirTotal=avoirPrecedent+ int.parse(controllerMontant.text);
 
 
     //Récupération du token pour le paiement
@@ -190,7 +168,7 @@ class homeDetail extends State<detailDateController>{
       //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
     };
     DateTime orderid = DateTime.now();
-    String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
+    String number_order ="Account${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
 
 
     Map <String,dynamic> bodypayment ={
@@ -198,7 +176,7 @@ class homeDetail extends State<detailDateController>{
       "merchant_key":"bd77ff4d",
       "currency":"OUV",
       "order_id":number_order,
-      "amount": prixTotal.toString(),
+      "amount": avoirenregsitre.toString(),
       "return_url": "http://www.koko0017.odns.fr",
       "cancel_url": "http://www.koko0017.odns.fr",
       "notif_url":"http://www.koko0017.odns.fr/notifications",
@@ -238,7 +216,7 @@ class homeDetail extends State<detailDateController>{
     //Lancement de la page paiement
     Map<String,dynamic> bodyverification ={
       "order_id":number_order,
-      "amount":prixTotal.toString(),
+      "amount":avoirenregsitre.toString(),
       "pay_token":paymenttoken.pay_token,
       "payment_url":paymenttoken.payment_url,
       "notif_token":paymenttoken.notif_token,
@@ -279,7 +257,23 @@ class homeDetail extends State<detailDateController>{
               if(paymentcheck.status=='SUCCESS')
               {
                 print('enregistrement dans timer');
-                billetrecording(true);
+                Map <String,dynamic>mapUser ={
+                  'nom':globalUser.nom,
+                  'prenom':globalUser.prenom,
+                  'id':globalUser.id,
+                  'compagnie':globalUser.compagnie,
+                  'telephone':globalUser.telephone,
+                  'image':globalUser.image,
+                  'typeUtilisateur':globalUser.type_utilisateur,
+                  'login':globalUser.pseudo,
+                  'mail':globalUser.mail,
+                  'sexe':globalUser.sexe,
+                  'naissance':globalUser.naissance,
+                  'avoir':avoirTotal,
+
+                };
+                firebaseHelper().addUser(globalUser.id, mapUser);
+
 
                 timer.cancel();
               }
@@ -301,12 +295,29 @@ class homeDetail extends State<detailDateController>{
         if(paymentcheck.status=='SUCCESS')
         {
           print("enregistrement");
-          billetrecording(true);
+          print('enregistrement dans timer');
+          Map <String,dynamic>mapUser ={
+            'nom':globalUser.nom,
+            'prenom':globalUser.prenom,
+            'id':globalUser.id,
+            'compagnie':globalUser.compagnie,
+            'telephone':globalUser.telephone,
+            'image':globalUser.image,
+            'typeUtilisateur':globalUser.type_utilisateur,
+            'login':globalUser.pseudo,
+            'mail':globalUser.mail,
+            'sexe':globalUser.sexe,
+            'naissance':globalUser.naissance,
+            'avoir':avoirTotal,
+
+          };
+          firebaseHelper().addUser(globalUser.id, mapUser);
+
         }
         if(paymentcheck.status=='FAILED')
         {
           print('non timer');
-          billetrecording(false);
+
         }
 
 
@@ -320,8 +331,6 @@ class homeDetail extends State<detailDateController>{
 
     });
   }
-
-
 
 
 

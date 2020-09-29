@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_material.dart';
@@ -23,6 +25,7 @@ class trajetController extends StatefulWidget{
 
 class homeTrajet extends State<trajetController>{
   GlobalKey <ScaffoldState> globalkey = GlobalKey<ScaffoldState>();
+  GlobalKey <ScaffoldState> globalkeyInternational = GlobalKey<ScaffoldState>();
 
 
   TextEditingController depart = new TextEditingController(text: 'Depart');
@@ -32,6 +35,7 @@ class homeTrajet extends State<trajetController>{
   DateFormat formatheure;
   DateFormat formatmois;
   int nbpassager=1;
+  bool internatinational = false;
   bool retour=false;
   final List<String> imgList = [
       'assets/banniere01.JPG',
@@ -54,6 +58,20 @@ class homeTrajet extends State<trajetController>{
     'San','Sandaré','Ségou','Sévaré','Sikasso',
     'Tabakoto','Taoudénit','Ténè','Tillaberry','Tombouctou','Toukoto',
     'Yangasso'
+  ];
+
+  List <String> destinationInternational=[
+    'Cotonou',
+    'Bobo djoulassa','Ouagadougou',
+    'Abidjan','Bouaké','Daloa','Féréké Dougou','Wangolo','Yamoussokoro','Zékoua',
+    'Banjul',
+    'Accra','Koumassi',
+    'Conakry','Divo','Siguiri','Vava',
+    'Bamako','Bougouni','Dioïla','Gao','Kayes','Kidal','Koulikoro','Ménaka','Mopti','Nioro du Sahel','Ségou','Sikasso','Taoudénit','Tombouctou',
+    'Aleg','Ayoune','Boutilimite','Gogui','Kiffa','Nouakchott','Tintane',
+    'Niamey',
+    'Dakar','Goudire','Kafrine','Kaolack','Kidira',"M'bour",'Tamba','Thiès',
+    'Lomé'
   ];
 
 
@@ -79,7 +97,7 @@ class homeTrajet extends State<trajetController>{
 
     // TODO: implement build
     return Scaffold(
-      key: globalkey,
+      key: (internatinational)?globalkeyInternational:globalkey,
       body: bodyPage(),
     );
   }
@@ -98,6 +116,26 @@ class homeTrajet extends State<trajetController>{
       child: SingleChildScrollView(
         child: Column(
           children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Text('National'),
+                Switch.adaptive(
+                    value: internatinational,
+                    onChanged: (bool valeur){
+                      setState(() {
+                        internatinational=valeur;
+                        destinationSelectionDepart='Choisir votre départ';
+                        destinationSelectionArrivee='Choisir votre arrivée';
+                      });
+                    }
+                ),
+
+                Text('International'),
+              ],
+
+
+            ),
 
             //
             Container(
@@ -123,7 +161,7 @@ class homeTrajet extends State<trajetController>{
                 ),
                 mode: Mode.DIALOG,
                 showSelectedItem: true,
-                items: destination,
+                items: (internatinational)?destinationInternational:destination,
                 showClearButton: false,
                 onChanged: (text){
                   setState(() {
@@ -176,7 +214,7 @@ class homeTrajet extends State<trajetController>{
                 ),
                 mode: Mode.DIALOG,
                 showSelectedItem: true,
-                items: destination,
+                items: (internatinational)?destinationInternational:destination,
                 showClearButton: false,
                 onChanged: (String text){
                   print(text);
@@ -398,7 +436,27 @@ class homeTrajet extends State<trajetController>{
 
   affichageSnack(String periode)
   {
+    int count=0;
+    int affichage;
     globalkey.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartNational,momentArrivee: momentArriveeNational,periode:periode));
+    Timer.periodic(Duration(seconds:2), (timer){
+      if(count<10)
+      {
+        count++;
+        print(count);
+        setState(() {
+          affichage=count;
+        });
+
+      }
+      else
+      {
+        timer.cancel();
+      }
+
+
+
+    });
 
   }
 

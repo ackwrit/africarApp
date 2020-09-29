@@ -151,8 +151,7 @@ class homeReviewBack extends State<backTrajetControllerReview>{
                       //déterminer choix si voyage de retour
                       Navigator.push(context, MaterialPageRoute(
                           builder: (BuildContext context){
-                            return
-                            bookingController(voyageRetour:widget.voyageRetour,retour: widget.retour,voyageAller: widget.voyageAller,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrePassager: widget.nombrepassager,);
+                            return bookingController(voyageRetour:widget.voyageRetour,retour: widget.retour,voyageAller: widget.voyageAller,momentDepart: widget.momentDepart,momentArrivee: widget.momentArrivee,nombrePassager: widget.nombrepassager,);
                           }
                       ));
                     }

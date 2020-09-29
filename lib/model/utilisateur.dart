@@ -14,6 +14,7 @@ class utilisateur{
   DateTime naissance;
   String pseudo;
   String mail;
+  int avoir;
 
 
   utilisateur(DocumentSnapshot snapshot)
@@ -30,6 +31,7 @@ class utilisateur{
     sexe=map['sexe'];
     naissance=conversion().readTimestamp(map['naissance']);
     type_utilisateur =map['typeUtilisateur'];
+    avoir=map['avoir'];
   }
 
 
@@ -48,6 +50,7 @@ class utilisateur{
       'mail':mail,
       'sexe':sexe,
       'naissance':naissance.millisecondsSinceEpoch,
+      'avoir':avoir,
 
     };
   }
