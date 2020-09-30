@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/informationController.dart';
 import 'package:africars/controller/profilController.dart';
+import 'package:africars/controller/registerController.dart';
+import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/fonction/pushNotification.dart';
 import 'package:africars/view/my_material.dart';
@@ -12,7 +14,11 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
+import 'controller/avoirController.dart';
+import 'controller/modificationProfil.dart';
 import 'fonction/firebaseHelper.dart';
 
 void main() {
@@ -41,10 +47,12 @@ class MyApp extends StatelessWidget {
     PageController pageController=PageController(initialPage: 0);
     int BottomSelectedIndex=0;
 
+
     return StreamBuilder<FirebaseUser>(
         stream: FirebaseAuth.instance.onAuthStateChanged,
         builder: (BuildContext context,snapshot){
           if(snapshot.hasData){
+
             return MyHomePage();
           }
           else
@@ -64,6 +72,7 @@ class MyHomePage extends StatefulWidget {
 
 
 
+
   final String title;
 
   @override
@@ -71,10 +80,41 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
   PageController pageController = PageController(initialPage: 0);
   int bottomSelectedIndex = 0;
   pushNotification _notification;
   FirebaseMessaging fcm = FirebaseMessaging();
+  String identifiant;
+  int selectedindex=0;
+
+
+
+  pageIndex(int pos){
+    switch(pos){
+      case 0: return pageBody();
+      case 1:return registerController();
+
+
+    };
+
+  }
+
+
+  pageIndexConnexion(int pos){
+    switch(pos){
+      case 0: return pageBody();
+      case 1:return print('profil');
+      case 2: return avoirController();
+      case 3:return modificationProfil();
+
+
+
+    };
+
+  }
+
 
 
 
@@ -84,6 +124,7 @@ class _MyHomePageState extends State<MyHomePage> {
     // TODO: implement initState
 
     super.initState();
+
 
 
     if (Platform.isIOS) {
@@ -115,8 +156,25 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
+
+
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('fr_FR');
+    firebaseHelper().myId().then((uid)
+    {
+      setState(() {
+        identifiant=uid;
+      });
+      firebaseHelper().getUser(identifiant).then((user)
+      {
+        setState(() {
+          globalUser=user;
+        });
+
+      });
+    });
+
 
     if (Theme
         .of(context)
@@ -136,17 +194,18 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
     return Scaffold(
+      drawer: (globalUser==null)?Drawervide():Drawerpresent(),
         appBar: new AppBar(
           actions: <Widget>[
-            IconButton(
-                icon: Icon(Icons.account_circle, size: 40,), onPressed: () {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context) {
-                    return profilController();
-                  }
-              ));
-            }
-            )
+            (globalUser==null)?Container():Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                Icon(Icons.credit_card),
+                Text(" ${globalUser.avoir} CFA")
+                
+              ], 
+              
+            ),
 
           ],
 
@@ -159,18 +218,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
         ),
-        body: PageView(
-          controller: pageController,
-          onPageChanged: (index) {
-            pageChanged(index);
-          },
+        body: (globalUser==null)?pageIndex(selectedindex):pageIndexConnexion(selectedindex),
 
-          children: [
-            trajetController(),
-            dateController(),
-            informationController(),
-          ],
-        ),
+
+
+
+
+
+
+
+
+
 
 
         bottomNavigationBar: Theme(
@@ -202,9 +260,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: new Text(
                     'Réservation', style: TextStyle(fontSize: 18),)),
               new BottomNavigationBarItem(
-                  icon: new Icon(Icons.info_outline_rounded),
+                  icon: new Icon(Icons.add_alert_rounded),
                   title: new Text(
-                    'Information', style: TextStyle(fontSize: 18),)),
+                    'Notification', style: TextStyle(fontSize: 18),)),
 
             ],
             backgroundColor: Colors.black,
@@ -214,6 +272,23 @@ class _MyHomePageState extends State<MyHomePage> {
 
         )
 
+    );
+  }
+
+
+  Widget pageBody()
+  {
+    return PageView(
+      controller: pageController,
+      onPageChanged: (index) {
+        pageChanged(index);
+      },
+
+      children: [
+        trajetController(),
+        dateController(),
+        informationController(),
+      ],
     );
   }
 
@@ -237,6 +312,177 @@ class _MyHomePageState extends State<MyHomePage> {
           index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
+
+
+  Widget Drawervide(){
+
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Center(
+              child: Text('Profil'),
+
+            ),
+            decoration: BoxDecoration(
+
+              color: Colors.orangeAccent,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Menu'),
+            selected: (selectedindex==0),
+            onTap: () {
+              setState(() {
+                selectedindex=0;
+              });
+
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading:Icon(Icons.login_rounded),
+            title: Text("S'enregistrer"),
+            selected: (selectedindex==1),
+            onTap: () {
+              setState(() {
+                selectedindex=1;
+
+              });
+
+              Navigator.pop(context);
+            },
+          ),
+
+
+
+
+        ],
+      ),
+    );
+
+  }
+
+
+
+
+  Widget Drawerpresent(){
+    return Drawer(
+      child: ListView(
+        padding: EdgeInsets.zero,
+        children: [
+          DrawerHeader(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  (globalUser==null)?Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(
+                        strokeWidth: 4,
+                      )
+                    ],
+                  ):Text('${globalUser.prenom} ${globalUser.nom}'),
+                  (globalUser.image==null)? Container(
+                    width: 70,
+                    height: 70,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                          fit: BoxFit.fill,
+                          image: AssetImage("assets/userIcon.png"),
+                        )
+                    ),
+                  ): Container(
+                    width: 100,
+                    height: 100,
+                    decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: NetworkImage(globalUser.image)
+                        )
+                    ),
+                  ),
+
+                ],
+
+              ),
+
+            ),
+            decoration: BoxDecoration(
+
+              color: Colors.orangeAccent,
+            ),
+          ),
+          ListTile(
+            leading: Icon(Icons.home),
+            title: Text('Menu'),
+            selected: (selectedindex==0),
+            onTap: () {
+              setState(() {
+                selectedindex=0;
+              });
+
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading:Icon(Icons.account_circle),
+            title: Text('Profil'),
+            selected: (selectedindex==1),
+            onTap: () {
+              setState(() {
+                selectedindex=1;
+
+              });
+
+              Navigator.push(context,MaterialPageRoute(
+                builder: (BuildContext context){
+                  return settingsProfilController();
+                }
+              ));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.credit_card_rounded),
+            title: Text('Porte-Monnaie'),
+            selected: (selectedindex==2),
+            onTap: () {
+              setState(() {
+                selectedindex=2;
+              });
+
+              Navigator.pop(context);
+            },
+          ),
+
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Paramètre'),
+            selected: (selectedindex==3),
+            onTap: () {
+              setState(() {
+                selectedindex=3;
+              });
+              Navigator.pop(context);
+            },
+          ),
+
+
+
+        ],
+      ),
+
+    );
+
+  }
+
+
+
 }
 
 
