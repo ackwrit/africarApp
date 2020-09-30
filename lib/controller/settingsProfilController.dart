@@ -201,6 +201,12 @@ class homeSettingsProfil extends State<settingsProfilController> {
                 ));
               },
             ),
+            SizedBox(height: 40,),
+            Divider(
+              color:Colors.black,
+              thickness: 2,
+
+            ),
             ListTile(
               leading: Icon(Icons.logout),
               selected: (selectedindex==6),
@@ -209,14 +215,9 @@ class homeSettingsProfil extends State<settingsProfilController> {
                 setState(() {
                   selectedindex=6;
                 });
+                MyDialog();
 
-                FirebaseAuth.instance.signOut();
 
-                Navigator.push(context,MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return MyApp();
-                    }
-                ));
               },
             ),
           ],
@@ -300,6 +301,66 @@ class homeSettingsProfil extends State<settingsProfilController> {
 
         ],
       ),
+    );
+
+
+  }
+
+
+  Future MyDialog() async{
+
+    return showDialog(
+      barrierDismissible: false,
+       context:context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          title: Text('Suppression profil'),
+          backgroundColor: background,
+          content: SingleChildScrollView(
+            child:ListBody(
+              children: [
+                Text('Cette action supprimera toutes les informations liés à votre profil.'),
+                Text('Souhaitez-vous supprimer votre profil ?'),
+              ],
+            ),
+          ),
+          actions: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                RaisedButton.icon(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    color: backgroundbar,
+                    onPressed: (){
+                      Navigator.pop(context);
+
+
+                    },
+                    icon: Icon(Icons.cancel,color: background,),
+                    label: Text('NON',style: TextStyle(color: background),)
+                ),
+                SizedBox(width: 10,),
+                RaisedButton.icon(
+                    color: backgroundbar,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    onPressed: (){
+                      FirebaseAuth.instance.signOut();
+                      Navigator.push(context,MaterialPageRoute(
+                          builder: (BuildContext context){
+                            return MyApp();
+                          }
+                      ));
+
+                    },
+                    icon: Icon(Icons.delete_forever,color: background,),
+                    label: Text('OUI',style: TextStyle(color: background),)
+                ),
+              ],
+            ),
+          ],
+
+        );
+      }
     );
 
 
