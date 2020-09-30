@@ -2,11 +2,14 @@ import 'package:africars/controller/avoirController.dart';
 import 'package:africars/controller/modificationProfil.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
+import 'package:africars/model/affichage_billet_validate.dart';
+import 'package:africars/model/affichage_messagerie.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class settingsProfilController extends StatefulWidget{
   @override
@@ -22,20 +25,25 @@ class homeSettingsProfil extends State<settingsProfilController> {
   String identifiant;
   utilisateur profil;
   int selectedindex=0;
+  DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
+  DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre = new NumberFormat("#,###", "fr_FR");
 
 
 
   pageIndex(int pos){
     switch(pos){
       case 0: return bodyPage();
-      case 1:return null;
+      case 1:return billetValidateController();
       case 2: return avoirController();
-      case 3:return modificationProfil();
-      case 4:return print('quitter');
-      case 5:return print('se decconnecter');
+      case 3: return chatController(globalUser, serviceClient);
+      case 4:return modificationProfil();
+      case 5:return print('quitter');
+      case 6:return print('se decconnecter');
     };
 
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -52,12 +60,22 @@ class homeSettingsProfil extends State<settingsProfilController> {
         });
 
       });
-
     });
   }
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    firebaseHelper().getUser(idServiceClient).then((user)
+    {
+      setState(() {
+        serviceClient=user;
+
+
+      });
+
+    });
+
+
     return Scaffold(
       drawer: Drawer(
         child: ListView(
@@ -65,7 +83,43 @@ class homeSettingsProfil extends State<settingsProfilController> {
           children: [
             DrawerHeader(
               child: Center(
-                child: Text('${globalUser.prenom} ${globalUser.nom}'),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    (globalUser==null)?Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          strokeWidth: 4,
+                        )
+                      ],
+                    ):Text('${globalUser.prenom} ${globalUser.nom}'),
+                    (globalUser.image==null)? Container(
+                      width: 70,
+                      height: 70,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                            fit: BoxFit.fill,
+                            image: AssetImage("assets/userIcon.png"),
+                          )
+                      ),
+                    ): Container(
+                      width: 100,
+                      height: 100,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          image: DecorationImage(
+                              fit: BoxFit.fill,
+                              image: NetworkImage(globalUser.image)
+                          )
+                      ),
+                    ),
+
+                  ],
+
+        ),
+
               ),
             decoration: BoxDecoration(
 
@@ -87,10 +141,13 @@ class homeSettingsProfil extends State<settingsProfilController> {
             ListTile(
               leading:Icon(Icons.departure_board_rounded),
               title: Text('Courses'),
+              selected: (selectedindex==1),
               onTap: () {
-                // Update the state of the app
-                // ...
-                // Then close the drawer
+                setState(() {
+                  selectedindex=1;
+
+                });
+
                 Navigator.pop(context);
               },
             ),
@@ -107,12 +164,24 @@ class homeSettingsProfil extends State<settingsProfilController> {
               },
             ),
             ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('Paramètre'),
+              leading: Icon(Icons.forum_rounded),
+              title: Text('Service Client'),
               selected: (selectedindex==3),
               onTap: () {
+                setState(() {
+                  selectedindex=3;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Paramètre'),
+              selected: (selectedindex==4),
+              onTap: () {
                setState(() {
-                 selectedindex=3;
+                 selectedindex=4;
                });
                 Navigator.pop(context);
               },
@@ -120,10 +189,10 @@ class homeSettingsProfil extends State<settingsProfilController> {
             ListTile(
               leading: Icon(Icons.exit_to_app_rounded),
               title: Text('Quitter'),
-              selected:(selectedindex==4),
+              selected:(selectedindex==5),
               onTap: () {
                setState(() {
-                 selectedindex=4;
+                 selectedindex=5;
                });
                 Navigator.push(context,MaterialPageRoute(
                     builder: (BuildContext context){
@@ -134,11 +203,11 @@ class homeSettingsProfil extends State<settingsProfilController> {
             ),
             ListTile(
               leading: Icon(Icons.logout),
-              selected: (selectedindex==5),
+              selected: (selectedindex==6),
               title: Text('Se déconnecter'),
               onTap: () {
                 setState(() {
-                  selectedindex=5;
+                  selectedindex=6;
                 });
 
                 FirebaseAuth.instance.signOut();
@@ -193,7 +262,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Padding(padding: EdgeInsets.all(5),),
+          SizedBox(height:25),
           (globalUser.image==null)? Container(
                 width: 70,
                 height: 70,
@@ -204,7 +273,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
                       image: AssetImage("assets/userIcon.png"),
                   )
                 ),
-              ):Container(
+              ): Container(
                 width: 100,
                 height: 100,
                 decoration: BoxDecoration(
@@ -215,16 +284,18 @@ class homeSettingsProfil extends State<settingsProfilController> {
                   )
                 ),
               ),
-          Padding(padding: EdgeInsets.all(5),),
-          //Text(profil.pseudo),
-          Padding(padding: EdgeInsets.all(5),),
+
+          SizedBox(height:25),
           Text(globalUser.nom),
-          Padding(padding: EdgeInsets.all(5),),
+          SizedBox(height:25),
           Text(globalUser.prenom),
+          SizedBox(height:25),
+          Text(globalUser.sexe),
+          SizedBox(height:25),
+          Text('${formatjour.format(globalUser.naissance)}'),
+          SizedBox(height:25),
 
 
-
-          //Portemonnaie virtuel
 
 
         ],

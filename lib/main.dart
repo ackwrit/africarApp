@@ -1,21 +1,19 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:africars/controller/avoirController.dart';
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/informationController.dart';
-import 'package:africars/controller/principalController.dart';
 import 'package:africars/controller/profilController.dart';
-import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/trajetController.dart';
-import 'package:africars/controller/trajetInternationalController.dart';
 import 'package:africars/fonction/pushNotification.dart';
-import 'package:africars/model/testingPage.dart';
-import 'package:animations/animations.dart';
+import 'package:africars/view/my_material.dart';
+import 'package:africars/view/my_widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
+import 'fonction/firebaseHelper.dart';
 
 void main() {
   runApp(MyApp());
@@ -73,20 +71,22 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  PageController pageController=PageController(initialPage: 0);
-  int bottomSelectedIndex=0;
+  PageController pageController = PageController(initialPage: 0);
+  int bottomSelectedIndex = 0;
   pushNotification _notification;
-  FirebaseMessaging fcm =FirebaseMessaging();
+  FirebaseMessaging fcm = FirebaseMessaging();
+
+
 
 
   @override
-  void initState(){
+  void initState() {
     // TODO: implement initState
 
     super.initState();
+
+
     if (Platform.isIOS) {
-
-
       fcm.requestNotificationPermissions(IosNotificationSettings(
         sound: true,
         badge: true,
@@ -94,10 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
       ));
       fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
         print('IOS settings register');
-
-
       });
-
     }
     fcm.configure(
       onLaunch: (Map<String, dynamic> message) async {
@@ -115,78 +112,65 @@ class _MyHomePageState extends State<MyHomePage> {
 
     );
     initialisation();
-
-
-
-
   }
 
 
   @override
   Widget build(BuildContext context) {
-  if(Theme.of(context).platform==TargetPlatform.iOS)
-    {
+
+    if (Theme
+        .of(context)
+        .platform == TargetPlatform.iOS) {
       return Configuration();
     }
-    else{
-    return Configuration();
+    else {
+      return Configuration();
     }
-
-
-
-
-
-
-
   }
 
 
+  Widget Configuration() {
 
 
-  Widget Configuration(){
+
 
 
     return Scaffold(
-      appBar: new AppBar(
-        actions: <Widget>[
-          IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
-          {
+        appBar: new AppBar(
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(Icons.account_circle, size: 40,), onPressed: () {
+              Navigator.push(context, MaterialPageRoute(
+                  builder: (BuildContext context) {
+                    return profilController();
+                  }
+              ));
+            }
+            )
 
-            Navigator.push(context, MaterialPageRoute(
-                builder: (BuildContext context)
-                {
-                  return profilController();
-                }
-            ));
-
-          }
-          )
-
-        ],
+          ],
 
 
-        centerTitle: true,
-        flexibleSpace: Image.asset("assets/newlogo.jpg",height: 800,width: 800,),
+          centerTitle: true,
+          flexibleSpace: Image.asset(
+            "assets/newlogo.jpg", height: 800, width: 800,),
 
-        backgroundColor: Colors.black,
+          backgroundColor: Colors.black,
 
 
+        ),
+        body: PageView(
+          controller: pageController,
+          onPageChanged: (index) {
+            pageChanged(index);
+          },
 
-      ),
-      body: PageView(
-        controller: pageController,
-        onPageChanged: (index)
-        {
-          pageChanged(index);
-        },
-
-        children: [
-          trajetController(),
-         // testingPage(),
-          dateController(),
-          informationController(),
-        ],
-      ),
+          children: [
+            trajetController(),
+            dateController(),
+            informationController(),
+          ],
+        ),
 
 
         bottomNavigationBar: Theme(
@@ -194,7 +178,10 @@ class _MyHomePageState extends State<MyHomePage> {
               canvasColor: Colors.black,
 
               primaryColor: Colors.orange,
-              textTheme: Theme.of(context).textTheme.copyWith(
+              textTheme: Theme
+                  .of(context)
+                  .textTheme
+                  .copyWith(
                   caption: TextStyle(color: Colors.orange)
               )
           ),
@@ -205,24 +192,24 @@ class _MyHomePageState extends State<MyHomePage> {
             selectedItemColor: Colors.orangeAccent,
 
 
-
-
-
-            onTap: (index){
+            onTap: (index) {
               bottomTapped(index);
-
             },
             items: [
-              new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),title: new Text("Trajet",style: TextStyle(fontSize: 18),),),
-             // new BottomNavigationBarItem(icon: new Icon(Icons.credit_card_rounded),title: new Text("Porte-Monnaie",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
-              new BottomNavigationBarItem(icon: new Icon(Icons.forum),title: new Text('Information',style: TextStyle(fontSize: 18),)),
+              new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),
+                title: new Text("Trajet", style: TextStyle(fontSize: 18),),),
+              new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),
+                  title: new Text(
+                    'Réservation', style: TextStyle(fontSize: 18),)),
+              new BottomNavigationBarItem(
+                  icon: new Icon(Icons.info_outline_rounded),
+                  title: new Text(
+                    'Information', style: TextStyle(fontSize: 18),)),
 
             ],
             backgroundColor: Colors.black,
 
           ),
-
 
 
         )
@@ -231,14 +218,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
 
-Future initialisation() async {
-
-  String token = await fcm.getToken();
-  print("Firebase messaging: $token");
-
-
-
-}
+  Future initialisation() async {
+    String token = await fcm.getToken();
+    print("Firebase messaging: $token");
+  }
 
   void pageChanged(int index) {
     setState(() {
@@ -250,128 +233,15 @@ Future initialisation() async {
   void bottomTapped(int index) {
     setState(() {
       bottomSelectedIndex = index;
-      pageController.animateToPage(index, duration: Duration(milliseconds: 500), curve: Curves.ease);
+      pageController.animateToPage(
+          index, duration: Duration(milliseconds: 500), curve: Curves.ease);
     });
   }
-
-
-
-
-
-
-  Widget iosConfig()
-  {
-    return new CupertinoTabScaffold(
-        tabBar: new CupertinoTabBar(
-            backgroundColor: Colors.black,
-            activeColor: Colors.orangeAccent,
-            inactiveColor: Colors.white,
-            items:[
-              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("National",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.map),title: new Text("International",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
-              new BottomNavigationBarItem(icon: new Icon(Icons.bubble_chart),title: new Text('Information',style: TextStyle(fontSize: 18),)),
-
-
-
-
-
-
-
-            ]),
-        tabBuilder: (BuildContext context,int index){
-          Widget controllerSelected= controllers()[index];
-          return new Scaffold(
-            appBar: new AppBar(
-              actions: [
-                IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
-                {
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (BuildContext context)
-                      {
-                        return profilController();
-                      }
-                  ));
-
-                }
-                )
-
-              ],
-
-              title:Image.asset("assets/newlogo.jpg",height: 225,),
-              backgroundColor: Colors.black,),
-            body: controllerSelected,
-
-
-          );
-        }
-    );
-  }
-
-
-
-  Widget androidConfig(){
-    
-    return new DefaultTabController(
-      length: 3,
-      child: Scaffold(
-        appBar: AppBar(
-          title:Image.asset("assets/newlogo.jpg",height: 225,),
-          backgroundColor: Colors.black,
-          actions: [
-            IconButton(icon:Icon(Icons.account_circle,size: 40,), onPressed:()
-            {
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context)
-                  {
-                    return profilController();
-                  }
-              ));
-
-            }
-            )
-
-          ],
-          centerTitle: true,
-          bottom: TabBar
-            (
-            indicatorColor: Colors.orange,
-
-              tabs: [
-              Tab(icon:new Icon(Icons.map),child: new Text("Trajet") ,),
-                Tab(icon:new Icon(Icons.map),child: new Text("Interational") ,),
-            Tab(icon:new Icon(Icons.bookmark),child: new Text("Réservation") ,),
-                Tab(icon: Icon(Icons.bubble_chart),child: Text("Information"),)
-          ]
-          ),
-
-        ),
-        body: TabBarView(
-            children: controllers()
-        ),
-      )
-    );
-
-  }
-
-
-
-
-  List <Widget> controllers (){
-    return [
-      trajetController(),
-      Text("porte-monnaie"),
-      //trajetInternationalController(),
-     dateController(),
-      informationController(),
-
-
-
-
-
-
-
-    ];
-
-  }
 }
+
+
+
+
+
+
+

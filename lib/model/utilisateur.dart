@@ -21,6 +21,7 @@ class utilisateur{
   {
     id=snapshot.documentID;
     Map map = snapshot.data;
+    id=map['id'];
     nom = map['nom'];
     prenom = map['prenom'];
     compagnie =map['compagnie'];
@@ -37,7 +38,7 @@ class utilisateur{
 
   Map toMap()
   {
-    Map map;
+    Map <String,dynamic>map;
     return map ={
       'nom':nom,
       'prenom':prenom,

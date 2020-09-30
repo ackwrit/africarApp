@@ -5,12 +5,18 @@ import 'package:flutter/material.dart';
 
 //Gloabl user
 utilisateur globalUser;
+utilisateur serviceClient=null;
 String globalCredentials="R0luU1gybEJCR3h5Rnc3Z3MxakFFSVRreFBhTUFpaUc6a2ZWNnhlSGEwbVcxNWV6TA";
 String urlPaiement='https://api.orange.com/orange-money-webpay/dev/v1/webpayment';
+String idServiceClient = "vqCx2lPsnybhqGt97QJ69SMOnjw2";
+
 
 
 //Widget
 Widget imagebar = Image.asset("assets/logo.png",height: 225);
+
+
+
 
 
 //horaire

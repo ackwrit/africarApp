@@ -10,6 +10,7 @@ import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class avoirController extends StatefulWidget{
@@ -25,6 +26,9 @@ class homeAvoir extends State<avoirController>{
   String uid;
   utilisateur globalUser;
   TextEditingController controllerMontant= new TextEditingController();
+  DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
+  DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre = new NumberFormat("#,###", "fr_FR");
 
   @override
   void initState() {
@@ -64,7 +68,7 @@ class homeAvoir extends State<avoirController>{
             elevation: 5.0,
             child: ListTile(
               leading: Icon(Icons.credit_card_rounded),
-              title: (globalUser.avoir==null)?Text('0 CFA'):Text('${globalUser.avoir} CFA'),
+              title: (globalUser.avoir==null)?Text('0 CFA'):Text('${formatchiffre.format(globalUser.avoir)} CFA'),
               trailing: RaisedButton.icon(
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                 color: Colors.orangeAccent,

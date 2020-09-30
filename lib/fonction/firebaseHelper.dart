@@ -107,6 +107,8 @@ Future<void> signOTP(smsCode,verifId)async{
   final fire_user =data_instance.collection("utilisateur");
   final fire_trajet=data_instance.collection("trajets");
   final fire_billet=data_instance.collection("billets");
+  final fire_message=data_instance.collection('messages');
+  final fire_conversation=data_instance.collection('conversations');
 
   //storage
 
@@ -169,6 +171,62 @@ Future<void> signOTP(smsCode,verifId)async{
   {
     DocumentSnapshot snapshot = await fire_user.document(uid).get();
     return utilisateur(snapshot);
+  }
+
+
+
+  sendMessage(String texte,utilisateur user,utilisateur moi){
+    DateTime date=DateTime.now();
+    Map <String,dynamic>map={
+      'from':moi.id,
+      'to':user.id,
+      'texte':texte,
+      'envoiMessage':date
+    };
+    String idDate = date.microsecondsSinceEpoch.toString();
+    addMessage(map, getMessageRef(moi.id, user.id, idDate));
+    addConversation(getConversation(moi.id, user, texte, date), moi.id);
+    addConversation(getConversation(user.id, moi, texte, date), user.id);
+
+
+
+
+  }
+
+  Map getConversation(String sender,utilisateur partenaire,String texte,DateTime date){
+    Map <String,dynamic> map = partenaire.toMap();
+    map ['idmoi']=sender;
+    map['lastmessage']=texte;
+    map['envoimessage']=date;
+    map['destinateur']=partenaire.id;
+
+    return map;
+
+  }
+
+
+  String getMessageRef(String from,String to,String date){
+    String resultat="";
+    List<String> liste=[from,to];
+    liste.sort((a,b)=>a.compareTo(b));
+    for(var x in liste){
+      resultat += x+"+";
+    }
+    resultat =resultat + date;
+    return resultat;
+
+  }
+
+
+
+  addMessage(Map<String,dynamic> map,String uid){
+    fire_message.document(uid).setData(map);
+
+  }
+
+  addConversation(Map<String,dynamic> map,String uid){
+    fire_conversation.document(uid).setData(map);
+
   }
 
 

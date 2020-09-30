@@ -11,16 +11,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/intl.dart';
 
-class dateController extends StatefulWidget{
+class billetValidateController extends StatefulWidget{
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
-    return homeDate();
+    return homeBilletValidate();
   }
 
 }
 
-class homeDate extends State<dateController>{
+class homeBilletValidate extends State<billetValidateController>{
   String identifiant;
   utilisateur profil;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
@@ -82,9 +82,9 @@ class homeDate extends State<dateController>{
                       pinned: true,
                       backgroundColor: Colors.orangeAccent,
                       flexibleSpace: FlexibleSpaceBar(
-                        title: Text('Les billets'),
+                        title: Text('Les billets achetés'),
                         centerTitle: true,
-                        
+
 
 
 
@@ -103,15 +103,15 @@ class homeDate extends State<dateController>{
                     itemBuilder: (BuildContext ctx,int index){
                       billet entreprise=billet(documents[index]);
 
-                      if(entreprise.idVoyageur==identifiant && entreprise.validate==false){
+                      if(entreprise.idVoyageur==identifiant && entreprise.validate==true){
                         return InkWell(
                           child: Card(
                             elevation: 10,
                             child: ListTile(
                               leading: Text("${formatminimum.format(entreprise.depart)}"),
                               title: Text("${entreprise.lieuDepart} - ${entreprise.lieuArrivee} "),
-                             trailing:(entreprise.validate)?Icon(FontAwesome.check,color: Colors.green,):Icon(FontAwesome.history,color: Colors.orange,),
-                             // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
+                              trailing:(entreprise.validate)?Icon(FontAwesome.check,color: Colors.green,):Icon(FontAwesome.history,color: Colors.orange,),
+                              // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
                             ),
                           ),
                           onTap: (){

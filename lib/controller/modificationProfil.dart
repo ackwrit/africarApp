@@ -8,6 +8,7 @@ import 'package:africars/view/my_material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 
 class modificationProfil extends StatefulWidget{
@@ -25,6 +26,9 @@ class homeSettingsProfil extends State<modificationProfil> {
   File image;
   String urlimage;
   String uid;
+  DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
+  DateFormat formatheure = DateFormat.Hm('fr_FR');
+  var formatchiffre = new NumberFormat("#,###", "fr_FR");
   @override
   void initState() {
     // TODO: implement initState
@@ -111,28 +115,18 @@ class homeSettingsProfil extends State<modificationProfil> {
                 onPressed: imagePicker,
                 child: Text("Modifier l'image",style: TextStyle(color: Colors.orange),),
               ),
-              Padding(padding: EdgeInsets.all(5),),
-              /*TextField(
-              decoration: InputDecoration(
-                fillColor: Colors.white,
-                filled: true,
-                hintText: 'Pseudo',
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-              ),
-              onChanged: (text){
-                setState(() {
-                  globalUser.pseudo=text;
-                });
-              },
-            ),*/
-            Padding(padding: EdgeInsets.all(5),),
+
+
+              SizedBox(height:25),
               Text(globalUser.nom),
 
-              Padding(padding: EdgeInsets.all(5),),
+              SizedBox(height:25),
               Text(globalUser.prenom),
-              Padding(padding: EdgeInsets.all(5),),
+              SizedBox(height:25),
+              Text(globalUser.sexe),
+              SizedBox(height:25),
+              Text('${formatjour.format(globalUser.naissance)}'),
+              SizedBox(height:25),
               RaisedButton(
                 child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
                 onPressed: (){
@@ -143,7 +137,9 @@ class homeSettingsProfil extends State<modificationProfil> {
                     'naissance':globalUser.naissance,
                     'image':urlimage,
                     'login':globalUser.pseudo,
+                    'sexe':globalUser.sexe,
                     'typeUtilisateur':globalUser.type_utilisateur,
+                    'avoir':globalUser.avoir
 
 
 
@@ -160,20 +156,7 @@ class homeSettingsProfil extends State<modificationProfil> {
                 color: Colors.black,
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               ),
-              RaisedButton(
-                onPressed: (){
-                  Navigator.push(context, MaterialPageRoute(
-                      builder: (BuildContext context){
-                        return settingsProfilController();
-                      }
-                  ));
-                },
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                child: Text('Retour',style: TextStyle(color: Colors.orange),),
-                color: Colors.black,
-              )
 
-              //Portemonnaie virtuel
 
 
             ],
