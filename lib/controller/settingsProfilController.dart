@@ -1,3 +1,4 @@
+import 'package:africars/controller/avoirController.dart';
 import 'package:africars/controller/modificationProfil.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
@@ -20,6 +21,21 @@ class settingsProfilController extends StatefulWidget{
 class homeSettingsProfil extends State<settingsProfilController> {
   String identifiant;
   utilisateur profil;
+  int selectedindex=0;
+
+
+
+  pageIndex(int pos){
+    switch(pos){
+      case 0: return bodyPage();
+      case 1:return null;
+      case 2: return avoirController();
+      case 3:return modificationProfil();
+      case 4:return print('quitter');
+      case 5:return print('se decconnecter');
+    };
+
+  }
   @override
   void initState() {
     // TODO: implement initState
@@ -43,34 +59,112 @@ class homeSettingsProfil extends State<settingsProfilController> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Center(
+                child: Text('${globalUser.prenom} ${globalUser.nom}'),
+              ),
+            decoration: BoxDecoration(
+
+              color: Colors.orangeAccent,
+            ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Menu'),
+              selected: (selectedindex==0),
+              onTap: () {
+                setState(() {
+                  selectedindex=0;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading:Icon(Icons.departure_board_rounded),
+              title: Text('Courses'),
+              onTap: () {
+                // Update the state of the app
+                // ...
+                // Then close the drawer
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.credit_card_rounded),
+              title: Text('Porte-Monnaie'),
+              selected: (selectedindex==2),
+              onTap: () {
+                setState(() {
+                  selectedindex=2;
+                });
+
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Paramètre'),
+              selected: (selectedindex==3),
+              onTap: () {
+               setState(() {
+                 selectedindex=3;
+               });
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.exit_to_app_rounded),
+              title: Text('Quitter'),
+              selected:(selectedindex==4),
+              onTap: () {
+               setState(() {
+                 selectedindex=4;
+               });
+                Navigator.push(context,MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return MyHomePage();
+                    }
+                ));
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.logout),
+              selected: (selectedindex==5),
+              title: Text('Se déconnecter'),
+              onTap: () {
+                setState(() {
+                  selectedindex=5;
+                });
+
+                FirebaseAuth.instance.signOut();
+
+                Navigator.push(context,MaterialPageRoute(
+                    builder: (BuildContext context){
+                      return MyApp();
+                    }
+                ));
+              },
+            ),
+          ],
+        ),
+
+      ),
+
+
       appBar: AppBar(
         title: Image.asset("assets/newlogo.jpg",height: 225,),
-        leading: IconButton(
-            icon: Icon(Icons.home,color: Colors.white,size: 40,),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context){
-                    return MyHomePage();
-                  }
-              ));
-            }),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.settings,size: 40,color: Colors.white,),
-              onPressed: (){
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context)
-                        {
-                          return modificationProfil();
-                        }
-                ));
-              })
-        ],
+
+
         backgroundColor: Colors.black,
         centerTitle: true,
       ),
       backgroundColor: Colors.orangeAccent,
-      body: bodyPage(),
+      body: pageIndex(selectedindex)
 
     );
 
@@ -127,17 +221,7 @@ class homeSettingsProfil extends State<settingsProfilController> {
           Text(globalUser.nom),
           Padding(padding: EdgeInsets.all(5),),
           Text(globalUser.prenom),
-          Padding(padding: EdgeInsets.all(5),),
-          FlatButton(
-              onPressed: (){
-                FirebaseAuth.instance.signOut();
-                Navigator.push(context, MaterialPageRoute(
-                    builder: (BuildContext context){
-                      return MyApp();
-                    }
-                ));
-              },
-              child: Text('Se déconnecter'))
+
 
 
           //Portemonnaie virtuel

@@ -48,32 +48,7 @@ class homeSettingsProfil extends State<modificationProfil> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Image.asset("assets/newlogo.jpg",height: 225,),
-        leading: IconButton(
-            icon: Icon(Icons.home,color: Colors.white,size: 40,),
-            onPressed: (){
-              Navigator.push(context, MaterialPageRoute(
-                  builder: (BuildContext context){
-                    return MyHomePage();
-                  }
-              ));
-            }),
-        actions: [
-          IconButton(
-              icon: Icon(Icons.settings,size: 40,color: Colors.white,),
-              onPressed: ()
-          {
-            Navigator.push(context, MaterialPageRoute(
-              builder: (BuildContext context){
-                return modificationProfil();
-              }
-            ));
-          })
-        ],
-        backgroundColor: Colors.black,
-        centerTitle: true,
-      ),
+
       backgroundColor: Colors.orangeAccent,
       body: bodyPage(),
 

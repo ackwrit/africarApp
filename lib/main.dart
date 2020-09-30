@@ -182,7 +182,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
         children: [
           trajetController(),
-          testingPage(),
+         // testingPage(),
           dateController(),
           informationController(),
         ],
@@ -192,6 +192,7 @@ class _MyHomePageState extends State<MyHomePage> {
         bottomNavigationBar: Theme(
           data: Theme.of(context).copyWith(
               canvasColor: Colors.black,
+
               primaryColor: Colors.orange,
               textTheme: Theme.of(context).textTheme.copyWith(
                   caption: TextStyle(color: Colors.orange)
@@ -213,12 +214,12 @@ class _MyHomePageState extends State<MyHomePage> {
             },
             items: [
               new BottomNavigationBarItem(icon: new Icon(Icons.departure_board),title: new Text("Trajet",style: TextStyle(fontSize: 18),),),
-              new BottomNavigationBarItem(icon: new Icon(Icons.credit_card_rounded),title: new Text("Porte-Monnaie",style: TextStyle(fontSize: 18),),),
+             // new BottomNavigationBarItem(icon: new Icon(Icons.credit_card_rounded),title: new Text("Porte-Monnaie",style: TextStyle(fontSize: 18),),),
               new BottomNavigationBarItem(icon: new Icon(Icons.bookmark),title: new Text('Réservation',style: TextStyle(fontSize: 18),)),
               new BottomNavigationBarItem(icon: new Icon(Icons.forum),title: new Text('Information',style: TextStyle(fontSize: 18),)),
 
             ],
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.black,
 
           ),
 
@@ -312,7 +313,7 @@ Future initialisation() async {
   Widget androidConfig(){
     
     return new DefaultTabController(
-      length: 4,
+      length: 3,
       child: Scaffold(
         appBar: AppBar(
           title:Image.asset("assets/newlogo.jpg",height: 225,),
