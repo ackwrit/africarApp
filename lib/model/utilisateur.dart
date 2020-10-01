@@ -14,6 +14,7 @@ class utilisateur{
   DateTime naissance;
   String pseudo;
   String mail;
+  String uid;
   int avoir;
 
 
@@ -22,6 +23,7 @@ class utilisateur{
     id=snapshot.documentID;
     Map map = snapshot.data;
     id=map['id'];
+    uid=map['uid'];
     nom = map['nom'];
     prenom = map['prenom'];
     compagnie =map['compagnie'];
@@ -52,6 +54,7 @@ class utilisateur{
       'sexe':sexe,
       'naissance':naissance.millisecondsSinceEpoch,
       'avoir':avoir,
+      'uid':uid
 
     };
   }

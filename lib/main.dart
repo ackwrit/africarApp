@@ -8,6 +8,8 @@ import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/controller/trajetController.dart';
 import 'package:africars/fonction/pushNotification.dart';
+import 'package:africars/model/affichage_billet_validate.dart';
+import 'package:africars/model/affichage_messagerie.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -104,10 +106,14 @@ class _MyHomePageState extends State<MyHomePage> {
 
   pageIndexConnexion(int pos){
     switch(pos){
-      case 0: return pageBody();
-      case 1:return print('profil');
+      case 0 :return pageBody();
+      case 7:return print('profil');
+      case 1:return billetValidateController();
       case 2: return avoirController();
-      case 3:return modificationProfil();
+      case 3:return chatController(globalUser, serviceClient);
+      case 4:return modificationProfil();
+      case 5:return print('quitter');
+      case 6:return print('se decconnecter');
 
 
 
@@ -176,6 +182,17 @@ class _MyHomePageState extends State<MyHomePage> {
     });
 
 
+    firebaseHelper().getUser(idServiceClient).then((user)
+    {
+      setState(() {
+        serviceClient=user;
+
+
+      });
+
+    });
+
+
     if (Theme
         .of(context)
         .platform == TargetPlatform.iOS) {
@@ -193,6 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+
     return Scaffold(
       drawer: (globalUser==null)?Drawervide():Drawerpresent(),
         appBar: new AppBar(
@@ -200,8 +218,22 @@ class _MyHomePageState extends State<MyHomePage> {
             (globalUser==null)?Container():Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                Icon(Icons.credit_card),
-                Text(" ${globalUser.avoir} CFA")
+                RaisedButton.icon(
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                    color: backgroundbar,
+                    onPressed: (){
+                    Navigator.push(context,MaterialPageRoute(
+                      builder: (BuildContext context)
+                          {
+                            return settingsProfilController(pageselected: 2,);
+                          }
+                    ));
+                    },
+                    icon: Icon(Icons.credit_card,color: background,),
+                    label:  Text(" ${globalUser.avoir} CFA",style: TextStyle(color: background),)
+                ),
+
+
                 
               ], 
               
@@ -231,7 +263,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
-        bottomNavigationBar: Theme(
+        bottomNavigationBar: (selectedindex==0)?Theme(
           data: Theme.of(context).copyWith(
               canvasColor: Colors.black,
 
@@ -270,7 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
 
 
-        )
+        ):null
 
     );
   }
@@ -419,24 +451,12 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Menu'),
-            selected: (selectedindex==0),
-            onTap: () {
-              setState(() {
-                selectedindex=0;
-              });
-
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
             leading:Icon(Icons.account_circle),
             title: Text('Profil'),
-            selected: (selectedindex==1),
+            selected: (selectedindex==7),
             onTap: () {
               setState(() {
-                selectedindex=1;
+                selectedindex=7;
 
               });
 
@@ -445,6 +465,19 @@ class _MyHomePageState extends State<MyHomePage> {
                   return settingsProfilController();
                 }
               ));
+            },
+          ),
+          ListTile(
+            leading:Icon(Icons.departure_board_rounded),
+            title: Text('Courses'),
+            selected: (selectedindex==1),
+            onTap: () {
+              setState(() {
+                selectedindex=1;
+
+              });
+
+              Navigator.pop(context);
             },
           ),
           ListTile(
@@ -459,16 +492,62 @@ class _MyHomePageState extends State<MyHomePage> {
               Navigator.pop(context);
             },
           ),
-
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Paramètre'),
+         ListTile(
+            leading: Icon(Icons.forum_rounded),
+            title: Text('Service Client'),
             selected: (selectedindex==3),
             onTap: () {
               setState(() {
                 selectedindex=3;
               });
+
               Navigator.pop(context);
+            },
+          ),
+
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('Paramètre'),
+            selected: (selectedindex==4),
+            onTap: () {
+              setState(() {
+                selectedindex=4;
+              });
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.exit_to_app_rounded),
+            title: Text('Quitter'),
+            selected:(selectedindex==5),
+            onTap: () {
+              setState(() {
+                selectedindex=5;
+              });
+              Navigator.push(context,MaterialPageRoute(
+                  builder: (BuildContext context){
+                    return MyHomePage();
+                  }
+              ));
+            },
+          ),
+          SizedBox(height: 40,),
+          Divider(
+            color:Colors.black,
+            thickness: 2,
+
+          ),
+          ListTile(
+            leading: Icon(Icons.logout),
+            selected: (selectedindex==6),
+            title: Text('Se déconnecter'),
+            onTap: () {
+              setState(() {
+                selectedindex=6;
+              });
+              MyDialog();
+
+
             },
           ),
 
@@ -478,6 +557,67 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
 
     );
+
+  }
+
+
+
+  Future MyDialog() async{
+
+    return showDialog(
+        barrierDismissible: false,
+        context:context,
+        builder: (BuildContext context){
+          return AlertDialog(
+            title: Text('Suppression profil'),
+            backgroundColor: background,
+            content: SingleChildScrollView(
+              child:ListBody(
+                children: [
+                  Text('Cette action supprimera toutes les informations liés à votre profil.'),
+                  Text('Souhaitez-vous supprimer votre profil ?'),
+                ],
+              ),
+            ),
+            actions: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  RaisedButton.icon(
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      color: backgroundbar,
+                      onPressed: (){
+                        Navigator.pop(context);
+
+
+                      },
+                      icon: Icon(Icons.cancel,color: background,),
+                      label: Text('NON',style: TextStyle(color: background),)
+                  ),
+                  SizedBox(width: 10,),
+                  RaisedButton.icon(
+                      color: backgroundbar,
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                      onPressed: (){
+                        FirebaseAuth.instance.signOut();
+                        Navigator.push(context,MaterialPageRoute(
+                            builder: (BuildContext context){
+                              return MyApp();
+                            }
+                        ));
+
+                      },
+                      icon: Icon(Icons.delete_forever,color: background,),
+                      label: Text('OUI',style: TextStyle(color: background),)
+                  ),
+                ],
+              ),
+            ],
+
+          );
+        }
+    );
+
 
   }
 

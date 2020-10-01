@@ -20,6 +20,7 @@ class chatController extends StatefulWidget{
 class chatControllerState extends State<chatController>{
   @override
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return Scaffold(
       backgroundColor: background,
@@ -30,6 +31,9 @@ class chatControllerState extends State<chatController>{
 
 
   Widget bodyPage(){
+    print('ody messagerie');
+    print(widget.moi.id);
+    print(widget.partenaire.id);
     return Container(
       child: InkWell(
         onTap: ()=>FocusScope.of(context).requestFocus(new FocusNode()),

@@ -12,6 +12,8 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class settingsProfilController extends StatefulWidget{
+  int pageselected;
+  settingsProfilController({int this.pageselected});
   @override
   State<StatefulWidget> createState() {
     // TODO: implement createState
@@ -23,26 +25,17 @@ class settingsProfilController extends StatefulWidget{
 
 class homeSettingsProfil extends State<settingsProfilController> {
   String identifiant;
+
   utilisateur profil;
   int selectedindex=0;
+
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   var formatchiffre = new NumberFormat("#,###", "fr_FR");
 
 
 
-  pageIndex(int pos){
-    switch(pos){
-      case 0: return bodyPage();
-      case 1:return billetValidateController();
-      case 2: return avoirController();
-      case 3: return chatController(globalUser, serviceClient);
-      case 4:return modificationProfil();
-      case 5:return print('quitter');
-      case 6:return print('se decconnecter');
-    };
 
-  }
 
   @override
   void initState() {
@@ -69,11 +62,15 @@ class homeSettingsProfil extends State<settingsProfilController> {
     {
       setState(() {
         serviceClient=user;
-
-
       });
 
     });
+    if(widget.pageselected!=null){
+      setState(() {
+        selectedindex=widget.pageselected;
+      });
+
+    }
 
 
     return Scaffold(
@@ -363,6 +360,23 @@ class homeSettingsProfil extends State<settingsProfilController> {
       }
     );
 
+
+  }
+
+
+
+
+
+  pageIndex(int pos){
+    switch(pos){
+      case 0: return bodyPage();
+      case 1:return billetValidateController();
+      case 2: return avoirController();
+      case 3: return chatController(globalUser, serviceClient);
+      case 4:return modificationProfil();
+      case 5:return print('quitter');
+      case 6:return print('se decconnecter');
+    };
 
   }
 }

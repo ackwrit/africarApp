@@ -176,6 +176,7 @@ Future<void> signOTP(smsCode,verifId)async{
 
 
   sendMessage(String texte,utilisateur user,utilisateur moi){
+    print('passage');
     DateTime date=DateTime.now();
     Map <String,dynamic>map={
       'from':moi.id,
@@ -183,9 +184,13 @@ Future<void> signOTP(smsCode,verifId)async{
       'texte':texte,
       'envoiMessage':date
     };
+    print('passage2');
     String idDate = date.microsecondsSinceEpoch.toString();
+    print('message');
     addMessage(map, getMessageRef(moi.id, user.id, idDate));
+    print('conversation');
     addConversation(getConversation(moi.id, user, texte, date), moi.id);
+    print('conversation 2');
     addConversation(getConversation(user.id, moi, texte, date), user.id);
 
 

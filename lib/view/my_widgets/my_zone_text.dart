@@ -44,6 +44,7 @@ class ZoneTextState extends State<ZoneText>{
   _sendBouttonpressed(){
     if(_textEditingController!=null && _textEditingController!=""){
       String text=_textEditingController.text;
+      print('enregistrement');
       firebaseHelper().sendMessage(text, widget.partenaire,widget.moi);
       setState(() {
         _textEditingController.text='';

@@ -313,7 +313,8 @@ Future <void> handleOTP(smsCode,verifId) async{
     'typeUtilisateur':'particulier',
     'sexe':(sexe)?'Femme':'Homme',
     'naissance':naissance,
-    'avoir':0
+    'avoir':0,
+    'id':uid,
 
 
   };
