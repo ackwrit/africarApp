@@ -82,7 +82,7 @@ class homeRegister extends State<registerController>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Image.asset("assets/newlogo.jpg",height: 225,),
+        title: Text('Incription'),
         backgroundColor: Colors.black,
 
       ),
@@ -166,13 +166,15 @@ class homeRegister extends State<registerController>{
                         showTitleActions: true,
                         minTime: DateTime(1918, 1, 1),
                         maxTime: DateTime(2030, 6, 7),
+
                         onConfirm: (DateTime date) {
                           setState(() {
                             naissance=date;
                           });
                         },
                         currentTime: DateTime.now(),
-                        locale: LocaleType.fr);
+                        locale: LocaleType.fr,
+                    );
                     setState(() {
                       passage=true;
                     });

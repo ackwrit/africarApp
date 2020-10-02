@@ -483,26 +483,11 @@ class homeBooking extends State<bookingController>{
 
     if(globalUser.avoir>=prixTotal){
       sommeAvoir=globalUser.avoir-prixTotal;
-      billetrecording(true);
-      Map <String,dynamic>userMap={
-        'nom':globalUser.nom,
-        'prenom':globalUser.prenom,
-        'id':globalUser.id,
-        'compagnie':globalUser.compagnie,
-        'telephone':globalUser.telephone,
-        'image':globalUser.image,
-        'typeUtilisateur':globalUser.type_utilisateur,
-        'login':globalUser.pseudo,
-        'mail':globalUser.mail,
-        'sexe':globalUser.sexe,
-        'naissance':globalUser.naissance,
-        'avoir':sommeAvoir,
 
-      };
-      firebaseHelper().addUser(globalUser.id, userMap);
     }
-    else
-      {
+    else {
+      sommeAvoir = 0;
+    }
         //Récupération du token pour le paiement
         var credentials= globalCredentials;
         Map<String,String>headerToken={
@@ -624,6 +609,21 @@ class homeBooking extends State<bookingController>{
                   {
                     print('enregistrement dans timer');
                     billetrecording(true);
+                    Map <String,dynamic>userMap= {
+                      'nom': globalUser.nom,
+                      'prenom': globalUser.prenom,
+                      'id': globalUser.id,
+                      'compagnie': globalUser.compagnie,
+                      'telephone': globalUser.telephone,
+                      'image': globalUser.image,
+                      'typeUtilisateur': globalUser.type_utilisateur,
+                      'login': globalUser.pseudo,
+                      'mail': globalUser.mail,
+                      'sexe': globalUser.sexe,
+                      'naissance': globalUser.naissance,
+                      'avoir': sommeAvoir,
+                    };
+                    firebaseHelper().addUser(globalUser.id, userMap);
 
                     timer.cancel();
                   }
@@ -646,6 +646,21 @@ class homeBooking extends State<bookingController>{
             {
               print("enregistrement");
               billetrecording(true);
+              Map <String,dynamic>userMap= {
+                'nom': globalUser.nom,
+                'prenom': globalUser.prenom,
+                'id': globalUser.id,
+                'compagnie': globalUser.compagnie,
+                'telephone': globalUser.telephone,
+                'image': globalUser.image,
+                'typeUtilisateur': globalUser.type_utilisateur,
+                'login': globalUser.pseudo,
+                'mail': globalUser.mail,
+                'sexe': globalUser.sexe,
+                'naissance': globalUser.naissance,
+                'avoir': sommeAvoir,
+              };
+              firebaseHelper().addUser(globalUser.id, userMap);
             }
             if(paymentcheck.status=='FAILED')
             {
@@ -663,7 +678,7 @@ class homeBooking extends State<bookingController>{
 
 
         });
-      }
+
 
 
   }

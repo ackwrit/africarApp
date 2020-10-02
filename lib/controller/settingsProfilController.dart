@@ -342,6 +342,9 @@ class homeSettingsProfil extends State<settingsProfilController> {
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     onPressed: (){
                       FirebaseAuth.instance.signOut();
+                      setState(() {
+                        globalUser=null;
+                      });
                       Navigator.push(context,MaterialPageRoute(
                           builder: (BuildContext context){
                             return MyApp();

@@ -19,9 +19,11 @@ import 'package:url_launcher/url_launcher.dart';
 class detailDateController extends StatefulWidget{
   billet ticket;
   bool validation;
-  detailDateController({billet ticket, bool validation})
+  bool useAvoir;
+  detailDateController({billet ticket, bool validation,bool useAvoir})
   {
     this.ticket=ticket;
+    this.useAvoir=useAvoir;
     this.validation=validation;
   }
 
@@ -36,6 +38,7 @@ class detailDateController extends StatefulWidget{
 class homeDetail extends State<detailDateController>{
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -159,7 +162,16 @@ class homeDetail extends State<detailDateController>{
 
   Future paye() async {
     billetrecording(false);
+    int prixResume;
     int prixTotal = widget.ticket.prixAller+widget.ticket.prixRetour;
+    if(globalUser.avoir>=prixTotal){
+      prixResume=globalUser.avoir-prixTotal;
+    }
+    else
+      {
+        prixResume=prixTotal-globalUser.avoir;
+      }
+
 
 
     //Récupération du token pour le paiement
@@ -198,7 +210,7 @@ class homeDetail extends State<detailDateController>{
       "merchant_key":"bd77ff4d",
       "currency":"OUV",
       "order_id":number_order,
-      "amount": prixTotal.toString(),
+      "amount": (widget.useAvoir)?prixResume.toString():prixTotal.toString(),
       "return_url": "http://www.koko0017.odns.fr",
       "cancel_url": "http://www.koko0017.odns.fr",
       "notif_url":"http://www.koko0017.odns.fr/notifications",
@@ -238,7 +250,7 @@ class homeDetail extends State<detailDateController>{
     //Lancement de la page paiement
     Map<String,dynamic> bodyverification ={
       "order_id":number_order,
-      "amount":prixTotal.toString(),
+      "amount":(widget.useAvoir)?prixResume.toString():prixTotal.toString(),
       "pay_token":paymenttoken.pay_token,
       "payment_url":paymenttoken.payment_url,
       "notif_token":paymenttoken.notif_token,
@@ -280,6 +292,21 @@ class homeDetail extends State<detailDateController>{
               {
                 print('enregistrement dans timer');
                 billetrecording(true);
+                Map <String,dynamic>userMap= {
+                  'nom': globalUser.nom,
+                  'prenom': globalUser.prenom,
+                  'id': globalUser.id,
+                  'compagnie': globalUser.compagnie,
+                  'telephone': globalUser.telephone,
+                  'image': globalUser.image,
+                  'typeUtilisateur': globalUser.type_utilisateur,
+                  'login': globalUser.pseudo,
+                  'mail': globalUser.mail,
+                  'sexe': globalUser.sexe,
+                  'naissance': globalUser.naissance,
+                  'avoir': (widget.useAvoir)?prixResume:globalUser.avoir,
+                };
+                firebaseHelper().addUser(globalUser.id, userMap);
 
                 timer.cancel();
               }
@@ -302,6 +329,22 @@ class homeDetail extends State<detailDateController>{
         {
           print("enregistrement");
           billetrecording(true);
+          Map <String,dynamic>userMap= {
+            'nom': globalUser.nom,
+            'prenom': globalUser.prenom,
+            'id': globalUser.id,
+            'compagnie': globalUser.compagnie,
+            'telephone': globalUser.telephone,
+            'image': globalUser.image,
+            'typeUtilisateur': globalUser.type_utilisateur,
+            'login': globalUser.pseudo,
+            'mail': globalUser.mail,
+            'sexe': globalUser.sexe,
+            'naissance': globalUser.naissance,
+            'avoir': (widget.useAvoir)?prixResume:globalUser.avoir,
+          };
+          firebaseHelper().addUser(globalUser.id, userMap);
+
         }
         if(paymentcheck.status=='FAILED')
         {

@@ -222,15 +222,18 @@ class _MyHomePageState extends State<MyHomePage> {
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                     color: backgroundbar,
                     onPressed: (){
-                    Navigator.push(context,MaterialPageRoute(
+                    setState(() {
+                      selectedindex=2;
+                    });
+                    /*Navigator.push(context,MaterialPageRoute(
                       builder: (BuildContext context)
                           {
                             return settingsProfilController(pageselected: 2,);
                           }
-                    ));
+                    ));*/
                     },
-                    icon: Icon(Icons.credit_card,color: background,),
-                    label:  Text(" ${globalUser.avoir} CFA",style: TextStyle(color: background),)
+                    icon: Icon(Icons.credit_card,color: Colors.white,),
+                    label:  Text(" ${globalUser.avoir} CFA",style: TextStyle(color: Colors.white),)
                 ),
 
 
@@ -600,6 +603,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                       onPressed: (){
                         FirebaseAuth.instance.signOut();
+                        setState(() {
+                          globalUser=null;
+                        });
                         Navigator.push(context,MaterialPageRoute(
                             builder: (BuildContext context){
                               return MyApp();

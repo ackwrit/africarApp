@@ -23,6 +23,7 @@ class dateController extends StatefulWidget{
 class homeDate extends State<dateController>{
   String identifiant;
   utilisateur profil;
+  bool useAvoir=false;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   DateFormat formatminimum = DateFormat.yMd('fr_FR');
@@ -109,6 +110,22 @@ class homeDate extends State<dateController>{
                             elevation: 10,
                             child: ListTile(
                               leading: Text("${formatminimum.format(entreprise.depart)}"),
+                              subtitle: Row(
+                                children:[
+                                  Text('Utiliser son avoir ? '),
+                                  Text('NON'),
+                                  Switch.adaptive
+                                    (value: useAvoir,
+                                      onChanged: (bool value){
+                                      setState(() {
+                                        useAvoir=value;
+                                      });
+
+                                      }),
+                                  Text('OUI'),
+                                ],
+
+                              ),
                               title: Text("${entreprise.lieuDepart} - ${entreprise.lieuArrivee} "),
                              trailing:(entreprise.validate)?Icon(FontAwesome.check,color: Colors.green,):Icon(FontAwesome.history,color: Colors.orange,),
                              // trailing: Text('Date : ${formatjour.format(entreprise.depart)} - ${formatheure.format(entreprise.depart)}'),
@@ -117,7 +134,7 @@ class homeDate extends State<dateController>{
                           onTap: (){
                             Navigator.push(context, MaterialPageRoute(
                                 builder: (BuildContext context){
-                                  return detailDateController(ticket:entreprise,validation: entreprise.validate,);
+                                  return detailDateController(ticket:entreprise,validation: entreprise.validate,useAvoir: useAvoir,);
                                 }
                             ));
 
