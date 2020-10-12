@@ -75,14 +75,7 @@ class homeTrajet extends State<trajetController>{
   ];
 
 
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    momentDepartNational=DateTime.now();
-    momentArriveeNational=DateTime.now();
 
-  }
   @override
 
 
@@ -91,6 +84,8 @@ class homeTrajet extends State<trajetController>{
     formatjour= DateFormat.yMMMMd('fr_FR');
     formatheure = DateFormat.Hm('fr_FR');
     formatmois = DateFormat.M('fr_FR');
+    momentDepartNational=DateTime.now();
+    momentArriveeNational=DateTime.now();
 
 
 

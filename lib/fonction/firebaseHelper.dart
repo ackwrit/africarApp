@@ -109,6 +109,7 @@ Future<void> signOTP(smsCode,verifId)async{
   final fire_billet=data_instance.collection("billets");
   final fire_message=data_instance.collection('messages');
   final fire_conversation=data_instance.collection('conversations');
+  final fire_chiffre=data_instance.collection('chiffres');
 
   //storage
 
@@ -134,6 +135,11 @@ Future<void> signOTP(smsCode,verifId)async{
   addBillet(String uid,Map<String,dynamic>map)
   {
     fire_billet.document(uid).setData(map);
+  }
+
+  addChiffre(String uid,Map<String,dynamic>map)
+  {
+    fire_chiffre.document(uid).setData(map);
   }
 
 

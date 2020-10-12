@@ -1,9 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/informationController.dart';
-import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/registerController.dart';
 import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/controller/trajetController.dart';
@@ -16,9 +14,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_icons/flutter_icons.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
-
 import 'controller/avoirController.dart';
 import 'controller/modificationProfil.dart';
 import 'fonction/firebaseHelper.dart';
@@ -140,7 +137,6 @@ class _MyHomePageState extends State<MyHomePage> {
         alert: true,
       ));
       fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
-        print('IOS settings register');
       });
     }
     fcm.configure(
@@ -159,14 +155,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     );
     initialisation();
-  }
-
-
-
-
-  @override
-  Widget build(BuildContext context) {
-    initializeDateFormatting('fr_FR');
     firebaseHelper().myId().then((uid)
     {
       setState(() {
@@ -186,11 +174,18 @@ class _MyHomePageState extends State<MyHomePage> {
     {
       setState(() {
         serviceClient=user;
-
-
       });
 
     });
+  }
+
+
+
+
+  @override
+  Widget build(BuildContext context) {
+    initializeDateFormatting('fr_FR');
+
 
 
     if (Theme
@@ -205,12 +200,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Widget Configuration() {
-
-
-
-
-
-
     return Scaffold(
       drawer: (globalUser==null)?Drawervide():Drawerpresent(),
         appBar: new AppBar(
@@ -225,12 +214,6 @@ class _MyHomePageState extends State<MyHomePage> {
                     setState(() {
                       selectedindex=2;
                     });
-                    /*Navigator.push(context,MaterialPageRoute(
-                      builder: (BuildContext context)
-                          {
-                            return settingsProfilController(pageselected: 2,);
-                          }
-                    ));*/
                     },
                     icon: Icon(Icons.credit_card,color: Colors.white,),
                     label:  Text(" ${globalUser.avoir} CFA",style: TextStyle(color: Colors.white),)
@@ -254,18 +237,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
         ),
         body: (globalUser==null)?pageIndex(selectedindex):pageIndexConnexion(selectedindex),
-
-
-
-
-
-
-
-
-
-
-
-
         bottomNavigationBar: (selectedindex==0)?Theme(
           data: Theme.of(context).copyWith(
               canvasColor: Colors.black,
@@ -295,7 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   title: new Text(
                     'Réservation', style: TextStyle(fontSize: 18),)),
               new BottomNavigationBarItem(
-                  icon: new Icon(Icons.add_alert_rounded),
+                  icon: new Icon(FontAwesome.bell),
                   title: new Text(
                     'Notification', style: TextStyle(fontSize: 18),)),
 
@@ -330,7 +301,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   Future initialisation() async {
     String token = await fcm.getToken();
-    print("Firebase messaging: $token");
+
   }
 
   void pageChanged(int index) {

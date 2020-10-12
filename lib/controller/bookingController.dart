@@ -6,6 +6,7 @@ import 'dart:io';
 import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
+import 'package:africars/model/chiffres.dart';
 import 'package:africars/model/my_checkout_payment.dart';
 import 'package:africars/model/my_token.dart';
 import 'package:africars/model/my_token_payment.dart';
@@ -13,6 +14,8 @@ import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:africars/view/my_widgets/my_information.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
@@ -401,6 +404,7 @@ class homeBooking extends State<bookingController>{
   affichage()
   {
     billetrecording(false);
+    recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
    keyinfo.currentState.showBottomSheet((builder)=>Myinformation(refbillet: refBillet,));
   }
 
@@ -757,6 +761,132 @@ class homeBooking extends State<bookingController>{
     );
 
   }
+
+
+  Future recuperationValeur ({String idenfiantCompagnie,int prix}) async{
+    DateTime maintenant=DateTime.now();
+    int jan=0;
+    int fev=0;
+    int index=0;
+    int mar=0;
+    int avril=0;
+    int mai=0;
+    int juin=0;
+    int juil=0;
+    int aout=0;
+    int sep=0;
+    int oct=0;
+    int nov=0;
+    int dec=0;
+    Stream firebaseStream;
+
+    //String uidChiffre='${maintenant.year}$identifiant';
+    String uidChiffre='${maintenant.year}lJ7yFzQ0nPQ3uXTXGzTLz2g8psD3';
+
+
+
+
+    firebaseStream =firebaseHelper().fire_chiffre.document(uidChiffre).snapshots();
+    print('affichage event');
+    print(firebaseStream.runtimeType);
+    print(firebaseStream.toString().length);
+    firebaseStream.listen((event) {
+      print('type event');
+      print(event.runtimeType);
+      print(event.exists);
+      if(event.exists) {
+        print("uidChiffre existe");
+        int ancienjan = 0;
+        int ancienfev = 0;
+        int ancienindex = 0;
+        int ancienmar = 0;
+        int ancienavril = 0;
+        int ancienmai = 0;
+        int ancienjuin = 0;
+        int ancienjuil = 0;
+        int ancienaout = 0;
+        int anciensep = 0;
+        int ancienoct = 0;
+        int anciennov = 0;
+        int anciendec = 0;
+        print(event.data['Octobre']);
+      }
+      else
+        {
+          print("UidChiffre n'existe pas");
+          //vérification
+          if(maintenant.month==DateTime.january)
+            {
+              jan=prix;
+            }
+          if(maintenant.month==DateTime.february)
+          {
+            fev=prix;
+          }
+          if(maintenant.month==DateTime.march)
+          {
+            mar=prix;
+          }
+          if(maintenant.month==DateTime.april)
+          {
+            avril=prix;
+          }
+          if(maintenant.month==DateTime.may)
+          {
+            mai=prix;
+          }
+          if(maintenant.month==DateTime.june)
+          {
+            juin=prix;
+          }
+          if(maintenant.month==DateTime.july)
+          {
+            juil=prix;
+          }
+          if(maintenant.month==DateTime.august)
+          {
+            aout=prix;
+          }
+          if(maintenant.month==DateTime.september)
+          {
+            sep=prix;
+          }
+          if(maintenant.month==DateTime.october)
+          {
+            oct=prix;
+          }
+          if(maintenant.month==DateTime.november)
+          {
+            nov=prix;
+          }
+          if(maintenant.month==DateTime.december)
+          {
+            dec=prix;
+          }
+          ////
+          Map<String,dynamic> map={
+            'Janvier':jan,
+            'Fevrier':fev,
+            'Mars':mar,
+            'Avril':avril,
+            'Mai':mai,
+            'Juin':juin,
+            'Juillet':juil,
+            'Aout':aout,
+            'Septembre':sep,
+            'Octobre':oct,
+            'Novembre':nov,
+            'Decembre':dec,
+            'uidChiffre':uidChiffre,
+          };
+          firebaseHelper().addChiffre(uidChiffre, map);
+        }
+
+    });
+  }
+
+
+
 
 
 
