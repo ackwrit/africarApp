@@ -628,6 +628,8 @@ class homeBooking extends State<bookingController>{
                       'avoir': sommeAvoir,
                     };
                     firebaseHelper().addUser(globalUser.id, userMap);
+                    recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
+                    (widget.retour)?recuperationValeur(idenfiantCompagnie: widget.voyageRetour.idCompagnie,prix: widget.voyageRetour.prix):null;
 
                     timer.cancel();
                   }
@@ -665,6 +667,8 @@ class homeBooking extends State<bookingController>{
                 'avoir': sommeAvoir,
               };
               firebaseHelper().addUser(globalUser.id, userMap);
+              recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
+              (widget.retour)?recuperationValeur(idenfiantCompagnie: widget.voyageRetour.idCompagnie,prix: widget.voyageRetour.prix):null;
             }
             if(paymentcheck.status=='FAILED')
             {
@@ -795,21 +799,79 @@ class homeBooking extends State<bookingController>{
       print(event.runtimeType);
       print(event.exists);
       if(event.exists) {
-        print("uidChiffre existe");
-        int ancienjan = 0;
-        int ancienfev = 0;
-        int ancienindex = 0;
-        int ancienmar = 0;
-        int ancienavril = 0;
-        int ancienmai = 0;
-        int ancienjuin = 0;
-        int ancienjuil = 0;
-        int ancienaout = 0;
-        int anciensep = 0;
-        int ancienoct = 0;
-        int anciennov = 0;
-        int anciendec = 0;
-        print(event.data['Octobre']);
+        while(index<1) {
+          print("uidChiffre existe");
+          int ancienjan = event.data['Janvier'];
+          int ancienfev = event.data['Fevrier'];
+          int ancienmar = event.data['Mars'];
+          int ancienavril = event.data['Avril'];
+          int ancienmai = event.data['Mai'];
+          int ancienjuin = event.data['Juin'];
+          int ancienjuil = event.data['Juillet'];
+          int ancienaout = event.data['Aout'];
+          int anciensep = event.data['Septembre'];
+          int ancienoct = event.data['Octobre'];
+          int anciennov = event.data['Novembre'];
+          int anciendec = event.data['Decembre'];
+          //vérification
+          if (maintenant.month == DateTime.january) {
+            jan = prix + ancienjan;
+          }
+          if (maintenant.month == DateTime.february) {
+            fev = prix + ancienfev;
+          }
+          if (maintenant.month == DateTime.march) {
+            mar = prix + ancienmar;
+          }
+          if (maintenant.month == DateTime.april) {
+            avril = prix + ancienavril;
+          }
+          if (maintenant.month == DateTime.may) {
+            mai = prix + ancienmai;
+          }
+          if (maintenant.month == DateTime.june) {
+            juin = prix + ancienjuin;
+          }
+          if (maintenant.month == DateTime.july) {
+            juil = prix + ancienjuil;
+          }
+          if (maintenant.month == DateTime.august) {
+            aout = prix + ancienaout;
+          }
+          if (maintenant.month == DateTime.september) {
+            sep = prix + anciensep;
+          }
+          if (maintenant.month == DateTime.october) {
+            oct = prix + ancienoct;
+          }
+          if (maintenant.month == DateTime.november) {
+            nov = prix + anciennov;
+          }
+          if (maintenant.month == DateTime.december) {
+            dec = prix + anciendec;
+          }
+          ////
+          Map<String, dynamic> map = {
+            'Janvier': jan,
+            'Fevrier': fev,
+            'Mars': mar,
+            'Avril': avril,
+            'Mai': mai,
+            'Juin': juin,
+            'Juillet': juil,
+            'Aout': aout,
+            'Septembre': sep,
+            'Octobre': oct,
+            'Novembre': nov,
+            'Decembre': dec,
+            'uidChiffre': uidChiffre,
+          };
+          firebaseHelper().addChiffre(uidChiffre, map);
+          index++;
+        }
+
+
+
       }
       else
         {
@@ -880,7 +942,9 @@ class homeBooking extends State<bookingController>{
             'uidChiffre':uidChiffre,
           };
           firebaseHelper().addChiffre(uidChiffre, map);
+          index++;
         }
+      index++;
 
     });
   }
