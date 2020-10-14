@@ -16,6 +16,7 @@ class chiffres{
   int novembre;
   int decembre;
   String uidChiffre;
+  String nomCompagnie;
 
 
 
@@ -39,6 +40,7 @@ class chiffres{
     novembre=map['Novembre'];
     decembre=map['Decembre'];
     uidChiffre=map['uidChiffre'];
+    nomCompagnie=map['nomCompagnie'];
 
 
 
@@ -62,6 +64,7 @@ class chiffres{
       map['Novembre']:novembre,
       map['Decembre']:decembre,
       map['uidChiffre']:uidChiffre,
+      map['nomCompagnie']:nomCompagnie,
     };
 
   }

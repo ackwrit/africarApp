@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:africars/controller/settingsProfilController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
-import 'package:africars/main.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:file_picker/file_picker.dart';
@@ -128,7 +127,7 @@ class homeSettingsProfil extends State<modificationProfil> {
               Text('${formatjour.format(globalUser.naissance)}'),
               SizedBox(height:25),
               RaisedButton(
-                child: Text('Enregsitrer',style: TextStyle(color: Colors.orange),),
+                child: Text('Enregistrer',style: TextStyle(color: Colors.orange),),
                 onPressed: (){
                   Map <String,dynamic> map ={
                     'prenom':globalUser.prenom,

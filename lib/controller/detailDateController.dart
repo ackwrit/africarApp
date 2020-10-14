@@ -152,6 +152,7 @@ class homeDetail extends State<detailDateController>{
       'prixAller':widget.ticket.prixAller,
       'prixRetour':widget.ticket.prixRetour,
       'idBillet':widget.ticket.id,
+      'onboarding':false,
 
     };
     firebaseHelper().addBillet(widget.ticket.id, map);
@@ -389,8 +390,8 @@ class homeDetail extends State<detailDateController>{
     int dec=0;
     Stream firebaseStream;
 
-    //String uidChiffre='${maintenant.year}$identifiant';
-    String uidChiffre='${maintenant.year}lJ7yFzQ0nPQ3uXTXGzTLz2g8psD3';
+    String uidChiffre='${maintenant.year}$idenfiantCompagnie';
+    //String uidChiffre='${maintenant.year}lJ7yFzQ0nPQ3uXTXGzTLz2g8psD3';
 
 
 

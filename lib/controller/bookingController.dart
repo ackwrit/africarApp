@@ -404,7 +404,7 @@ class homeBooking extends State<bookingController>{
   affichage()
   {
     billetrecording(false);
-    recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
+    //recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
    keyinfo.currentState.showBottomSheet((builder)=>Myinformation(refbillet: refBillet,));
   }
 
@@ -454,6 +454,7 @@ class homeBooking extends State<bookingController>{
       'qrCodeRetour':(widget.retour)?generateQRCodeRetour:'',
       'billerRetour':widget.retour,
       'validate':validate,
+      'onboarding':false,
       'jourAller':jourDepart,
       'jourRetour':(widget.retour)?jourRetour:DateTime.now(),
       'prixAller':widget.voyageAller.prix,
@@ -767,7 +768,7 @@ class homeBooking extends State<bookingController>{
   }
 
 
-  Future recuperationValeur ({String idenfiantCompagnie,int prix}) async{
+  Future recuperationValeur ({String idenfiantCompagnie,int prix,String nomCompagnie}) async{
     DateTime maintenant=DateTime.now();
     int jan=0;
     int fev=0;
@@ -784,8 +785,8 @@ class homeBooking extends State<bookingController>{
     int dec=0;
     Stream firebaseStream;
 
-    //String uidChiffre='${maintenant.year}$identifiant';
-    String uidChiffre='${maintenant.year}lJ7yFzQ0nPQ3uXTXGzTLz2g8psD3';
+    String uidChiffre='${maintenant.year}$idenfiantCompagnie';
+    //String uidChiffre='${maintenant.year}lJ7yFzQ0nPQ3uXTXGzTLz2g8psD3';
 
 
 
@@ -865,6 +866,7 @@ class homeBooking extends State<bookingController>{
             'Novembre': nov,
             'Decembre': dec,
             'uidChiffre': uidChiffre,
+            'nomCompagnie':nomCompagnie
           };
           firebaseHelper().addChiffre(uidChiffre, map);
           index++;
@@ -940,6 +942,7 @@ class homeBooking extends State<bookingController>{
             'Novembre':nov,
             'Decembre':dec,
             'uidChiffre':uidChiffre,
+            'nomCompagnie':nomCompagnie
           };
           firebaseHelper().addChiffre(uidChiffre, map);
           index++;
