@@ -82,7 +82,7 @@ class homeRegister extends State<registerController>{
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text('Incription'),
+        title: Text('Inscription'),
         backgroundColor: Colors.black,
 
       ),
@@ -179,7 +179,7 @@ class homeRegister extends State<registerController>{
                       passage=true;
                     });
                   },
-                  label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 18),)
+                  label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 15),)
               ),
 
 
