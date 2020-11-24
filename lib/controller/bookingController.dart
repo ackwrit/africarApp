@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 
+import 'package:africars/controller/facture.dart';
 import 'package:africars/controller/reservationController.dart';
 import 'package:africars/fonction/firebaseHelper.dart';
 import 'package:africars/main.dart';
@@ -14,6 +15,7 @@ import 'package:africars/model/trajet.dart';
 import 'package:africars/model/utilisateur.dart';
 import 'package:africars/view/my_widgets/constants.dart';
 import 'package:africars/view/my_widgets/my_information.dart';
+import 'package:africars/view/my_widgets/my_information_avoir.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -365,7 +367,7 @@ class homeBooking extends State<bookingController>{
             SizedBox(height: 15,),*/
             SizedBox(height: 15,),
            InkWell(
-             onTap: ()=>paye(),
+             onTap: ()=>(avoir)?paye():payewithoutAvoir(),
              child: Column(
              children:[
                Text('Paiement par Orange Money'),
@@ -403,14 +405,24 @@ class homeBooking extends State<bookingController>{
 
   affichage()
   {
-    billetrecording(false);
+    billetrecording(false,'0');
     //recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
    keyinfo.currentState.showBottomSheet((builder)=>Myinformation(refbillet: refBillet,));
   }
 
 
 
-  void billetrecording(bool validate)
+
+  affichageAvoir()
+  {
+
+    //recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
+    keyinfo.currentState.showBottomSheet((builder)=>MyinformationAvoir(refbillet: refBillet,));
+  }
+
+
+
+  void billetrecording(bool validate,String idfacture)
   {
     DateTime momentRetour;
     DateTime jourRetour;
@@ -460,6 +472,7 @@ class homeBooking extends State<bookingController>{
       'prixAller':widget.voyageAller.prix,
       'prixRetour':(widget.retour)?widget.voyageRetour.prix:0,
       'idBillet':refBillet,
+      'idfacture':idfacture
 
     };
     firebaseHelper().addBillet(refBillet, map);
@@ -467,8 +480,232 @@ class homeBooking extends State<bookingController>{
   }
 
 
+
+
+  Future payewithoutAvoir() async {
+    billetrecording(false,'0');
+
+    int prixTotal=0;
+    if(widget.retour){
+      setState(() {
+        prixTotal = widget.voyageAller.prix + widget.voyageRetour.prix;
+      });
+
+
+    }
+    else
+    {
+      setState(() {
+        prixTotal=widget.voyageAller.prix;
+      });
+
+
+    }
+
+
+
+
+
+    //Récupération du token pour le paiement
+    var credentials= globalCredentials;
+    Map<String,String>headerToken={
+      HttpHeaders.authorizationHeader :'Basic $credentials',
+    };
+    Map<String,dynamic> bodyToken ={
+      "grant_type":"client_credentials",
+      "token_type": "Bearer",
+      "expires_in": "777600",
+      "access_token": ""
+
+    };
+    var response =await http.post('https://api.orange.com/oauth/v2/token',headers: headerToken,body: bodyToken);
+
+    Token body = Token.fromJson(jsonDecode(response.body));
+
+
+
+    ///////////////////////////////////
+    //activation payment
+    Map <String,String> headerpayment={
+      HttpHeaders.authorizationHeader :"${body.token_type} ${body.access_token}",
+      HttpHeaders.acceptHeader:"application/json",
+      HttpHeaders.hostHeader:"api.orange.com",
+      HttpHeaders.contentTypeHeader:"application/json"
+      //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
+    };
+    DateTime orderid = DateTime.now();
+    String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
+    int prixResume=prixTotal;
+
+      Map <String, dynamic> bodypayment = {
+        "Content-Type": "application/json",
+        "merchant_key": "bd77ff4d",
+        "currency": "OUV",
+        "order_id": number_order,
+        "amount": (avoir) ? prixResume.toString() : prixTotal.toString(),
+        "return_url": "http://www.koko0017.odns.fr",
+        "cancel_url": "http://www.koko0017.odns.fr",
+        "notif_url": "http://www.koko0017.odns.fr/notifications",
+        "lang": "fr",
+        "reference": "Africar",
+
+      };
+
+
+      http.Response paymentResponse = await http.post(
+          urlPaiement,
+          headers: headerpayment,
+          body: jsonEncode(bodypayment)
+
+      );
+      TokenPayment paymenttoken = TokenPayment.fromJson(
+          jsonDecode(paymentResponse.body));
+
+
+      //headerverification
+      Map<String, String>headerverification = {
+        HttpHeaders.authorizationHeader: "${body.token_type} ${body
+            .access_token}",
+        HttpHeaders.acceptHeader: "application/json",
+        HttpHeaders.hostHeader: "api.orange.com",
+        //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
+
+
+      };
+      Map<String, dynamic>bodynotification = {
+        "status": "SUCCESS",
+        "notif_token": paymenttoken.notif_token,
+        "txnid": ""
+      };
+      http.Response notificationpage = await http.post(
+          "http://www.koko0017.odns.fr/notifications",
+          body: bodynotification);
+
+
+      //Lancement de la page paiement
+
+
+
+      Map<String, dynamic> bodyverification = {
+        "order_id": number_order,
+        "amount": (avoir) ? prixResume.toString() : prixTotal.toString(),
+        "pay_token": paymenttoken.pay_token,
+        "payment_url": paymenttoken.payment_url,
+        "notif_token": paymenttoken.notif_token,
+        "txnid": "",
+        "content-type": "application/json; charset=UTF-8"
+      };
+      if (await canLaunch(paymenttoken.payment_url)) {
+        await launch(paymenttoken.payment_url);
+      } else {
+        throw 'Could not launch ${paymenttoken.payment_url}';
+      }
+      int counter = 0;
+      Timer(Duration(seconds: 30), () async {
+        http.Response verificationPaiement = await http.post(
+            "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+            , body: json.encode(bodyverification),
+            headers: headerverification);
+        CheckoutPayment paymentcheck = CheckoutPayment.fromJson(
+            jsonDecode(verificationPaiement.body));
+
+        if (verificationPaiement.statusCode == 201) {
+          print(paymentcheck.status);
+          if (paymentcheck.status == 'INITIATED') {
+            Timer.periodic(Duration(seconds: 30), (timer) async {
+              if (counter < 10) {
+                counter++;
+                print(counter);
+                verificationPaiement = await http.post(
+                    "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+                    , body: json.encode(bodyverification),
+                    headers: headerverification);
+                paymentcheck = CheckoutPayment.fromJson(
+                    jsonDecode(verificationPaiement.body));
+                print(paymentcheck.status);
+                if (paymentcheck.status == 'SUCCESS') {
+                  print('enregistrement dans timer');
+                  creationFacture(prixResume, number_order);
+                  billetrecording(true,number_order);
+                  Map <String, dynamic>userMap = {
+                    'nom': globalUser.nom,
+                    'prenom': globalUser.prenom,
+                    'id': globalUser.id,
+                    'compagnie': globalUser.compagnie,
+                    'telephone': globalUser.telephone,
+                    'image': globalUser.image,
+                    'typeUtilisateur': globalUser.type_utilisateur,
+                    'login': globalUser.pseudo,
+                    'mail': globalUser.mail,
+                    'sexe': globalUser.sexe,
+                    'naissance': globalUser.naissance,
+                    'avoir': sommeAvoir,
+                  };
+                  firebaseHelper().addUser(globalUser.id, userMap);
+                  recuperationValeur(
+                      idenfiantCompagnie: widget.voyageAller.idCompagnie,
+                      prix: widget.voyageAller.prix);
+                  (widget.retour) ? recuperationValeur(
+                      idenfiantCompagnie: widget.voyageRetour.idCompagnie,
+                      prix: widget.voyageRetour.prix) : null;
+
+
+                  timer.cancel();
+                }
+                if (paymentcheck.status == "FAILED") {
+                  timer.cancel();
+                }
+              }
+              else {
+                timer.cancel();
+              }
+            });
+          }
+
+          if (paymentcheck.status == 'SUCCESS') {
+            print("enregistrement");
+            creationFacture(prixResume, number_order);
+            billetrecording(true,number_order);
+            Map <String, dynamic>userMap = {
+              'nom': globalUser.nom,
+              'prenom': globalUser.prenom,
+              'id': globalUser.id,
+              'compagnie': globalUser.compagnie,
+              'telephone': globalUser.telephone,
+              'image': globalUser.image,
+              'typeUtilisateur': globalUser.type_utilisateur,
+              'login': globalUser.pseudo,
+              'mail': globalUser.mail,
+              'sexe': globalUser.sexe,
+              'naissance': globalUser.naissance,
+              'avoir': sommeAvoir,
+            };
+            firebaseHelper().addUser(globalUser.id, userMap);
+            recuperationValeur(
+                idenfiantCompagnie: widget.voyageAller.idCompagnie,
+                prix: widget.voyageAller.prix);
+            (widget.retour) ? recuperationValeur(
+                idenfiantCompagnie: widget.voyageRetour.idCompagnie,
+                prix: widget.voyageRetour.prix) : null;
+          }
+          if (paymentcheck.status == 'FAILED') {
+            print('non timer');
+            billetrecording(false,'0');
+          }
+        }
+        else {
+          print('non');
+        }
+      });
+
+
+
+
+  }
+
+
   Future paye() async {
-    billetrecording(false);
+    billetrecording(false,'0');
     if(globalUser.avoir==null){
       sommeAvoir=0;
     }
@@ -523,172 +760,244 @@ class homeBooking extends State<bookingController>{
         DateTime orderid = DateTime.now();
         String number_order ="${orderid.day}${orderid.month}${orderid.year}${orderid.hour}${orderid.minute}${orderid.second}${orderid.millisecond}";
         int prixResume=prixTotal-globalUser.avoir;
+        if(prixResume<=0)
+          {
+            setState(() {
+              globalUser.avoir=globalUser.avoir-prixTotal;
+            });
+            Map <String, dynamic>userMap = {
+              'nom': globalUser.nom,
+              'prenom': globalUser.prenom,
+              'id': globalUser.id,
+              'compagnie': globalUser.compagnie,
+              'telephone': globalUser.telephone,
+              'image': globalUser.image,
+              'typeUtilisateur': globalUser.type_utilisateur,
+              'login': globalUser.pseudo,
+              'mail': globalUser.mail,
+              'sexe': globalUser.sexe,
+              'naissance': globalUser.naissance,
+              'avoir': globalUser.avoir,
+            };
+            firebaseHelper().addUser(globalUser.id, userMap);
+            billetrecording(true,number_order);
+            creationFacture(0, number_order);
+            //Affichage qu'il y'a bien ernregistrement du billet dans la base de donnée.
+            affichageAvoir();
+          }
+        else {
+          Map <String, dynamic> bodypayment = {
+            "Content-Type": "application/json",
+            "merchant_key": "bd77ff4d",
+            "currency": "OUV",
+            "order_id": number_order,
+            "amount": (avoir) ? prixResume.toString() : prixTotal.toString(),
+            "return_url": "http://www.koko0017.odns.fr",
+            "cancel_url": "http://www.koko0017.odns.fr",
+            "notif_url": "http://www.koko0017.odns.fr/notifications",
+            "lang": "fr",
+            "reference": "Africar",
+
+          };
+          creationFacture(prixTotal, number_order);
+
+          http.Response paymentResponse = await http.post(
+              urlPaiement,
+              headers: headerpayment,
+              body: jsonEncode(bodypayment)
+
+          );
+          TokenPayment paymenttoken = TokenPayment.fromJson(
+              jsonDecode(paymentResponse.body));
 
 
-        Map <String,dynamic> bodypayment ={
-          "Content-Type":"application/json",
-          "merchant_key":"bd77ff4d",
-          "currency":"OUV",
-          "order_id":number_order,
-          "amount": (avoir)?prixResume.toString():prixTotal.toString(),
-          "return_url": "http://www.koko0017.odns.fr",
-          "cancel_url": "http://www.koko0017.odns.fr",
-          "notif_url":"http://www.koko0017.odns.fr/notifications",
-          "lang": "fr",
-          "reference":"Africar",
-
-        };
-
-        http.Response paymentResponse = await http.post(
-            urlPaiement,
-            headers: headerpayment,
-            body: jsonEncode(bodypayment)
-
-        );
-        TokenPayment paymenttoken = TokenPayment.fromJson(jsonDecode(paymentResponse.body));
+          //headerverification
+          Map<String, String>headerverification = {
+            HttpHeaders.authorizationHeader: "${body.token_type} ${body
+                .access_token}",
+            HttpHeaders.acceptHeader: "application/json",
+            HttpHeaders.hostHeader: "api.orange.com",
+            //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
 
 
-        //headerverification
-        Map<String,String>headerverification ={
-          HttpHeaders.authorizationHeader:"${body.token_type} ${body.access_token}",
-          HttpHeaders.acceptHeader:"application/json",
-          HttpHeaders.hostHeader:"api.orange.com",
-          //HttpHeaders.contentTypeHeader:"application/json; charset=UTF-8"
+          };
+          Map<String, dynamic>bodynotification = {
+            "status": "SUCCESS",
+            "notif_token": paymenttoken.notif_token,
+            "txnid": ""
+          };
+          http.Response notificationpage = await http.post(
+              "http://www.koko0017.odns.fr/notifications",
+              body: bodynotification);
 
 
-        };
-        Map<String,dynamic>bodynotification={
-          "status":"SUCCESS",
-          "notif_token":paymenttoken.notif_token,
-          "txnid": ""
-
-        };
-        http.Response notificationpage = await http.post("http://www.koko0017.odns.fr/notifications",body: bodynotification);
+          //Lancement de la page paiement
+          print('création de la facture');
+          creationFacture(prixResume, number_order);
+          print('fin de la création');
 
 
+          Map<String, dynamic> bodyverification = {
+            "order_id": number_order,
+            "amount": (avoir) ? prixResume.toString() : prixTotal.toString(),
+            "pay_token": paymenttoken.pay_token,
+            "payment_url": paymenttoken.payment_url,
+            "notif_token": paymenttoken.notif_token,
+            "txnid": "",
+            "content-type": "application/json; charset=UTF-8"
+          };
+          if (await canLaunch(paymenttoken.payment_url)) {
+            await launch(paymenttoken.payment_url);
+          } else {
+            throw 'Could not launch ${paymenttoken.payment_url}';
+          }
+          int counter = 0;
+          Timer(Duration(seconds: 30), () async {
+            http.Response verificationPaiement = await http.post(
+                "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+                , body: json.encode(bodyverification),
+                headers: headerverification);
+            CheckoutPayment paymentcheck = CheckoutPayment.fromJson(
+                jsonDecode(verificationPaiement.body));
+
+            if (verificationPaiement.statusCode == 201) {
+              print(paymentcheck.status);
+              if (paymentcheck.status == 'INITIATED') {
+                Timer.periodic(Duration(seconds: 30), (timer) async {
+                  if (counter < 10) {
+                    counter++;
+                    print(counter);
+                    verificationPaiement = await http.post(
+                        "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
+                        , body: json.encode(bodyverification),
+                        headers: headerverification);
+                    paymentcheck = CheckoutPayment.fromJson(
+                        jsonDecode(verificationPaiement.body));
+                    print(paymentcheck.status);
+                    if (paymentcheck.status == 'SUCCESS') {
+                      print('enregistrement dans timer');
+                      creationFacture(prixResume, number_order);
+                      billetrecording(true,number_order);
+                      Map <String, dynamic>userMap = {
+                        'nom': globalUser.nom,
+                        'prenom': globalUser.prenom,
+                        'id': globalUser.id,
+                        'compagnie': globalUser.compagnie,
+                        'telephone': globalUser.telephone,
+                        'image': globalUser.image,
+                        'typeUtilisateur': globalUser.type_utilisateur,
+                        'login': globalUser.pseudo,
+                        'mail': globalUser.mail,
+                        'sexe': globalUser.sexe,
+                        'naissance': globalUser.naissance,
+                        'avoir': sommeAvoir,
+                      };
+                      firebaseHelper().addUser(globalUser.id, userMap);
+                      recuperationValeur(
+                          idenfiantCompagnie: widget.voyageAller.idCompagnie,
+                          prix: widget.voyageAller.prix);
+                      (widget.retour) ? recuperationValeur(
+                          idenfiantCompagnie: widget.voyageRetour.idCompagnie,
+                          prix: widget.voyageRetour.prix) : null;
 
 
+                      timer.cancel();
+                    }
+                    if (paymentcheck.status == "FAILED") {
+                      timer.cancel();
+                    }
+                  }
+                  else {
+                    timer.cancel();
+                  }
+                });
+              }
 
-        //Lancement de la page paiement
-        Map<String,dynamic> bodyverification ={
-          "order_id":number_order,
-          "amount":(avoir)?prixResume.toString():prixTotal.toString(),
-          "pay_token":paymenttoken.pay_token,
-          "payment_url":paymenttoken.payment_url,
-          "notif_token":paymenttoken.notif_token,
-          "txnid": "",
-          "content-type":"application/json; charset=UTF-8"
-
-
-        };
-        if (await canLaunch(paymenttoken.payment_url)) {
-          await launch(paymenttoken.payment_url);
-
-
-        } else {
-          throw 'Could not launch ${paymenttoken.payment_url}';
+              if (paymentcheck.status == 'SUCCESS') {
+                print("enregistrement");
+                creationFacture(prixResume, number_order);
+                billetrecording(true,number_order);
+                Map <String, dynamic>userMap = {
+                  'nom': globalUser.nom,
+                  'prenom': globalUser.prenom,
+                  'id': globalUser.id,
+                  'compagnie': globalUser.compagnie,
+                  'telephone': globalUser.telephone,
+                  'image': globalUser.image,
+                  'typeUtilisateur': globalUser.type_utilisateur,
+                  'login': globalUser.pseudo,
+                  'mail': globalUser.mail,
+                  'sexe': globalUser.sexe,
+                  'naissance': globalUser.naissance,
+                  'avoir': sommeAvoir,
+                };
+                firebaseHelper().addUser(globalUser.id, userMap);
+                recuperationValeur(
+                    idenfiantCompagnie: widget.voyageAller.idCompagnie,
+                    prix: widget.voyageAller.prix);
+                (widget.retour) ? recuperationValeur(
+                    idenfiantCompagnie: widget.voyageRetour.idCompagnie,
+                    prix: widget.voyageRetour.prix) : null;
+              }
+              if (paymentcheck.status == 'FAILED') {
+                print('non timer');
+                billetrecording(false,number_order);
+              }
+            }
+            else {
+              print('non');
+            }
+          });
         }
-        int counter=0;
-        Timer(Duration(seconds:30), () async {
-          http.Response verificationPaiement = await http.post(
-              "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
-              ,body: json.encode(bodyverification),headers: headerverification);
-          CheckoutPayment paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
-
-          if(verificationPaiement.statusCode==201)
-          {
-
-            print(paymentcheck.status);
-            if(paymentcheck.status=='INITIATED'){
-              Timer.periodic(Duration(seconds: 30), (timer) async {
-                if(counter<10)
-                {
-                  counter++;
-                  print(counter);
-                  verificationPaiement = await http.post(
-                      "https://api.orange.com/orange-money-webpay/dev/v1/transactionstatus"
-                      ,body: json.encode(bodyverification),headers: headerverification);
-                  paymentcheck = CheckoutPayment.fromJson(jsonDecode(verificationPaiement.body));
-                  print(paymentcheck.status);
-                  if(paymentcheck.status=='SUCCESS')
-                  {
-                    print('enregistrement dans timer');
-                    billetrecording(true);
-                    Map <String,dynamic>userMap= {
-                      'nom': globalUser.nom,
-                      'prenom': globalUser.prenom,
-                      'id': globalUser.id,
-                      'compagnie': globalUser.compagnie,
-                      'telephone': globalUser.telephone,
-                      'image': globalUser.image,
-                      'typeUtilisateur': globalUser.type_utilisateur,
-                      'login': globalUser.pseudo,
-                      'mail': globalUser.mail,
-                      'sexe': globalUser.sexe,
-                      'naissance': globalUser.naissance,
-                      'avoir': sommeAvoir,
-                    };
-                    firebaseHelper().addUser(globalUser.id, userMap);
-                    recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
-                    (widget.retour)?recuperationValeur(idenfiantCompagnie: widget.voyageRetour.idCompagnie,prix: widget.voyageRetour.prix):null;
-
-                    timer.cancel();
-                  }
-                  if(paymentcheck.status=="FAILED")
-                  {
-                    timer.cancel();
-                  }
-
-                }
-                else
-                {
-                  timer.cancel();
-                  print('fini');
-                }
-
-              });
-            }
-
-            if(paymentcheck.status=='SUCCESS')
-            {
-              print("enregistrement");
-              billetrecording(true);
-              Map <String,dynamic>userMap= {
-                'nom': globalUser.nom,
-                'prenom': globalUser.prenom,
-                'id': globalUser.id,
-                'compagnie': globalUser.compagnie,
-                'telephone': globalUser.telephone,
-                'image': globalUser.image,
-                'typeUtilisateur': globalUser.type_utilisateur,
-                'login': globalUser.pseudo,
-                'mail': globalUser.mail,
-                'sexe': globalUser.sexe,
-                'naissance': globalUser.naissance,
-                'avoir': sommeAvoir,
-              };
-              firebaseHelper().addUser(globalUser.id, userMap);
-              recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
-              (widget.retour)?recuperationValeur(idenfiantCompagnie: widget.voyageRetour.idCompagnie,prix: widget.voyageRetour.prix):null;
-            }
-            if(paymentcheck.status=='FAILED')
-            {
-              print('non timer');
-              billetrecording(false);
-            }
-
-
-          }
-          else
-          {
-            print('non');
-          }
 
 
 
-        });
+  }
 
 
+  creationFacture(int prix,String number) async{
+    if(widget.retour) {
+      prix = widget.voyageAller.prix + widget.voyageRetour.prix;
+    }
+    else
+      {
+        prix=widget.voyageAller.prix;
+      }
+    DateTime vendu=DateTime.now();
+    String forrmatDate= DateFormat('yyyy-MM-dd').format(vendu);
+    Map <String,String> headerfacture={
+      HttpHeaders.authorizationHeader:'QSTCsbbtRLNYBVUhoyT3',
+
+
+      HttpHeaders.acceptHeader:"application/json",
+      HttpHeaders.contentTypeHeader:"application/json"
+      //"Postman-Token": "e18f3aac-9bd7-ddc5-a3a4-668e6089a0d5"
+    };
+    print(forrmatDate);
+
+
+    Map <String,dynamic> bodyfacture ={
+      "Content-Type":"application/json",
+      "api_token":"QSTCsbbtRLNYBVUhoyT3",
+      "invoice":{
+        "kind":"vat",
+        "number": number,
+        "sell_date": forrmatDate,
+        "issue_date":forrmatDate,
+        "payment_to":forrmatDate,
+        "seller_name": "Africars",
+        "seller_tax_no": "5252445767",
+        "paid":prix,
+        "buyer_name": "${globalUser.nom} ${globalUser.prenom}",
+        //"buyer_tax_no": "5252445767",
+        "positions":[{"name":"${widget.voyageAller.depart}-${widget.voyageAller.destination}", "tax":23, "total_price_gross":widget.voyageAller.prix, "quantity":1},
+              (widget.retour)?{"name":"${widget.voyageRetour.depart}-${widget.voyageRetour.destination}", "tax":23, "total_price_gross":widget.voyageRetour.prix, "quantity":1}:null]
+      }
+    };
+
+
+    http.Response facture = await http.post("https://k-b-k-services-groupes.vosfactures.fr/invoices.json",
+        headers: headerfacture,body: jsonEncode(bodyfacture));
 
   }
 

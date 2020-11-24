@@ -130,6 +130,7 @@ class homeRegister extends State<registerController>{
                   setState(() {
                     prenom=text;
                     passage=false;
+                    passage=true;
                   });
                 },
                 decoration: InputDecoration(
@@ -175,9 +176,6 @@ class homeRegister extends State<registerController>{
                         currentTime: DateTime.now(),
                         locale: LocaleType.fr,
                     );
-                    setState(() {
-                      passage=true;
-                    });
                   },
                   label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 15),)
               ),
@@ -234,7 +232,7 @@ class homeRegister extends State<registerController>{
 
                     //firebaseHelper().handleSignPhone(number.toString());
                   },
-                  child: (codeSent)?Text('Enregister'):Text('Validation')
+                  child: (codeSent)?Text('Inscription'):Text('Validation')
 
 
               ):Container(),

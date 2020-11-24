@@ -6,10 +6,12 @@ import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:africars/view/my_snack.dart';
 import 'package:animate_icons/animate_icons.dart';
+import 'package:calendar_strip/calendar_strip.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:dropdown_search/dropdown_search.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_time_picker_spinner/flutter_time_picker_spinner.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
@@ -176,7 +178,10 @@ class homeTrajet extends State<trajetController>{
                 endIcon: Icons.swap_vertical_circle,
                 size: 50.0,
                 onStartIconPress: (){
-                  swapVille();
+
+                    swapVille();
+
+
                   return true;
                 },
                 onEndIconPress: () {
@@ -433,7 +438,8 @@ class homeTrajet extends State<trajetController>{
   {
     int count=0;
     int affichage;
-    globalkey.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartNational,momentArrivee: momentArriveeNational,periode:periode));
+    globalkey.currentState.showBottomSheet((builder) => MySnack(periode));
+    //globalkey.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartNational,momentArrivee: momentArriveeNational,periode:periode));
     Timer.periodic(Duration(seconds:2), (timer){
       if(count<10)
       {
@@ -453,6 +459,98 @@ class homeTrajet extends State<trajetController>{
 
     });
 
+  }
+
+
+
+
+
+  MySnack(String periode){
+    DateTime momentDepart=DateTime.now();
+    DateTime momentArrivee=DateTime.now();
+    return Container(
+        height: MediaQuery.of(context).size.height/1.43,
+        color: background,
+        child:Container(
+
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(25),topRight: Radius.circular(25)),
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              CalendarStrip(
+                  containerHeight: 100,
+
+
+                  onDateSelected: (heure)
+                  {
+                    if(periode =='depart')
+                    {
+                      setState(() {
+                        momentDepart=heure;
+                        print('moment depart');
+                        print(momentDepart);
+                      });
+
+                    }
+                    else
+                    {
+                      setState(() {
+                        momentArrivee=heure;
+                      });
+                    }
+
+                  }
+              ),
+              Text('Horaire',style: TextStyle(fontSize: 20),),
+
+              TimePickerSpinner(
+                isForce2Digits: true,
+                minutesInterval: 15,
+                highlightedTextStyle: TextStyle(color: background,fontSize: 20),
+                normalTextStyle: TextStyle(color: Colors.black,fontSize: 10),
+                onTimeChange: (time)
+                {
+                  if(periode=='depart')
+                  {
+                    DateTime hour = new DateTime(momentDepart.year,momentDepart.month,momentDepart.day,time.hour,time.minute);
+                    print('hour');
+                    print(hour);
+                    setState(() {
+                      momentDepartNational=hour;
+                      momentDepartInternational=hour;
+
+                    });
+                  }
+                  else
+                  {
+                    DateTime houre = new DateTime(momentArrivee.year,momentArrivee.month,momentArrivee.day,time.hour,time.minute);
+                    setState(() {
+                      momentArriveeNational=houre;
+                      momentArriveeInternational=houre;
+
+                    });
+
+                  }
+                },
+
+              ),
+              RaisedButton(
+                onPressed: (){
+
+                  Navigator.pop(context);
+                },
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+                color: backgroundbar,
+                child: Text("Valider",style: TextStyle(color: background),),
+              )
+
+            ],
+          ),
+        )
+    );
   }
 
 

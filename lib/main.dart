@@ -36,38 +36,17 @@ class MyApp extends StatelessWidget {
 
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: authentification(),
+      home: MyHomePage(),
       debugShowCheckedModeBanner: false,
     );
   }
 
-
-  Widget authentification(){
-    PageController pageController=PageController(initialPage: 0);
-    int BottomSelectedIndex=0;
-
-
-    return StreamBuilder<FirebaseUser>(
-        stream: FirebaseAuth.instance.onAuthStateChanged,
-        builder: (BuildContext context,snapshot){
-          if(snapshot.hasData){
-
-            return MyHomePage();
-          }
-          else
-          {
-            return MyHomePage();
-          }
-
-        }
-    );
-
-  }
 }
 
 class MyHomePage extends StatefulWidget {
 
   MyHomePage({Key key, this.title}) : super(key: key);
+
 
 
 
@@ -104,13 +83,21 @@ class _MyHomePageState extends State<MyHomePage> {
   pageIndexConnexion(int pos){
     switch(pos){
       case 0 :return pageBody();
+      break;
       case 7:return print('profil');
+      break;
       case 1:return billetValidateController();
+      break;
       case 2: return avoirController();
+      break;
       case 3:return chatController(globalUser, serviceClient);
+      break;
       case 4:return modificationProfil();
+      break;
       case 5:return print('quitter');
+      break;
       case 6:return print('se decconnecter');
+      break;
 
 
 

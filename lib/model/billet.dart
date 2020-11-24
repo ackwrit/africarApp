@@ -26,6 +26,7 @@ class billet{
   String idCompagnieAller;
   String idCompagnieRetour;
   String idVoyageur;
+  String idFacture;
 
 
 
@@ -54,6 +55,7 @@ class billet{
     idCompagnieAller=map['idCompagnieAller'];
     idCompagnieRetour=map['idCompagnieRetour'];
     idVoyageur=map['idvoyageur'];
+    idFacture=map['idfacture'];
 
 
   }
@@ -62,25 +64,26 @@ class billet{
   Map toMap(){
     Map map;
     return map ={
-      map['emission']:emission,
-      map['depart']:depart,
-      map['retour']:retour,
-      map['lieuDepart']:lieuDepart,
-      map['lieuArrivee']:lieuArrivee,
-      map['qrCodeAller']:qrCodeAller,
-      map['qrCodeRetour']:qrCodeRetour,
-      map['nbPassager']:nbPassager,
-      map['nomPassager']:nomPassager,
-      map['prenomPassager']:prenomPassager,
-      map['logoCompagnieAller']:logoCompagnieAller,
-      map['logoCompagnieRetour']:logoCompagnieRetour,
-      map['telephone']:telephobne,
-      map['validate']:validate,
-      map['prixAller']:prixAller,
-      map['prixRetour']:prixRetour,
-      map['idCompagnieAller']:idCompagnieAller,
-      map['idCompagnieRetour']:idCompagnieRetour,
-      map['idvoyageur']:idVoyageur
+      'emission':emission,
+      'depart':depart,
+      'retour':retour,
+      'lieuDepart':lieuDepart,
+      'lieuArrivee':lieuArrivee,
+      'qrCodeAller':qrCodeAller,
+      'qrCodeRetour':qrCodeRetour,
+      'nbPassager':nbPassager,
+      'nomPassager':nomPassager,
+      'prenomPassager':prenomPassager,
+      'logoCompagnieAller':logoCompagnieAller,
+      'logoCompagnieRetour':logoCompagnieRetour,
+      'telephone':telephobne,
+      'validate':validate,
+      'prixAller':prixAller,
+     'prixRetour':prixRetour,
+      'idCompagnieAller':idCompagnieAller,
+      'idCompagnieRetour':idCompagnieRetour,
+     'idvoyageur':idVoyageur,
+      'idfacture':idFacture
 
     };
   }
