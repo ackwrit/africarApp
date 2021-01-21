@@ -1,6 +1,7 @@
 
 import 'dart:async';
 
+import 'package:africars/constants/lib_africars.dart';
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_material.dart';
@@ -253,14 +254,14 @@ class homeTrajet extends State<trajetController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Aller'),
-                  Text(formatjour.format(momentDepartNational)),
+                  (internatinational)?Text(formatjour.format(GlobalDepartInternational)):Text(formatjour.format(GlobalDepart)),
 
 
                   FlatButton(
                     //snack bar
-                    onPressed:()=> affichageSnack('depart'),//affichageSnackBar('depart'),
+                    onPressed:()=> affichageSnack('depart',internatinational),//affichageSnackBar('depart'),
 
-                    child: Text(formatheure.format(momentDepartNational)),
+                    child: (internatinational)?Text(formatheure.format(GlobalDepartInternational)):Text(formatheure.format(GlobalDepart)),
 
                   ),
 
@@ -293,13 +294,13 @@ class homeTrajet extends State<trajetController>{
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   Text('Retour'),
-                  Text(formatjour.format(momentArriveeNational)),
+                  (internatinational)?Text(formatjour.format(GlobalDestinationInternational)):Text(formatjour.format(GlobalDesttination)),
 
 
                   FlatButton(
-                    onPressed:()=>affichageSnack('arrivee'),
+                    onPressed:()=>affichageSnack('arrivee',internatinational),
 
-                    child: Text(formatheure.format(momentArriveeNational)),
+                    child: (internatinational)?Text(formatheure.format(GlobalDestinationInternational)):Text(formatheure.format(GlobalDesttination)),
 
                   ),
 
@@ -377,8 +378,8 @@ class homeTrajet extends State<trajetController>{
                         retour: retour,
                         depart: destinationSelectionDepart,
                         arrivee: destinationSelectionArrivee,
-                        heureArrivee: momentArriveeNational,
-                        heureDepart: momentDepartNational,
+                        heureArrivee: (internatinational)?GlobalDestinationInternational:GlobalDesttination,
+                        heureDepart: (internatinational)?GlobalDepartInternational:GlobalDepart,
                         nombrepassager: nbpassager,);
                     }
                 ));
@@ -434,12 +435,22 @@ class homeTrajet extends State<trajetController>{
   }
 
 
-  affichageSnack(String periode)
+
+
+  affichageSnack(String periode,bool international)
   {
     int count=0;
     int affichage;
-    globalkey.currentState.showBottomSheet((builder) => MySnack(periode));
-    //globalkey.currentState.showBottomSheet((builder) => Mysnackbar(momentDepart: momentDepartNational,momentArrivee: momentArriveeNational,periode:periode));
+    if(international==true){
+      globalkeyInternational.currentState.showBottomSheet((context) => MySnack(periode, international));
+
+    }
+    else
+      {
+        globalkey.currentState.showBottomSheet((builder) => MySnack(periode,international));
+      }
+
+
     Timer.periodic(Duration(seconds:2), (timer){
       if(count<10)
       {
@@ -447,6 +458,13 @@ class homeTrajet extends State<trajetController>{
         print(count);
         setState(() {
           affichage=count;
+          momentDepartNational=GlobalDepart;
+          momentDepartInternational=GlobalDepartInternational;
+          momentArriveeNational=GlobalDesttination;
+          momentArriveeInternational=GlobalDestinationInternational;
+          print('exterieur');
+          print(GlobalDepart);
+          print(momentDepartNational);
         });
 
       }
@@ -458,6 +476,16 @@ class homeTrajet extends State<trajetController>{
 
 
     });
+    setState(() {
+      momentDepartNational=GlobalDepart;
+      momentDepartInternational=GlobalDepartInternational;
+      momentArriveeNational=GlobalDesttination;
+      momentArriveeInternational=GlobalDestinationInternational;
+      print('exterieur');
+      print(GlobalDepart);
+      print(momentDepartNational);
+
+    });
 
   }
 
@@ -465,7 +493,7 @@ class homeTrajet extends State<trajetController>{
 
 
 
-  MySnack(String periode){
+  MySnack(String periode,bool international){
     DateTime momentDepart=DateTime.now();
     DateTime momentArrivee=DateTime.now();
     return Container(
@@ -492,6 +520,8 @@ class homeTrajet extends State<trajetController>{
                         momentDepart=heure;
                         print('moment depart');
                         print(momentDepart);
+                        GlobalDepart=momentDepart;
+                        GlobalDepartInternational=momentDepart;
                       });
 
                     }
@@ -499,6 +529,8 @@ class homeTrajet extends State<trajetController>{
                     {
                       setState(() {
                         momentArrivee=heure;
+                        GlobalDesttination=momentArrivee;
+                        GlobalDestinationInternational=momentArrivee;
                       });
                     }
 
@@ -521,6 +553,10 @@ class homeTrajet extends State<trajetController>{
                     setState(() {
                       momentDepartNational=hour;
                       momentDepartInternational=hour;
+                      GlobalDepart=hour;
+                      print('fin départ');
+                      print(GlobalDepart);
+                      GlobalDepartInternational=hour;
 
                     });
                   }
@@ -530,6 +566,8 @@ class homeTrajet extends State<trajetController>{
                     setState(() {
                       momentArriveeNational=houre;
                       momentArriveeInternational=houre;
+                      GlobalDesttination=houre;
+                      GlobalDestinationInternational=houre;
 
                     });
 
@@ -539,6 +577,7 @@ class homeTrajet extends State<trajetController>{
               ),
               RaisedButton(
                 onPressed: (){
+
 
                   Navigator.pop(context);
                 },

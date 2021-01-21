@@ -1,3 +1,4 @@
+import 'package:africars/constants/lib_africars.dart';
 import 'package:africars/view/my_material.dart';
 import 'package:calendar_strip/calendar_strip.dart';
 import 'package:flutter/cupertino.dart';
@@ -19,6 +20,7 @@ class Mysnackbar extends StatefulWidget{
 }
 
 class SnackbarState extends State<Mysnackbar>{
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -40,17 +42,19 @@ class SnackbarState extends State<Mysnackbar>{
 
                 onDateSelected: (heure)
                 {
+
                   if(widget.periode=='depart')
                   {
+
                     setState(() {
-                      widget.momentDepart=heure;
+                      GlobalDepart=heure;
                     });
 
                   }
                   else
                   {
                     setState(() {
-                      widget.momentArrivee=heure;
+                      GlobalDesttination=heure;
                     });
                   }
 
@@ -66,19 +70,19 @@ class SnackbarState extends State<Mysnackbar>{
               {
                 if(widget.periode=='depart')
                 {
-                  DateTime hour = new DateTime(widget.momentDepart.year,widget.momentDepart.month,widget.momentDepart.day,time.hour,time.minute);
+                  DateTime hour = new DateTime(GlobalDepart.year,GlobalDepart.month,GlobalDepart.day,time.hour,time.minute);
                   setState(() {
-                    momentDepartNational=hour;
-                    momentDepartInternational=hour;
+                    GlobalDepart=hour;
+                    GlobalDepartInternational=hour;
 
                   });
                 }
                 else
                 {
-                  DateTime houre = new DateTime(widget.momentArrivee.year,widget.momentArrivee.month,widget.momentArrivee.day,time.hour,time.minute);
+                  DateTime houre = new DateTime(GlobalDesttination.year,GlobalDesttination.month,GlobalDesttination.day,time.hour,time.minute);
                   setState(() {
-                    momentArriveeNational=houre;
-                    momentArriveeInternational=houre;
+                   GlobalDesttination=houre;
+                    GlobalDestinationInternational=houre;
 
                   });
 
@@ -88,8 +92,8 @@ class SnackbarState extends State<Mysnackbar>{
             ),
             RaisedButton(
                 onPressed: (){
-                  print(widget.momentDepart);
-                  Navigator.pop(context,widget.momentDepart);
+
+                  Navigator.pop(context);
                 },
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
               color: backgroundbar,

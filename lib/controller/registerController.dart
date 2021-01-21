@@ -6,7 +6,7 @@ import 'package:africars/view/my_material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+//import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
@@ -104,11 +104,13 @@ class homeRegister extends State<registerController>{
         child: InkWell(
           onTap: (()=>FocusScope.of(context).requestFocus(FocusNode())),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
+              SizedBox(height: 15,),
               Center(
                 child: Text('Inscription',style: TextStyle(fontSize: 30,fontWeight: FontWeight.bold),),
               ),
+              SizedBox(height: 15,),
               TextField(
                 onChanged: (text){
                   setState(() {
@@ -124,6 +126,7 @@ class homeRegister extends State<registerController>{
 
                 ),
               ),
+              SizedBox(height: 15,),
 
               (nom==null || nom=='')?Container():TextField(
                 onChanged: (text){
@@ -141,7 +144,8 @@ class homeRegister extends State<registerController>{
 
                 ),
               ),
-              (prenom==null||prenom =='')?Container():Row(
+              SizedBox(height: 15,),
+              /*(prenom==null||prenom =='')?Container():Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text('Homme'),
@@ -157,6 +161,7 @@ class homeRegister extends State<registerController>{
 
                 ],
               ),
+              SizedBox(height: 15,),
               (prenom==null||prenom =='')?Container():RaisedButton.icon(
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
                   color: backgroundbar,
@@ -179,6 +184,7 @@ class homeRegister extends State<registerController>{
                   },
                   label: Text('Date de naissance :  ${formatjour.format(naissance)}',style: TextStyle(color:background,fontSize: 15),)
               ),
+              SizedBox(height: 15,),*/
 
 
 
@@ -202,6 +208,7 @@ class homeRegister extends State<registerController>{
                     )
                 ),
               ),
+              SizedBox(height: 15,),
 
               (codeSent)?TextField(
                 decoration: InputDecoration(
@@ -232,7 +239,7 @@ class homeRegister extends State<registerController>{
 
                     //firebaseHelper().handleSignPhone(number.toString());
                   },
-                  child: (codeSent)?Text('Inscription'):Text('Validation')
+                  child: (codeSent)?Text('Validation'):Text('Inscription')
 
 
               ):Container(),
