@@ -27,6 +27,7 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:random_string/random_string.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 
 class bookingController extends StatefulWidget{
   bool retour;
@@ -37,6 +38,7 @@ class bookingController extends StatefulWidget{
   DateTime momentDepartRetour;
   DateTime momentArriveeRetour;
   int nombrePassager;
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   bookingController({trajet voyageAller,trajet voyageRetour,
     DateTime momentDepart,DateTime momentDepartRetour,DateTime momentArrivee,
   DateTime momentArriveeRetour,bool retour,int nombrePassager})
@@ -842,7 +844,7 @@ class homeBooking extends State<bookingController>{
             "amount": (avoir) ? prixResume.toString() : prixTotal.toString(),
             "pay_token": paymenttoken.pay_token,
             "payment_url": paymenttoken.payment_url,
-            "notif_token": paymenttoken.notif_token,
+            //"notif_token": paymenttoken.notif_token,
             "txnid": "",
             "content-type": "application/json; charset=UTF-8"
           };
