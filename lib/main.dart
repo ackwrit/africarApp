@@ -430,7 +430,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           ListTile(
             leading:Icon(Icons.departure_board_rounded),
-            title: Text('Courses'),
+            title: Text('Mes voyages'),
             selected: (selectedindex==1),
             onTap: () {
               setState(() {

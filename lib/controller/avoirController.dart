@@ -25,7 +25,7 @@ class avoirController extends StatefulWidget{
 class homeAvoir extends State<avoirController>{
   String uid;
   utilisateur globalUser;
-  TextEditingController controllerMontant= new TextEditingController();
+  String controllerMontant;
   DateFormat formatjour = DateFormat.yMMMMd('fr_FR');
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   var formatchiffre = new NumberFormat("#,###", "fr_FR");
@@ -101,10 +101,10 @@ class homeAvoir extends State<avoirController>{
 
 
             ),
-            controller: controllerMontant,
+
             onChanged: (text){
               setState(() {
-                controllerMontant.text=text;
+                controllerMontant=text;
 
               });
             },
@@ -139,9 +139,9 @@ class homeAvoir extends State<avoirController>{
         avoirPrecedent=globalUser.avoir;
       }
 
-    int avoirenregsitre=int.parse(controllerMontant.text);
+    int avoirenregsitre=int.parse(controllerMontant);
 
-    avoirTotal=avoirPrecedent+ int.parse(controllerMontant.text);
+    avoirTotal=avoirPrecedent+ int.parse(controllerMontant);
 
 
     //Récupération du token pour le paiement

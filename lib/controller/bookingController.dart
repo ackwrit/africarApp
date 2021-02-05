@@ -1027,6 +1027,7 @@ class homeBooking extends State<bookingController>{
                       fillColor: Colors.white,
                       filled: true,
                       hintText: nom,
+                      labelText: 'Nom',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
@@ -1050,6 +1051,7 @@ class homeBooking extends State<bookingController>{
                       fillColor: Colors.white,
                       filled: true,
                       hintText: prenom,
+                      labelText: 'Prénom',
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(20),
                       ),
