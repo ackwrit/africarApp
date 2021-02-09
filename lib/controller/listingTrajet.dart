@@ -120,11 +120,13 @@ class homeListing extends State<listingTrajet>{
                                 position: index,
                                 duration: const Duration(milliseconds: 425),
                                 child: SlideAnimation(
-                                  verticalOffset: 50.0,
+                                  //verticalOffset: 50.0,
+                                    horizontalOffset: 50.0,
+                                    
                                     child: FadeInAnimation(
                                         child:OpenContainer(
                                           closedColor: background,
-                                            transitionDuration: Duration(milliseconds:950),
+                                            transitionDuration: Duration(milliseconds:450),
 
 
                                             closedShape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),

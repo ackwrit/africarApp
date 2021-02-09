@@ -66,6 +66,7 @@ class homeBooking extends State<bookingController>{
   String generateQRCode=randomAlphaNumeric(20);
   String generateQRCodeRetour=randomAlphaNumeric(20);
   String refBillet=randomAlphaNumeric(13);
+
   utilisateur profil;
   String identifiant;
   var formatchiffre = new NumberFormat('#,###','fr_FR');
@@ -76,17 +77,47 @@ class homeBooking extends State<bookingController>{
   DateFormat formatheure = DateFormat.Hm('fr_FR');
   String nom;
   String prenom;
-  FirebaseMessaging _fcm =FirebaseMessaging();
+  FirebaseMessaging fcm =FirebaseMessaging();
   StreamSubscription iosSubscription;
   String uid;
   bool personne=false;
   bool avoir=false;
   int sommeAvoir=0;
+  String tokenNotification;
+  int _messageCount=0;
 
   @override
+
   void initState() {
     // TODO: implement initState
     super.initState();
+
+    if (Platform.isIOS) {
+      fcm.requestNotificationPermissions(IosNotificationSettings(
+        sound: true,
+        badge: true,
+        alert: true,
+      ));
+      fcm.onIosSettingsRegistered.listen((IosNotificationSettings settings) {
+      });
+    }
+    fcm.configure(
+      onLaunch: (Map<String, dynamic> message) async {
+        print("onLaunch: $message");
+        // TODO optional
+      },
+      onResume: (Map<String, dynamic> message) async {
+        print("onResume: $message");
+        // TODO optional
+      },
+      onMessage: (Map<String, dynamic> message) async {
+        print("onMessage: $message ");
+      },
+
+
+
+
+    );
     firebaseHelper().myId().then((value){
       setState(() {
         uid=value;
@@ -100,11 +131,14 @@ class homeBooking extends State<bookingController>{
       });
 
     });
+
   }
 
 
   @override
+
   Widget build(BuildContext context) {
+
     // TODO: implement build
     return Scaffold(
       key:keyinfo,
@@ -485,6 +519,10 @@ class homeBooking extends State<bookingController>{
 
 
   Future payewithoutAvoir() async {
+    tokenNotification= await fcm.getToken();
+    sendPushMessage();
+
+
     billetrecording(false,'0');
 
     int prixTotal=0;
@@ -704,6 +742,45 @@ class homeBooking extends State<bookingController>{
 
 
   }
+
+
+
+  String constructFCMPayload(String token) {
+    _messageCount++;
+    return jsonEncode({
+      'token': token,
+      'data': {
+        'via': 'Africars',
+        'count': _messageCount.toString(),
+      },
+      'notification': {
+        'title': 'Africars',
+        'body': 'Votre billet n° $refBillet est en cours de réservation ...',
+      },
+    });
+  }
+
+
+  Future sendPushMessage() async{
+    if (tokenNotification == null) {
+      print('Unable to send FCM message, no token exists.');
+      return;
+    }
+
+    try {
+      await http.post(
+        'https://api.rnfirebase.io/messaging/send',
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+        },
+        body: constructFCMPayload(tokenNotification),
+      );
+      print('FCM request for device sent!');
+    } catch (e) {
+      print(e);
+    }
+  }
+
 
 
   Future paye() async {
