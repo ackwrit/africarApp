@@ -1,7 +1,7 @@
 import 'package:africars/controller/dateController.dart';
 import 'package:africars/controller/profilController.dart';
 import 'package:africars/controller/trajetController.dart';
-import 'package:africars/controller/trajetInternationalController.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -134,7 +134,7 @@ class homePrincipal extends State<principalController>{
   List <Widget> controllers (){
     return [
       trajetController(),
-      trajetInternationalController(),
+      trajetController(),
       dateController(),
 
 

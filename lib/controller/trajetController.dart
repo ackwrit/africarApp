@@ -5,9 +5,8 @@ import 'package:africars/constants/lib_africars.dart';
 import 'package:africars/controller/listingTrajet.dart';
 import 'package:africars/controller/verificationController.dart';
 import 'package:africars/view/my_material.dart';
-import 'package:africars/view/my_snack.dart';
 import 'package:animate_icons/animate_icons.dart';
-import 'package:calendar_strip/calendar_strip.dart';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:date_picker_timeline/date_picker_timeline.dart';
 import 'package:dropdown_search/dropdown_search.dart';

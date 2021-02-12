@@ -85,6 +85,7 @@ class homeBooking extends State<bookingController>{
   int sommeAvoir=0;
   String tokenNotification;
   int _messageCount=0;
+  String _message;
 
   @override
 
@@ -441,7 +442,8 @@ class homeBooking extends State<bookingController>{
 
   affichage()
   {
-    billetrecording(false,'0');
+
+    billetrecording(false,'0','');
     //recuperationValeur(idenfiantCompagnie: widget.voyageAller.idCompagnie,prix: widget.voyageAller.prix);
    keyinfo.currentState.showBottomSheet((builder)=>Myinformation(refbillet: refBillet,));
   }
@@ -458,7 +460,7 @@ class homeBooking extends State<bookingController>{
 
 
 
-  void billetrecording(bool validate,String idfacture)
+  void billetrecording(bool validate,String idfacture,String token)
   {
     DateTime momentRetour;
     DateTime jourRetour;
@@ -508,7 +510,8 @@ class homeBooking extends State<bookingController>{
       'prixAller':widget.voyageAller.prix,
       'prixRetour':(widget.retour)?widget.voyageRetour.prix:0,
       'idBillet':refBillet,
-      'idfacture':idfacture
+      'idfacture':idfacture,
+      'tokenNotification':token
 
     };
     firebaseHelper().addBillet(refBillet, map);
@@ -521,9 +524,11 @@ class homeBooking extends State<bookingController>{
   Future payewithoutAvoir() async {
     tokenNotification= await fcm.getToken();
     sendPushMessage();
+    print('token');
+    print(tokenNotification);
 
 
-    billetrecording(false,'0');
+    billetrecording(false,'0',tokenNotification);
 
     int prixTotal=0;
     if(widget.retour){
@@ -666,7 +671,7 @@ class homeBooking extends State<bookingController>{
                 if (paymentcheck.status == 'SUCCESS') {
                   print('enregistrement dans timer');
                   creationFacture(prixResume, number_order);
-                  billetrecording(true,number_order);
+                  billetrecording(true,number_order,tokenNotification);
                   Map <String, dynamic>userMap = {
                     'nom': globalUser.nom,
                     'prenom': globalUser.prenom,
@@ -705,7 +710,7 @@ class homeBooking extends State<bookingController>{
           if (paymentcheck.status == 'SUCCESS') {
             print("enregistrement");
             creationFacture(prixResume, number_order);
-            billetrecording(true,number_order);
+            billetrecording(true,number_order,tokenNotification);
             Map <String, dynamic>userMap = {
               'nom': globalUser.nom,
               'prenom': globalUser.prenom,
@@ -730,7 +735,7 @@ class homeBooking extends State<bookingController>{
           }
           if (paymentcheck.status == 'FAILED') {
             print('non timer');
-            billetrecording(false,'0');
+            billetrecording(false,'0',tokenNotification);
           }
         }
         else {
@@ -776,6 +781,8 @@ class homeBooking extends State<bookingController>{
         body: constructFCMPayload(tokenNotification),
       );
       print('FCM request for device sent!');
+
+
     } catch (e) {
       print(e);
     }
@@ -784,7 +791,8 @@ class homeBooking extends State<bookingController>{
 
 
   Future paye() async {
-    billetrecording(false,'0');
+    tokenNotification= await fcm.getToken();
+    billetrecording(false,'0',tokenNotification);
     if(globalUser.avoir==null){
       sommeAvoir=0;
     }
@@ -859,7 +867,7 @@ class homeBooking extends State<bookingController>{
               'avoir': globalUser.avoir,
             };
             firebaseHelper().addUser(globalUser.id, userMap);
-            billetrecording(true,number_order);
+            billetrecording(true,number_order,tokenNotification);
             creationFacture(0, number_order);
             //Affichage qu'il y'a bien ernregistrement du billet dans la base de donnée.
             affichageAvoir();
@@ -956,7 +964,7 @@ class homeBooking extends State<bookingController>{
                     if (paymentcheck.status == 'SUCCESS') {
                       print('enregistrement dans timer');
                       creationFacture(prixResume, number_order);
-                      billetrecording(true,number_order);
+                      billetrecording(true,number_order,tokenNotification);
                       Map <String, dynamic>userMap = {
                         'nom': globalUser.nom,
                         'prenom': globalUser.prenom,
@@ -995,7 +1003,7 @@ class homeBooking extends State<bookingController>{
               if (paymentcheck.status == 'SUCCESS') {
                 print("enregistrement");
                 creationFacture(prixResume, number_order);
-                billetrecording(true,number_order);
+                billetrecording(true,number_order,tokenNotification);
                 Map <String, dynamic>userMap = {
                   'nom': globalUser.nom,
                   'prenom': globalUser.prenom,
@@ -1020,7 +1028,7 @@ class homeBooking extends State<bookingController>{
               }
               if (paymentcheck.status == 'FAILED') {
                 print('non timer');
-                billetrecording(false,number_order);
+                billetrecording(false,number_order,tokenNotification);
               }
             }
             else {

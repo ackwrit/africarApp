@@ -63,9 +63,11 @@ class _MyHomePageState extends State<MyHomePage> {
   PageController pageController = PageController(initialPage: 0);
   int bottomSelectedIndex = 0;
   pushNotification _notification;
-  FirebaseMessaging fcm = FirebaseMessaging();
+
   String identifiant;
   int selectedindex=0;
+  String _message;
+
 
 
 
@@ -118,6 +120,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
 
+
+
     if (Platform.isIOS) {
       fcm.requestNotificationPermissions(IosNotificationSettings(
         sound: true,
@@ -130,19 +134,24 @@ class _MyHomePageState extends State<MyHomePage> {
     fcm.configure(
       onLaunch: (Map<String, dynamic> message) async {
         print("onLaunch: $message");
+        _message=message["notification"]["title"];
+
         // TODO optional
       },
       onResume: (Map<String, dynamic> message) async {
         print("onResume: $message");
+        _message=message["notification"]["title"];
         // TODO optional
       },
       onMessage: (Map<String, dynamic> message) async {
         print("onMessage: $message ");
+        _message=message["notification"]["title"];
       },
      
 
 
     );
+
     initialisation();
     firebaseHelper().myId().then((uid)
     {
@@ -189,6 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
   Widget Configuration() {
+
     return Scaffold(
       drawer: (globalUser==null)?Drawervide():Drawerpresent(),
         appBar: new AppBar(
